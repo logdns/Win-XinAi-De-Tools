@@ -7,7 +7,6 @@ using PortManager.Views;
 using Windows.Graphics;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.UI.ViewManagement;
 
 namespace PortManager;
@@ -20,6 +19,7 @@ public sealed partial class MainWindow : Window
     private AppWindow? _appWindow;
     private IntPtr _windowHandle;
     private readonly NavigationHistory _history = new();
+    private readonly Dictionary<string, Page> _formPages = new();
     private bool _syncingNavigation;
     private bool _closeDialogOpen;
     private readonly UISettings _uiSettings = new();
@@ -36,7 +36,10 @@ public sealed partial class MainWindow : Window
         LanguageSelector.SelectedIndex = _preferences.Language == AppLanguage.English ? 1 : 0;
         ApplyTheme();
         ConfigureWindow();
-        ContentFrame.SizeChanged += (_, _) => UpdatePagePadding();
+        PageHost.SizeChanged += (_, _) => UpdatePagePadding();
+        NavView.DisplayModeChanged += (_, _) => UpdateShellLayout();
+        NavView.RegisterPropertyChangedCallback(NavigationView.IsPaneOpenProperty, (_, _) => UpdateShellLayout());
+        UpdateShellLayout();
         ApplyLanguage();
         Closed += MainWindow_Closed;
         _isReady = true;
@@ -241,10 +244,8 @@ public sealed partial class MainWindow : Window
         SavePreferences();
         ApplyLanguage();
         // Drop cached translations while keeping route history intact.
-        if (ContentFrame.Content is Page current) current.NavigationCacheMode = NavigationCacheMode.Disabled;
-        ContentFrame.CacheSize = 0;
+        _formPages.Clear();
         NavigateFrame(_history.Current, force: true);
-        ContentFrame.CacheSize = 16;
     }
 
     private void ApplyLanguage()
@@ -293,14 +294,17 @@ public sealed partial class MainWindow : Window
         };
 
         if (pageType is null) return false;
-        if (!force && ContentFrame.CurrentSourcePageType == pageType) return false;
-        NavigationTransitionInfo transition = _uiSettings.AnimationsEnabled
-            ? new EntranceNavigationTransitionInfo()
-            : new SuppressNavigationTransitionInfo();
-        if (!ContentFrame.Navigate(pageType, null, transition)) return false;
-        if (ContentFrame.Content is Page page)
-            page.NavigationCacheMode = tag is "AddPort" or "PortStatus" or "NetworkSettings" or "SmbSettings" or "WslDashboard"
-                ? NavigationCacheMode.Enabled : NavigationCacheMode.Disabled;
+        if (!force && PageHost.Content?.GetType() == pageType) return false;
+        var retainForm = tag is "AddPort" or "PortStatus" or "NetworkSettings" or "SmbSettings" or "WslDashboard";
+        if (!_formPages.TryGetValue(tag, out var page))
+        {
+            page = (Page)Activator.CreateInstance(pageType)!;
+            if (retainForm) _formPages[tag] = page;
+        }
+        PageHost.ContentTransitions = new TransitionCollection();
+        if (_uiSettings.AnimationsEnabled)
+            PageHost.ContentTransitions.Add(new EntranceThemeTransition { IsStaggeringEnabled = false });
+        PageHost.Content = page;
         if (isBack) _history.GoBack();
         else if (!force) _history.Visit(tag);
         _syncingNavigation = true;
@@ -313,10 +317,18 @@ public sealed partial class MainWindow : Window
         return true;
     }
 
+    private void UpdateShellLayout()
+    {
+        PanePreferences.Visibility = NavView.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+        // Overlay navigation buttons occupy the top of the content in Minimal mode.
+        PageHost.Margin = new Thickness(0, NavView.DisplayMode == NavigationViewDisplayMode.Minimal ? 48 : 0, 0, 0);
+        UpdatePagePadding();
+    }
+
     private void UpdatePagePadding()
     {
-        if (ContentFrame.Content is not Page page) return;
-        var padding = ContentFrame.ActualWidth < 600 ? new Thickness(16) : new Thickness(28, 24, 28, 28);
+        if (PageHost.Content is not Page page) return;
+        var padding = PageHost.ActualWidth < 600 ? new Thickness(16) : new Thickness(28, 24, 28, 28);
         if (page.Content is Grid grid) grid.Padding = padding;
         else if (page.Content is ScrollViewer scroll) scroll.Padding = padding;
     }

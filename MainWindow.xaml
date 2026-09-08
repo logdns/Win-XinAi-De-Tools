@@ -10,6 +10,7 @@
 
     <NavigationView
         x:Name="NavView"
+        Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
         PaneDisplayMode="Auto"
         IsBackButtonVisible="Visible"
         IsBackEnabled="False"
@@ -92,7 +93,7 @@
         </NavigationView.FooterMenuItems>
 
         <NavigationView.PaneFooter>
-            <StackPanel Margin="8,8,8,12" Spacing="6">
+            <StackPanel x:Name="PanePreferences" Margin="8,8,8,12" Spacing="6">
                 <TextBlock x:Name="ThemeHeader" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 <ComboBox x:Name="ThemeSelector" HorizontalAlignment="Stretch" SelectionChanged="ThemeSelector_SelectionChanged" AutomationProperties.AutomationId="ThemeSelector">
                     <ComboBoxItem x:Name="SystemThemeOption"/>
@@ -109,7 +110,7 @@
         </NavigationView.PaneFooter>
 
         <Grid Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="12,0,0,0">
-            <Frame x:Name="ContentFrame" IsNavigationStackEnabled="False" CacheSize="16"/>
+            <ContentControl x:Name="PageHost" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
         </Grid>
     </NavigationView>
 </Window>

@@ -35,10 +35,10 @@ public sealed partial class MainWindow
                         {
                             NavigateTo(route);
                             await Task.Delay(120);
-                            ContentFrame.UpdateLayout();
+                            PageHost.UpdateLayout();
                             Require(_history.Current == route, $"Wrong route: {route}");
-                            Require(NavView.SelectedItem == (FindNavigationItem(route) ?? MoreItem), $"Wrong selection: {route}");
-                            var page = (Page)ContentFrame.Content;
+                            Require(Equals(NavView.SelectedItem, FindNavigationItem(route) ?? MoreItem), $"Wrong selection: {route}");
+                            var page = (Page)PageHost.Content;
                             Require(page.ActualWidth > 0 && page.ActualHeight > 0, $"Empty page: {route}");
                             Require(page.ActualTheme == (theme == 1 ? ElementTheme.Light : ElementTheme.Dark), $"Wrong theme: {route}");
                             CheckLayout(page);
@@ -60,6 +60,8 @@ public sealed partial class MainWindow
                                     await Task.Delay(100);
                                 page.UpdateLayout();
                                 CheckLayout(page);
+                                if (page.Content is ScrollViewer scroll) scroll.ChangeView(null, 0, null, true);
+                                await Task.Delay(100);
                                 await CaptureAsync($"{route}-{(theme == 1 ? "light" : "dark")}-{size.Width}.png");
                             }
                         }
@@ -77,11 +79,11 @@ public sealed partial class MainWindow
             LanguageSelector.SelectedIndex = 0;
             Require(GoBack() && _history.Current == "NetworkSettings", "Language change altered history");
             NavigateTo("AddPort");
-            var form = (Page)ContentFrame.Content;
+            var form = (Page)PageHost.Content;
             ((TextBox)form.FindName("RuleNameInput")).Text = "unsaved smoke test draft";
             NavigateTo("About");
             Require(GoBack(), "Draft back navigation");
-            Require(((TextBox)((Page)ContentFrame.Content).FindName("RuleNameInput")).Text == "unsaved smoke test draft", "Draft was lost");
+            Require(((TextBox)((Page)PageHost.Content).FindName("RuleNameInput")).Text == "unsaved smoke test draft", "Draft was lost");
             var current = _history.Current;
             NavigateTo("invalid-route");
             Require(_history.Current == current, "Invalid route changed history");

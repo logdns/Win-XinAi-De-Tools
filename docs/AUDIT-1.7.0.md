@@ -12,6 +12,8 @@ Scope: native UI changes, all page layouts and navigation, local UI preference s
 | Explicit app themes could differ from confirmation dialogs | RequestedTheme propagated to destructive-operation dialogs |
 | Repeated close gestures could open concurrent close dialogs | Guard the active close dialog with a finally-reset flag |
 | Unsupported XAML `GoBack` key failed startup despite compiling | Removed that key; retain supported Alt+Left; require actual startup smoke testing |
+| Disabled Frame history also prevented reliable form caching | Explicitly retain the five form page instances in the shell; GUI regression verifies draft content |
+| Compact pane clipped preferences; Minimal mode overlaid page headings | Hide preferences until the pane opens and reserve navigation-button space |
 | New native Skia binaries require redistributable notices | Include upstream MIT license and bundled component notices in all packages |
 | Transitive package audit was not explicitly enabled | NuGetAuditMode=all plus explicit direct/transitive vulnerability report gate |
 | Additional screenshot artifact could accidentally become a release download | Release job downloads only application package artifacts |
