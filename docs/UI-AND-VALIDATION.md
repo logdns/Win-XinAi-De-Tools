@@ -42,7 +42,7 @@ The harness requires `CI=true` and `--ui-smoke` (set by the script). It only vis
 
 Requested native window sizes can be constrained by the runner display; the log records the actual XAML viewport in DIP for every size.
 
-Coverage: 13 pages × 2 languages × 2 explicit themes × 3 window sizes (480 × 640, 800 × 600, 1400 × 900), all four WSL tabs, layout bounds, selected navigation item, history after changing language, draft retention, unknown routes, empty history, and restoring System appearance. CI also validates startup, native window/tray icons, minimize/restore, clean shutdown, Windows Firewall integration, Rust/Go helper builds, NuGet vulnerability data for direct/transitive dependencies, and x86/x64/ARM64 portable and installer builds.
+Coverage: 13 pages × 2 languages × 2 explicit themes × 3 window sizes (480 × 640, 800 × 600, 1400 × 900), all four WSL tabs, layout bounds, selected navigation item, history after changing language, draft retention, unknown routes, empty history, modal-dialog theme/back protection, compact-pane visibility, and restoring System appearance. CI also validates startup, native window/tray icons, minimize/restore, clean shutdown, Windows Firewall integration, Rust/Go helper builds, NuGet vulnerability data for direct/transitive dependencies, and x86/x64/ARM64 portable and installer builds.
 
 The `ui-verification` Actions artifact contains actual dashboard/WSL screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
 

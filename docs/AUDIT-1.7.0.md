@@ -12,8 +12,9 @@ Scope: native UI changes, all page layouts and navigation, local UI preference s
 | Explicit app themes could differ from confirmation dialogs | RequestedTheme propagated to destructive-operation dialogs |
 | Repeated close gestures could open concurrent close dialogs | Guard the active close dialog with a finally-reset flag |
 | Unsupported XAML `GoBack` key failed startup despite compiling | Removed that key; retain supported Alt+Left; require actual startup smoke testing |
-| Disabled Frame history also prevented reliable form caching | Explicitly retain the five form page instances in the shell; GUI regression verifies draft content |
+| Frame cache did not retain drafts in the GUI regression | Explicitly retain the five form page instances in the shell; GUI regression verifies draft content |
 | Compact pane clipped preferences; Minimal mode overlaid page headings | Hide preferences until the pane opens and reserve navigation-button space |
+| UWP accessibility-event registration failed in the unpackaged desktop app | Observe desktop-supported UISettings.ColorValuesChanged; startup and GUI regression passed |
 | New native Skia binaries require redistributable notices | Include upstream MIT license and bundled component notices in all packages |
 | Transitive package audit was not explicitly enabled | NuGetAuditMode=all plus explicit direct/transitive vulnerability report gate |
 | Additional screenshot artifact could accidentally become a release download | Release job downloads only application package artifacts |
@@ -29,6 +30,6 @@ Scope: native UI changes, all page layouts and navigation, local UI preference s
 
 ## Evidence and limits
 
-The initial local .NET run passed 56 tests. The Windows candidate run passed the .NET and firewall integration jobs, dependency gates, and all three compilations; its startup check caught the unsupported key before publication. Final release evidence is the successful workflow linked from the v1.7.0 release and its `ui-verification` artifact, including the packaged Skia-render log, page/layout/navigation checks, and actual screenshots.
+The initial local .NET run passed 56 tests. The Windows candidate run passed the .NET and firewall integration jobs, dependency gates, and all three compilations; its startup check caught the unsupported key before publication. The final code candidate [Windows verification run](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/34215102523) passed startup and all 156 page/theme/language/size combinations, WSL tabs, history, retained drafts, modal-dialog protection, and all three portable builds. Actual viewports on the runner were 464 × 601, 784 × 561, and 1028 × 749 DIP; the requested largest window was limited by the hosted display. Final release evidence is the successful workflow linked from the v1.7.0 release and its `ui-verification` artifact, including the packaged Skia-render log, page/layout/navigation checks, and actual screenshots.
 
 Rust and Go helper test commands are part of CI, but these small helpers currently contain no unit test cases; successful commands validate compilation only. Automated GUI execution is on x64. ARM64/x86 execution, mixed-monitor DPI, large text, Narrator, high contrast, and OS-specific behavior need the manual acceptance matrix in [UI-AND-VALIDATION.md](UI-AND-VALIDATION.md). Package hashes verify download integrity and are not a code-signing certificate.
