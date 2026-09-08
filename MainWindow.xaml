@@ -17,7 +17,7 @@
         IsSettingsVisible="False"
         IsPaneOpen="True"
         CompactModeThresholdWidth="700"
-        ExpandedModeThresholdWidth="1120"
+        ExpandedModeThresholdWidth="1000"
         OpenPaneLength="240"
         CompactPaneLength="48"
         SelectionChanged="NavView_SelectionChanged"

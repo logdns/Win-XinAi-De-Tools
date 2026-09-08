@@ -31,6 +31,7 @@ public sealed partial class MainWindow
                     {
                         _appWindow!.Resize(size);
                         await Task.Delay(150);
+                        App.LogStartup($"UI viewport: requested {size.Width}x{size.Height}, actual {NavView.ActualWidth}x{NavView.ActualHeight} DIP.");
                         foreach (var route in routes)
                         {
                             NavigateTo(route);

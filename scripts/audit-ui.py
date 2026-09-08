@@ -20,16 +20,16 @@ for key in chinese:
 styles = {e.get(X + 'Key') for e in ET.parse(ROOT / 'App.xaml').iter() if e.get(X + 'Key')}
 for path in [ROOT / 'App.xaml', ROOT / 'MainWindow.xaml', *sorted((ROOT / 'Views').glob('*.xaml'))]:
     ET.parse(path)
-    for key in re.findall(r'\{StaticResource ([\w]+)\}', path.read_text()):
+    for key in re.findall(r'\{StaticResource ([\w]+)\}', path.read_text(encoding="utf-8")):
         assert key in chinese or key in styles, f'{path.name}: missing resource {key}'
     if path.with_suffix('.xaml.cs').exists():
-        source = path.with_suffix('.xaml.cs').read_text()
-        for handler in re.findall(r'(?:Click|Loaded|SizeChanged|SelectionChanged|TextChanged|ValueChanged|KeyDown|Invoked)="(\w+)"', path.read_text()):
+        source = path.with_suffix('.xaml.cs').read_text(encoding="utf-8")
+        for handler in re.findall(r'(?:Click|Loaded|SizeChanged|SelectionChanged|TextChanged|ValueChanged|KeyDown|Invoked)="(\w+)"', path.read_text(encoding="utf-8")):
             assert handler in source, f'{path.name}: missing handler {handler}'
 project = ET.parse(ROOT / 'Win-XinAi-De-Tools.csproj').getroot()
 version = project.findtext('PropertyGroup/Version')
 for path in ['README.md', 'README.zh-CN.md', 'installer/Win-XinAi-De-Tools.iss', 'CHANGELOG.md']:
-    assert version in (ROOT / path).read_text(), f'{path}: missing current version'
+    assert version in (ROOT / path).read_text(encoding="utf-8"), f'{path}: missing current version'
 assert version in chinese['About_Version'] and version in english['About_Version']
 manifest = ET.parse(ROOT / 'Package.appxmanifest').getroot()
 assert list(manifest)[0].get('Version') == version + '.0'

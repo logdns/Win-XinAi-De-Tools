@@ -50,7 +50,11 @@ public sealed class RuleDistributionChart : UserControl
 
     private void RootChanged(XamlRoot sender, XamlRootChangedEventArgs args) => Render();
 
-    private void HighContrastChanged(AccessibilitySettings sender, object args) => DispatcherQueue.TryEnqueue(Render);
+    private void HighContrastChanged(AccessibilitySettings sender, object args) => DispatcherQueue.TryEnqueue(() =>
+    {
+        _renderKey = null;
+        Render();
+    });
 
     private void Render()
     {
