@@ -9,3 +9,9 @@ The application references Microsoft.WindowsAppSDK, Microsoft.Windows.SDK.BuildT
 The WSL page is an independent native WinUI implementation that invokes Windows `wsl.exe`. No third-party WSL dashboard source or assets are bundled.
 
 WSL 页面是调用 Windows `wsl.exe` 的独立原生 WinUI 实现，本项目不捆绑第三方 WSL 仪表板源代码或资源。
+
+## SkiaSharp and Skia
+
+The dashboard chart uses SkiaSharp 3.119.4 and SkiaSharp.NativeAssets.Win32 3.119.4. SkiaSharp is MIT licensed; Skia and its bundled components retain their respective licenses. Unmodified upstream license and third-party notice files from the native NuGet package are included in [licenses/](licenses/) and copied into portable and installer distributions.
+
+概览图使用 SkiaSharp 与 Windows 原生库。上游许可和第三方声明原文保存在 `licenses/`，并随免安装及安装包分发。

@@ -26,7 +26,6 @@
 
         <NavigationView.KeyboardAccelerators>
             <KeyboardAccelerator Key="Left" Modifiers="Menu" Invoked="BackAccelerator_Invoked"/>
-            <KeyboardAccelerator Key="GoBack" Invoked="BackAccelerator_Invoked"/>
         </NavigationView.KeyboardAccelerators>
         <NavigationView.PaneHeader>
             <StackPanel Orientation="Horizontal" Spacing="10" Margin="4,8,0,12">

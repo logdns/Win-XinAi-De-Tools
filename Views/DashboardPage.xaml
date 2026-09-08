@@ -11,31 +11,24 @@
                     <Button Content="{StaticResource Common_Retry}" Click="RetryButton_Click"/>
                 </InfoBar.ActionButton>
             </InfoBar>
-            <Border Style="{StaticResource CardPanel}">
-                <StackPanel Spacing="12">
-                    <controls:RuleDistributionChart x:Name="DistributionChart" Height="160" HorizontalAlignment="Stretch" AutomationProperties.AccessibilityView="Raw"/>
-                    <TextBlock Text="{StaticResource Dashboard_Distribution}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
-                    <TextBlock x:Name="DistributionSummary" Text="{StaticResource Dashboard_Loading}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
-                </StackPanel>
-            </Border>
-            <Border Style="{StaticResource CardPanel}">
-                <Grid ColumnSpacing="16" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
+            <Border Style="{StaticResource CardPanel}" Background="{ThemeResource HeroBackgroundBrush}" BorderBrush="{ThemeResource HeroBorderBrush}">
+                <Grid ColumnSpacing="24" RowSpacing="16" controls:AdaptiveLayout.CompactBelow="520">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="200"/>
                     </Grid.ColumnDefinitions>
-                    <Border Width="48" Height="48" CornerRadius="6" Background="{ThemeResource AccentFillColorDefaultBrush}">
-                        <FontIcon Glyph="" FontSize="22" Foreground="White"/>
-                    </Border>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                        <TextBlock Text="{StaticResource Dashboard_RuleCount}" FontWeight="SemiBold" TextWrapping="Wrap"/>
-                        <TextBlock x:Name="FirewallStatusText" Text="{StaticResource Dashboard_Loading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                    <StackPanel Spacing="10" VerticalAlignment="Center">
+                        <TextBlock Text="{StaticResource Dashboard_RuleCount}" Style="{StaticResource SectionTitle}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock x:Name="RuleCount" Text="--" FontSize="44" FontWeight="SemiBold"/>
+                            <ProgressRing x:Name="LoadingRing" Width="22" Height="22" IsActive="True"/>
+                        </StackPanel>
+                        <TextBlock x:Name="FirewallStatusText" Text="{StaticResource Dashboard_Loading}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{StaticResource Dashboard_Distribution}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="DistributionSummary" Text="{StaticResource Dashboard_Loading}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+                        <Button Content="{StaticResource Common_Refresh}" Click="RetryButton_Click" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                        <ProgressRing x:Name="LoadingRing" Width="22" Height="22" IsActive="True"/>
-                        <TextBlock x:Name="RuleCount" Text="--" FontSize="32" FontWeight="SemiBold" TextWrapping="Wrap"/>
-                    </StackPanel>
+                    <controls:RuleDistributionChart x:Name="DistributionChart" Grid.Column="1" Height="180" HorizontalAlignment="Stretch" AutomationProperties.AccessibilityView="Raw"/>
                 </Grid>
             </Border>
             <StackPanel Spacing="12">

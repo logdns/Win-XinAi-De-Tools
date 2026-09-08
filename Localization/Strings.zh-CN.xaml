@@ -290,7 +290,7 @@
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
-    <x:String x:Key="About_FrameworkText">Microsoft WinUI 3 · Windows Community Toolkit · .NET 8 · 可选 Rust 和 Go WSL 桥接组件</x:String>
+    <x:String x:Key="About_FrameworkText">Microsoft WinUI 3 · Windows Community Toolkit · SkiaSharp · .NET 8 · 可选 Rust 和 Go WSL 桥接组件</x:String>
     <x:String x:Key="About_Admin">管理员权限</x:String>
     <x:String x:Key="About_AdminText">修改 Windows 防火墙规则需要管理员权限。</x:String>
     <x:String x:Key="Theme_Header">外观</x:String>

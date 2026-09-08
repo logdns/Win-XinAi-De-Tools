@@ -50,6 +50,11 @@
     <None Update="Assets\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="licenses\**;LICENSE;THIRD-PARTY-NOTICES.md"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <!-- Localization dictionaries are loaded by ms-appx URI in unpackaged builds. -->
   <ItemGroup>
     <Page Remove="Localization\**\*.xaml" />

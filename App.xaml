@@ -11,6 +11,21 @@
                 <ResourceDictionary Source="ms-appx:///Localization/Strings.zh-CN.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="HeroBackgroundBrush" Color="#EAF2FF"/>
+                    <SolidColorBrush x:Key="HeroBorderBrush" Color="#CBDDF7"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="HeroBackgroundBrush" Color="#17273F"/>
+                    <SolidColorBrush x:Key="HeroBorderBrush" Color="#294364"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="HeroBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}"/>
+                    <SolidColorBrush x:Key="HeroBorderBrush" Color="{ThemeResource SystemColorWindowTextColor}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <!-- 全局样式：卡片容器 -->
             <Style x:Key="CardPanel" TargetType="Border">
                 <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>

@@ -290,7 +290,7 @@
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>
-    <x:String x:Key="About_FrameworkText">Microsoft WinUI 3 · Windows Community Toolkit · .NET 8 · optional Rust and Go WSL bridges</x:String>
+    <x:String x:Key="About_FrameworkText">Microsoft WinUI 3 · Windows Community Toolkit · SkiaSharp · .NET 8 · optional Rust and Go WSL bridges</x:String>
     <x:String x:Key="About_Admin">Administrator access</x:String>
     <x:String x:Key="About_AdminText">Changing Windows Firewall rules requires administrator privileges.</x:String>
     <x:String x:Key="Theme_Header">Appearance</x:String>
