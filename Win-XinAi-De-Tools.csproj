@@ -19,15 +19,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <SatelliteResourceLanguages>en-US;zh-CN;zh-Hans</SatelliteResourceLanguages>
     <LangVersion>latest</LangVersion>
-    <Version>1.6.2</Version>
-    <AssemblyVersion>1.6.2.0</AssemblyVersion>
-    <FileVersion>1.6.2.0</FileVersion>
+    <Version>1.7.0</Version>
+    <AssemblyVersion>1.7.0.0</AssemblyVersion>
+    <FileVersion>1.7.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260804001" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.9169" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

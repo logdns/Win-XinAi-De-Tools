@@ -1,11 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page
-    x:Class="PortManager.Views.DeleteRulePage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:models="using:PortManager.Models"
-    Loaded="Page_Loaded">
-
+<?xml version='1.0' encoding='utf-8'?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:models="using:PortManager.Models" xmlns:controls="using:PortManager.Controls" x:Class="PortManager.Views.DeleteRulePage" Loaded="Page_Loaded">
     <Grid Padding="32,28" RowSpacing="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,16 +7,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <StackPanel>
-            <TextBlock Text="{StaticResource Delete_Title}" Style="{StaticResource PageTitle}"/>
-            <TextBlock Text="{StaticResource Delete_Subtitle}" Style="{StaticResource PageSubtitle}"/>
+            <TextBlock Text="{StaticResource Delete_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
+            <TextBlock Text="{StaticResource Delete_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
         </StackPanel>
-
         <InfoBar x:Name="StatusBar" Grid.Row="1" IsOpen="False" IsClosable="True"/>
-
         <Border Grid.Row="2" Style="{StaticResource CardPanel}" Padding="16">
-            <Grid ColumnSpacing="10">
+            <Grid ColumnSpacing="10" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MaxWidth="440"/>
                     <ColumnDefinition Width="Auto"/>
@@ -31,16 +22,18 @@
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="ManualNameInput" PlaceholderText="{StaticResource Delete_ManualPlaceholder}"/>
                 <Button x:Name="DeleteManualButton" Grid.Column="1" Click="DeleteManual_Click">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xE74D;"/>
-                        <TextBlock Text="{StaticResource Common_Delete}"/>
-                    </StackPanel>
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="" Grid.Column="0"/>
+                        <TextBlock Text="{StaticResource Common_Delete}" Grid.Column="1" TextWrapping="Wrap"/>
+                    </Grid>
                 </Button>
-                <ProgressRing x:Name="LoadingRing" Grid.Column="3" Width="20" Height="20"
-                              IsActive="False" VerticalAlignment="Center"/>
+                <ProgressRing x:Name="LoadingRing" Grid.Column="3" Width="20" Height="20" IsActive="False" VerticalAlignment="Center"/>
             </Grid>
         </Border>
-
         <ListView Grid.Row="3" x:Name="RulesList" SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -52,7 +45,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:FirewallRule">
                     <Border Style="{StaticResource CardPanel}" Padding="16,12">
-                        <Grid ColumnSpacing="14">
+                        <Grid ColumnSpacing="14" controls:AdaptiveLayout.CompactBelow="680" RowSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -60,29 +53,21 @@
                                 <ColumnDefinition Width="80"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" VerticalAlignment="Center"
-                                       TextTrimming="CharacterEllipsis"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind DirectionDisplay}" VerticalAlignment="Center"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Grid.Column="2" Text="{x:Bind ProtocolDisplay}" VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="3" Text="{x:Bind PortDisplay}" VerticalAlignment="Center"
-                                       HorizontalAlignment="Right" FontWeight="SemiBold"/>
-                            <Button Grid.Column="4" Width="36" Height="32" Padding="0"
-                                    Click="DeleteItem_Click" Tag="{x:Bind Name}"
-                                    ToolTipService.ToolTip="{StaticResource Common_Delete}">
-                                <FontIcon Glyph="&#xE74D;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind Name}"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind DirectionDisplay}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Column="2" Text="{x:Bind ProtocolDisplay}" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Column="3" Text="{x:Bind PortDisplay}" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            <Button Grid.Column="4" Width="36" Height="32" Padding="0" Click="DeleteItem_Click" Tag="{x:Bind Name}" ToolTipService.ToolTip="{StaticResource Common_Delete}" AutomationProperties.Name="{StaticResource Common_Delete}">
+                                <FontIcon Glyph="" FontSize="14"/>
                             </Button>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-        <StackPanel x:Name="EmptyState" Grid.Row="3" Visibility="Collapsed"
-                    HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-            <FontIcon Glyph="&#xE74D;" FontSize="36" Opacity="0.35"/>
-            <TextBlock Text="{StaticResource Delete_Empty}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <StackPanel x:Name="EmptyState" Grid.Row="3" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+            <FontIcon Glyph="" FontSize="36" Opacity="0.35"/>
+            <TextBlock Text="{StaticResource Delete_Empty}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
         </StackPanel>
     </Grid>
 </Page>

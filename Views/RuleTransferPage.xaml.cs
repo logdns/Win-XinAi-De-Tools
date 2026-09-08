@@ -54,7 +54,7 @@ public sealed partial class RuleTransferPage : Page
             var document = RuleTransferService.Parse(await File.ReadAllTextAsync(path));
             var dialog = new ContentDialog
             {
-                XamlRoot = XamlRoot,
+                XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
                 Title = App.Text("Transfer_ConfirmImportTitle"),
                 Content = string.Format(App.Text("Transfer_ConfirmImportFormat"), Path.GetFileName(path), document.Rules.Count),
                 PrimaryButtonText = App.Text("Common_Confirm"),

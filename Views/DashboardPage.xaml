@@ -1,88 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page
-    x:Class="PortManager.Views.DashboardPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
-    Loaded="Page_Loaded">
-
+<?xml version='1.0' encoding='utf-8'?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="using:PortManager.Controls" xmlns:toolkit="using:CommunityToolkit.WinUI.Controls" x:Class="PortManager.Views.DashboardPage" Loaded="Page_Loaded">
     <ScrollViewer Padding="32,28" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
         <StackPanel MaxWidth="960" HorizontalAlignment="Stretch" Spacing="24">
             <StackPanel>
-                <TextBlock Text="{StaticResource Dashboard_Title}" Style="{StaticResource PageTitle}"/>
-                <TextBlock Text="{StaticResource Dashboard_Subtitle}" Style="{StaticResource PageSubtitle}"/>
+                <TextBlock Text="{StaticResource Dashboard_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
+                <TextBlock Text="{StaticResource Dashboard_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
             </StackPanel>
-
-            <InfoBar x:Name="ErrorBar" IsOpen="False" Severity="Error"
-                     Title="{StaticResource Common_FirewallError}"
-                     Message="{StaticResource Common_FirewallErrorDetail}">
+            <InfoBar x:Name="ErrorBar" IsOpen="False" Severity="Error" Title="{StaticResource Common_FirewallError}" Message="{StaticResource Common_FirewallErrorDetail}">
                 <InfoBar.ActionButton>
                     <Button Content="{StaticResource Common_Retry}" Click="RetryButton_Click"/>
                 </InfoBar.ActionButton>
             </InfoBar>
-
             <Border Style="{StaticResource CardPanel}">
-                <Grid ColumnSpacing="16">
+                <StackPanel Spacing="12">
+                    <controls:RuleDistributionChart x:Name="DistributionChart" Height="160" HorizontalAlignment="Stretch" AutomationProperties.AccessibilityView="Raw"/>
+                    <TextBlock Text="{StaticResource Dashboard_Distribution}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="DistributionSummary" Text="{StaticResource Dashboard_Loading}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource CardPanel}">
+                <Grid ColumnSpacing="16" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Border Width="48" Height="48" CornerRadius="6"
-                            Background="{ThemeResource AccentFillColorDefaultBrush}">
-                        <FontIcon Glyph="&#xE83D;" FontSize="22" Foreground="White"/>
+                    <Border Width="48" Height="48" CornerRadius="6" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                        <FontIcon Glyph="" FontSize="22" Foreground="White"/>
                     </Border>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                        <TextBlock Text="{StaticResource Dashboard_RuleCount}" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="FirewallStatusText" Text="{StaticResource Dashboard_Loading}"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{StaticResource Dashboard_RuleCount}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="FirewallStatusText" Text="{StaticResource Dashboard_Loading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
                         <ProgressRing x:Name="LoadingRing" Width="22" Height="22" IsActive="True"/>
-                        <TextBlock x:Name="RuleCount" Text="--" FontSize="32" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="RuleCount" Text="--" FontSize="32" FontWeight="SemiBold" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Grid>
             </Border>
-
             <StackPanel Spacing="12">
-                <TextBlock Text="{StaticResource Dashboard_QuickActions}" Style="{StaticResource SectionTitle}"/>
-                <Grid ColumnSpacing="12">
+                <TextBlock Text="{StaticResource Dashboard_QuickActions}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                <Grid ColumnSpacing="12" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                            Padding="16,12" Click="AddPort_Click">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="&#xE710;"/>
-                            <TextBlock Text="{StaticResource Dashboard_Add}"/>
-                        </StackPanel>
+                    <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="16,12" Click="AddPort_Click">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="" Grid.Column="0"/>
+                            <TextBlock Text="{StaticResource Dashboard_Add}" Grid.Column="1" TextWrapping="Wrap"/>
+                        </Grid>
                     </Button>
-                    <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                            Padding="16,12" Click="ListRules_Click">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="&#xE8FD;"/>
-                            <TextBlock Text="{StaticResource Dashboard_View}"/>
-                        </StackPanel>
+                    <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="16,12" Click="ListRules_Click">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="" Grid.Column="0"/>
+                            <TextBlock Text="{StaticResource Dashboard_View}" Grid.Column="1" TextWrapping="Wrap"/>
+                        </Grid>
                     </Button>
-                    <Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                            Padding="16,12" Click="PortStatus_Click">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="&#xE721;"/>
-                            <TextBlock Text="{StaticResource Dashboard_Query}"/>
-                        </StackPanel>
+                    <Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="16,12" Click="PortStatus_Click">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="" Grid.Column="0"/>
+                            <TextBlock Text="{StaticResource Dashboard_Query}" Grid.Column="1" TextWrapping="Wrap"/>
+                        </Grid>
                     </Button>
                 </Grid>
             </StackPanel>
-
             <StackPanel Spacing="12">
-                <TextBlock Text="{StaticResource Dashboard_Extensions}" Style="{StaticResource SectionTitle}"/>
-                <toolkit:SettingsCard Header="{StaticResource Nav_More}"
-                                      Description="{StaticResource Dashboard_ExtensionsDescription}"
-                                      IsClickEnabled="True" Click="MoreFeatures_Click">
+                <TextBlock Text="{StaticResource Dashboard_Extensions}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                <toolkit:SettingsCard Header="{StaticResource Nav_More}" Description="{StaticResource Dashboard_ExtensionsDescription}" IsClickEnabled="True" Click="MoreFeatures_Click">
                     <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE72A;"/>
+                        <FontIcon Glyph=""/>
                     </toolkit:SettingsCard.HeaderIcon>
                 </toolkit:SettingsCard>
             </StackPanel>

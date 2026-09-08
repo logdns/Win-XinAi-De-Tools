@@ -1,201 +1,369 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page x:Class="PortManager.Views.WslDashboardPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Loaded="Page_Loaded"
-      SizeChanged="Page_SizeChanged">
-    <Grid x:Name="RootGrid" Padding="28,24,28,28" RowSpacing="14">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/><RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <StackPanel Spacing="4">
-            <TextBlock Text="{StaticResource Wsl_Title}" Style="{StaticResource PageTitle}"/>
-            <TextBlock Text="{StaticResource Wsl_Subtitle}" Style="{StaticResource PageSubtitle}"/>
-        </StackPanel>
-
-        <Border x:Name="SetupPanel" Grid.Row="1" Style="{StaticResource CardPanel}" Visibility="Collapsed">
-            <Grid x:Name="SetupGrid" ColumnSpacing="16" RowSpacing="12">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition x:Name="SetupActionColumn" Width="Auto"/></Grid.ColumnDefinitions>
-                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition x:Name="SetupActionRow" Height="0"/></Grid.RowDefinitions>
-                <StackPanel Spacing="4">
-                    <TextBlock x:Name="SetupTitle" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
-                    <TextBlock x:Name="SetupMessage" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                </StackPanel>
-                <StackPanel x:Name="SetupButtons" Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <Button x:Name="InstallButton" Click="InstallButton_Click">
-                        <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE896;"/><TextBlock Text="{StaticResource Wsl_Install}"/></StackPanel>
-                    </Button>
-                    <Button x:Name="InstallDistributionButton" Click="InstallDistributionButton_Click">
-                        <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE710;"/><TextBlock Text="{StaticResource Wsl_InstallDistribution}"/></StackPanel>
-                    </Button>
-                    <Button x:Name="HelpButton" Click="HelpButton_Click">
-                        <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE897;"/><TextBlock Text="{StaticResource Wsl_OpenInstallHelp}"/></StackPanel>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <InfoBar x:Name="OperationBar" Grid.Row="2" IsOpen="False" IsClosable="True"/>
-
-        <Grid x:Name="WorkspaceGrid" Grid.Row="3" ColumnSpacing="14" RowSpacing="14">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="DistributionColumn" Width="280"/>
-                <ColumnDefinition x:Name="DetailsColumn" Width="*"/>
-            </Grid.ColumnDefinitions>
+<?xml version='1.0' encoding='utf-8'?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="using:PortManager.Controls" x:Class="PortManager.Views.WslDashboardPage" Loaded="Page_Loaded" SizeChanged="Page_SizeChanged">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+        <Grid x:Name="RootGrid" Padding="28,24,28,28" RowSpacing="14">
             <Grid.RowDefinitions>
-                <RowDefinition x:Name="DistributionRow" Height="*"/>
-                <RowDefinition x:Name="DetailsRow" Height="0"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <Border x:Name="DistributionCard" Style="{StaticResource CardPanel}">
-                <Grid RowSpacing="10">
+            <StackPanel Spacing="4">
+                <TextBlock Text="{StaticResource Wsl_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
+                <TextBlock Text="{StaticResource Wsl_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
+            </StackPanel>
+            <Border x:Name="SetupPanel" Grid.Row="1" Style="{StaticResource CardPanel}" Visibility="Collapsed">
+                <Grid x:Name="SetupGrid" ColumnSpacing="16" RowSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition x:Name="SetupActionColumn" Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition x:Name="SetupActionRow" Height="0"/>
                     </Grid.RowDefinitions>
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Text="{StaticResource Wsl_Distributions}" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
-                        <Button x:Name="RefreshButton" Grid.Column="1" Click="RefreshButton_Click" ToolTipService.ToolTip="{StaticResource Wsl_Refresh}"><FontIcon Glyph="&#xE72C;"/></Button>
-                    </Grid>
-                    <TextBlock x:Name="StatusText" Grid.Row="1" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    <ListView x:Name="DistributionList" Grid.Row="2" SelectionChanged="DistributionList_SelectionChanged" MinHeight="80" MaxHeight="320">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Spacing="2" Padding="2,4">
-                                    <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold"/>
-                                    <TextBlock Text="{Binding StateLabel}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <TextBlock x:Name="EmptyText" Grid.Row="3" Text="{StaticResource Wsl_Empty}" Visibility="Collapsed" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    <StackPanel Grid.Row="4" Spacing="8" Margin="0,8,0,0">
-                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,4"/>
-                        <TextBlock Text="{StaticResource Wsl_AddDistribution}" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Text="{StaticResource Wsl_AddDistributionHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <Button x:Name="InstallAnotherDistributionButton" HorizontalAlignment="Stretch" Click="InstallAnotherDistributionButton_Click">
-                            <StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE710;"/><TextBlock Text="{StaticResource Wsl_InstallOtherDistribution}"/></StackPanel>
-                        </Button>
-                        <Button HorizontalAlignment="Stretch" Click="OpenImportButton_Click">
-                            <StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE8B5;"/><TextBlock Text="{StaticResource Wsl_ImportExistingDistribution}"/></StackPanel>
-                        </Button>
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="SetupTitle" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="SetupMessage" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
+                    <controls:WrapPanel x:Name="SetupButtons" Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                        <Button x:Name="InstallButton" Click="InstallButton_Click">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Wsl_Install}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
+                        <Button x:Name="InstallDistributionButton" Click="InstallDistributionButton_Click">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Wsl_InstallDistribution}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
+                        <Button x:Name="HelpButton" Click="HelpButton_Click">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Wsl_OpenInstallHelp}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
+                    </controls:WrapPanel>
                 </Grid>
             </Border>
-
-            <Border x:Name="DetailsCard" Grid.Column="1" Style="{StaticResource CardPanel}">
-                <Grid RowSpacing="10">
-                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-                    <Grid ColumnSpacing="10">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <StackPanel Spacing="3">
-                            <TextBlock Text="{StaticResource Wsl_Actions}" Style="{StaticResource SectionTitle}"/>
-                            <TextBlock x:Name="SelectedText" Text="{StaticResource Wsl_Select}" TextWrapping="Wrap"/>
+            <InfoBar x:Name="OperationBar" Grid.Row="2" IsOpen="False" IsClosable="True"/>
+            <Grid x:Name="WorkspaceGrid" Grid.Row="3" ColumnSpacing="14" RowSpacing="14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="DistributionColumn" Width="280"/>
+                    <ColumnDefinition x:Name="DetailsColumn" Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="DistributionRow" Height="*"/>
+                    <RowDefinition x:Name="DetailsRow" Height="0"/>
+                </Grid.RowDefinitions>
+                <Border x:Name="DistributionCard" Style="{StaticResource CardPanel}">
+                    <Grid RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid ColumnSpacing="8" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{StaticResource Wsl_Distributions}" Style="{StaticResource SectionTitle}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                            <Button x:Name="RefreshButton" Grid.Column="1" Click="RefreshButton_Click" ToolTipService.ToolTip="{StaticResource Wsl_Refresh}" AutomationProperties.Name="{StaticResource Wsl_Refresh}">
+                                <FontIcon Glyph=""/>
+                            </Button>
+                        </Grid>
+                        <TextBlock x:Name="StatusText" Grid.Row="1" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <ListView x:Name="DistributionList" Grid.Row="2" SelectionChanged="DistributionList_SelectionChanged" MinHeight="80" MaxHeight="320">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Spacing="2" Padding="2,4">
+                                        <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding StateLabel}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <TextBlock x:Name="EmptyText" Grid.Row="3" Text="{StaticResource Wsl_Empty}" Visibility="Collapsed" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <StackPanel Grid.Row="4" Spacing="8" Margin="0,8,0,0">
+                            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="{StaticResource Wsl_AddDistribution}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                            <TextBlock Text="{StaticResource Wsl_AddDistributionHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <Button x:Name="InstallAnotherDistributionButton" HorizontalAlignment="Stretch" Click="InstallAnotherDistributionButton_Click">
+                                <Grid ColumnSpacing="7">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                    <TextBlock Text="{StaticResource Wsl_InstallOtherDistribution}" Grid.Column="1" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
+                            <Button HorizontalAlignment="Stretch" Click="OpenImportButton_Click">
+                                <Grid ColumnSpacing="7">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                    <TextBlock Text="{StaticResource Wsl_ImportExistingDistribution}" Grid.Column="1" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Button>
                         </StackPanel>
-                        <ProgressRing x:Name="LoadingRing" Grid.Column="1" Width="20" Height="20" IsActive="False" VerticalAlignment="Center"/>
                     </Grid>
-
-                    <TabView x:Name="ManagementTabs" Grid.Row="1" IsAddTabButtonVisible="False">
-                        <TabViewItem Header="{StaticResource Wsl_TabOverview}" IsClosable="False">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                <StackPanel Spacing="12" Padding="0,10,8,10">
-                                    <Grid x:Name="ActionGrid" ColumnSpacing="8" RowSpacing="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
-                                            <ColumnDefinition x:Name="ActionColumnThree" Width="*"/><ColumnDefinition x:Name="ActionColumnFour" Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                                        <Button x:Name="StartButton" HorizontalAlignment="Stretch" Click="StartButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE768;"/><TextBlock Text="{StaticResource Wsl_Start}"/></StackPanel></Button>
-                                        <Button x:Name="StopButton" Grid.Column="1" HorizontalAlignment="Stretch" Click="StopButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE71A;"/><TextBlock Text="{StaticResource Wsl_Stop}"/></StackPanel></Button>
-                                        <Button x:Name="DefaultButton" Grid.Column="2" HorizontalAlignment="Stretch" Click="DefaultButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE734;"/><TextBlock Text="{StaticResource Wsl_SetDefault}"/></StackPanel></Button>
-                                        <Button x:Name="TerminalButton" Grid.Column="3" HorizontalAlignment="Stretch" Click="TerminalButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE756;"/><TextBlock Text="{StaticResource Wsl_OpenTerminal}"/></StackPanel></Button>
-                                        <Button x:Name="ExplorerButton" Grid.Row="1" HorizontalAlignment="Stretch" Click="ExplorerButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE8B7;"/><TextBlock Text="{StaticResource Wsl_OpenExplorer}"/></StackPanel></Button>
-                                        <Button x:Name="VsCodeButton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Click="VsCodeButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE943;"/><TextBlock Text="{StaticResource Wsl_OpenVsCode}"/></StackPanel></Button>
-                                        <Button x:Name="DiskUsageButton" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Click="DiskUsageButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE958;"/><TextBlock Text="{StaticResource Wsl_DiskUsage}"/></StackPanel></Button>
-                                        <Button x:Name="UnregisterButton" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" Click="UnregisterButton_Click"><StackPanel Orientation="Horizontal" Spacing="7"><FontIcon Glyph="&#xE74D;"/><TextBlock Text="{StaticResource Wsl_Unregister}"/></StackPanel></Button>
-                                    </Grid>
-                                    <TextBlock x:Name="DiskUsageText" TextWrapping="Wrap" FontFamily="Consolas" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </TabViewItem>
-
-                        <TabViewItem Header="{StaticResource Wsl_TabSettings}" IsClosable="False">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                <StackPanel Spacing="12" Padding="0,10,8,10">
-                                    <TextBlock Text="{StaticResource Wsl_Settings}" Style="{StaticResource SectionTitle}"/>
-                                    <TextBlock x:Name="VersionText" Text="{StaticResource Wsl_VersionUnavailable}" TextWrapping="Wrap" FontFamily="Consolas" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <Button x:Name="UpdateButton" Click="UpdateButton_Click"><TextBlock Text="{StaticResource Wsl_Update}"/></Button>
-                                        <Button x:Name="ShutdownButton" Click="ShutdownButton_Click"><TextBlock Text="{StaticResource Wsl_ShutdownAll}"/></Button>
+                </Border>
+                <Border x:Name="DetailsCard" Grid.Column="1" Style="{StaticResource CardPanel}">
+                    <Grid RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid ColumnSpacing="10" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="{StaticResource Wsl_Actions}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="SelectedText" Text="{StaticResource Wsl_Select}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <ProgressRing x:Name="LoadingRing" Grid.Column="1" Width="20" Height="20" IsActive="False" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TabView x:Name="ManagementTabs" Grid.Row="1" IsAddTabButtonVisible="False">
+                            <TabViewItem Header="{StaticResource Wsl_TabOverview}" IsClosable="False">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Spacing="12" Padding="0,10,8,10">
+                                        <controls:WrapPanel x:Name="ActionGrid" Spacing="8">
+                                            <Button x:Name="StartButton" HorizontalAlignment="Stretch" Click="StartButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_Start}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="StopButton" HorizontalAlignment="Stretch" Click="StopButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_Stop}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="DefaultButton" HorizontalAlignment="Stretch" Click="DefaultButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_SetDefault}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="TerminalButton" HorizontalAlignment="Stretch" Click="TerminalButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_OpenTerminal}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="ExplorerButton" HorizontalAlignment="Stretch" Click="ExplorerButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_OpenExplorer}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="VsCodeButton" HorizontalAlignment="Stretch" Click="VsCodeButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_OpenVsCode}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="DiskUsageButton" HorizontalAlignment="Stretch" Click="DiskUsageButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_DiskUsage}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                            <Button x:Name="UnregisterButton" HorizontalAlignment="Stretch" Click="UnregisterButton_Click">
+                                                <Grid ColumnSpacing="7">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Glyph="" Grid.Column="0"/>
+                                                    <TextBlock Text="{StaticResource Wsl_Unregister}" Grid.Column="1" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Button>
+                                        </controls:WrapPanel>
+                                        <TextBlock x:Name="DiskUsageText" TextWrapping="Wrap" FontFamily="Consolas" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     </StackPanel>
-                                    <CheckBox x:Name="AutostartCheckBox" Content="{StaticResource Wsl_Autostart}" Click="AutostartCheckBox_Click" ToolTipService.ToolTip="{StaticResource Wsl_AutostartHelp}"/>
-                                    <CheckBox x:Name="ShutdownOnExitCheckBox" Content="{StaticResource Wsl_ShutdownOnExit}" Click="ShutdownOnExitCheckBox_Click" ToolTipService.ToolTip="{StaticResource Wsl_ShutdownOnExitHelp}"/>
-                                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
-                                    <TextBlock Text="{StaticResource Wsl_TaskScheduler}" Style="{StaticResource SectionTitle}"/>
-                                    <TextBlock Text="{StaticResource Wsl_TaskHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBox x:Name="TaskNameBox" Header="{StaticResource Wsl_TaskName}" PlaceholderText="{StaticResource Wsl_TaskNamePlaceholder}"/>
-                                    <TextBox x:Name="TaskCommandBox" Header="{StaticResource Wsl_TaskCommand}" PlaceholderText="/usr/local/bin/backup.sh"/>
-                                    <Grid ColumnSpacing="8">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                                        <TextBox x:Name="TaskStartTimeBox" Header="{StaticResource Wsl_TaskTime}" PlaceholderText="23:00"/>
-                                        <ComboBox x:Name="TaskScheduleSelector" Grid.Column="1" Header="{StaticResource Wsl_TaskFrequency}" SelectedIndex="0" HorizontalAlignment="Stretch"><ComboBoxItem Content="DAILY"/><ComboBoxItem Content="WEEKLY"/><ComboBoxItem Content="ONCE"/></ComboBox>
-                                    </Grid>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <Button Click="ScheduleButton_Click"><TextBlock Text="{StaticResource Wsl_Schedule}"/></Button>
-                                        <Button Click="RemoveScheduleButton_Click"><TextBlock Text="{StaticResource Wsl_RemoveSchedule}"/></Button>
+                                </ScrollViewer>
+                            </TabViewItem>
+                            <TabViewItem Header="{StaticResource Wsl_TabSettings}" IsClosable="False">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Spacing="12" Padding="0,10,8,10">
+                                        <TextBlock Text="{StaticResource Wsl_Settings}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                        <TextBlock x:Name="VersionText" Text="{StaticResource Wsl_VersionUnavailable}" TextWrapping="Wrap" FontFamily="Consolas" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <controls:WrapPanel Spacing="8">
+                                            <Button x:Name="UpdateButton" Click="UpdateButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_Update}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button x:Name="ShutdownButton" Click="ShutdownButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_ShutdownAll}" TextWrapping="Wrap"/>
+                                            </Button>
+                                        </controls:WrapPanel>
+                                        <CheckBox x:Name="AutostartCheckBox" Content="{StaticResource Wsl_Autostart}" Click="AutostartCheckBox_Click" ToolTipService.ToolTip="{StaticResource Wsl_AutostartHelp}"/>
+                                        <CheckBox x:Name="ShutdownOnExitCheckBox" Content="{StaticResource Wsl_ShutdownOnExit}" Click="ShutdownOnExitCheckBox_Click" ToolTipService.ToolTip="{StaticResource Wsl_ShutdownOnExitHelp}"/>
+                                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
+                                        <TextBlock Text="{StaticResource Wsl_TaskScheduler}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{StaticResource Wsl_TaskHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBox x:Name="TaskNameBox" Header="{StaticResource Wsl_TaskName}" PlaceholderText="{StaticResource Wsl_TaskNamePlaceholder}"/>
+                                        <TextBox x:Name="TaskCommandBox" Header="{StaticResource Wsl_TaskCommand}" PlaceholderText="/usr/local/bin/backup.sh"/>
+                                        <Grid ColumnSpacing="8" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="TaskStartTimeBox" Header="{StaticResource Wsl_TaskTime}" PlaceholderText="23:00"/>
+                                            <ComboBox x:Name="TaskScheduleSelector" Grid.Column="1" Header="{StaticResource Wsl_TaskFrequency}" SelectedIndex="0" HorizontalAlignment="Stretch">
+                                                <ComboBoxItem Content="DAILY"/>
+                                                <ComboBoxItem Content="WEEKLY"/>
+                                                <ComboBoxItem Content="ONCE"/>
+                                            </ComboBox>
+                                        </Grid>
+                                        <controls:WrapPanel Spacing="8">
+                                            <Button Click="ScheduleButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_Schedule}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="RemoveScheduleButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_RemoveSchedule}" TextWrapping="Wrap"/>
+                                            </Button>
+                                        </controls:WrapPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </TabViewItem>
-
-                        <TabViewItem Header="{StaticResource Wsl_TabStorage}" IsClosable="False">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                <StackPanel Spacing="12" Padding="0,10,8,10">
-                                    <TextBlock Text="{StaticResource Wsl_Backup}" Style="{StaticResource SectionTitle}"/>
-                                    <TextBlock Text="{StaticResource Wsl_BackupHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBox x:Name="ImportNameBox" Header="{StaticResource Wsl_ImportName}" PlaceholderText="MyLinux"/>
-                                    <TextBox x:Name="ArchivePathBox" Header="{StaticResource Wsl_ArchivePath}" PlaceholderText="C:\Backups\distro.tar"/>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><Button Click="ExportButton_Click"><TextBlock Text="{StaticResource Wsl_Export}"/></Button><Button Click="ImportButton_Click"><TextBlock Text="{StaticResource Wsl_Import}"/></Button></StackPanel>
-                                    <TextBox x:Name="MovePathBox" Header="{StaticResource Wsl_InstallPath}" PlaceholderText="D:\WSL\Ubuntu"/>
-                                    <Button HorizontalAlignment="Left" Click="MoveButton_Click"><TextBlock Text="{StaticResource Wsl_Move}"/></Button>
-                                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
-                                    <TextBlock Text="{StaticResource Wsl_DiskMount}" Style="{StaticResource SectionTitle}"/>
-                                    <TextBlock Text="{StaticResource Wsl_DiskMountHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBox x:Name="DiskPathBox" Header="{StaticResource Wsl_DiskPath}" PlaceholderText="C:\WSL\ext4.vhdx"/>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><Button Click="MountButton_Click"><TextBlock Text="{StaticResource Wsl_Mount}"/></Button><Button Click="UnmountButton_Click"><TextBlock Text="{StaticResource Wsl_Unmount}"/></Button></StackPanel>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </TabViewItem>
-
-                        <TabViewItem Header="{StaticResource Wsl_TabNetwork}" IsClosable="False">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                <StackPanel Spacing="12" Padding="0,10,8,10">
-                                    <TextBlock Text="{StaticResource Wsl_Network}" Style="{StaticResource SectionTitle}"/>
-                                    <TextBlock Text="{StaticResource Wsl_NetworkHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBox x:Name="ProxyBox" Header="{StaticResource Wsl_Proxy}" PlaceholderText="proxy.example:8080"/>
-                                    <Button HorizontalAlignment="Left" Click="ProxyButton_Click"><TextBlock Text="{StaticResource Wsl_SetProxy}"/></Button>
-                                    <Grid ColumnSpacing="8">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                                        <TextBox x:Name="ListenPortBox" Header="{StaticResource Wsl_ListenPort}" PlaceholderText="2222"/>
-                                        <TextBox x:Name="ConnectAddressBox" Grid.Column="1" Header="{StaticResource Wsl_ConnectAddress}" PlaceholderText="127.0.0.1"/>
-                                        <TextBox x:Name="ConnectPortBox" Grid.Column="2" Header="{StaticResource Wsl_ConnectPort}" PlaceholderText="22"/>
-                                    </Grid>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><Button Click="AddProxyButton_Click"><TextBlock Text="{StaticResource Wsl_AddPortForward}"/></Button><Button Click="RemoveProxyButton_Click"><TextBlock Text="{StaticResource Wsl_RemovePortForward}"/></Button></StackPanel>
-                                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
-                                    <TextBlock Text="{StaticResource Wsl_Usb}" Style="{StaticResource SectionTitle}"/>
-                                    <TextBlock Text="{StaticResource Wsl_UsbHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <ListView x:Name="UsbList" Height="120"/>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><Button Click="UsbRefreshButton_Click"><TextBlock Text="{StaticResource Wsl_UsbRefresh}"/></Button><Button Click="UsbBindButton_Click"><TextBlock Text="{StaticResource Wsl_UsbBind}"/></Button><Button Click="UsbAttachButton_Click"><TextBlock Text="{StaticResource Wsl_UsbAttach}"/></Button><Button Click="UsbDetachButton_Click"><TextBlock Text="{StaticResource Wsl_UsbDetach}"/></Button></StackPanel>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </TabViewItem>
-                    </TabView>
-                </Grid>
-            </Border>
+                                </ScrollViewer>
+                            </TabViewItem>
+                            <TabViewItem Header="{StaticResource Wsl_TabStorage}" IsClosable="False">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Spacing="12" Padding="0,10,8,10">
+                                        <TextBlock Text="{StaticResource Wsl_Backup}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{StaticResource Wsl_BackupHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBox x:Name="ImportNameBox" Header="{StaticResource Wsl_ImportName}" PlaceholderText="MyLinux"/>
+                                        <TextBox x:Name="ArchivePathBox" Header="{StaticResource Wsl_ArchivePath}" PlaceholderText="C:\Backups\distro.tar"/>
+                                        <controls:WrapPanel Spacing="8">
+                                            <Button Click="ExportButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_Export}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="ImportButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_Import}" TextWrapping="Wrap"/>
+                                            </Button>
+                                        </controls:WrapPanel>
+                                        <TextBox x:Name="MovePathBox" Header="{StaticResource Wsl_InstallPath}" PlaceholderText="D:\WSL\Ubuntu"/>
+                                        <Button HorizontalAlignment="Left" Click="MoveButton_Click">
+                                            <TextBlock Text="{StaticResource Wsl_Move}" TextWrapping="Wrap"/>
+                                        </Button>
+                                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
+                                        <TextBlock Text="{StaticResource Wsl_DiskMount}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{StaticResource Wsl_DiskMountHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBox x:Name="DiskPathBox" Header="{StaticResource Wsl_DiskPath}" PlaceholderText="C:\WSL\ext4.vhdx"/>
+                                        <controls:WrapPanel Spacing="8">
+                                            <Button Click="MountButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_Mount}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="UnmountButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_Unmount}" TextWrapping="Wrap"/>
+                                            </Button>
+                                        </controls:WrapPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabViewItem>
+                            <TabViewItem Header="{StaticResource Wsl_TabNetwork}" IsClosable="False">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Spacing="12" Padding="0,10,8,10">
+                                        <TextBlock Text="{StaticResource Wsl_Network}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{StaticResource Wsl_NetworkHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBox x:Name="ProxyBox" Header="{StaticResource Wsl_Proxy}" PlaceholderText="proxy.example:8080"/>
+                                        <Button HorizontalAlignment="Left" Click="ProxyButton_Click">
+                                            <TextBlock Text="{StaticResource Wsl_SetProxy}" TextWrapping="Wrap"/>
+                                        </Button>
+                                        <Grid ColumnSpacing="8" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="ListenPortBox" Header="{StaticResource Wsl_ListenPort}" PlaceholderText="2222"/>
+                                            <TextBox x:Name="ConnectAddressBox" Grid.Column="1" Header="{StaticResource Wsl_ConnectAddress}" PlaceholderText="127.0.0.1"/>
+                                            <TextBox x:Name="ConnectPortBox" Grid.Column="2" Header="{StaticResource Wsl_ConnectPort}" PlaceholderText="22"/>
+                                        </Grid>
+                                        <controls:WrapPanel Spacing="8">
+                                            <Button Click="AddProxyButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_AddPortForward}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="RemoveProxyButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_RemovePortForward}" TextWrapping="Wrap"/>
+                                            </Button>
+                                        </controls:WrapPanel>
+                                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
+                                        <TextBlock Text="{StaticResource Wsl_Usb}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{StaticResource Wsl_UsbHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <ListView x:Name="UsbList" Height="120"/>
+                                        <controls:WrapPanel Spacing="8">
+                                            <Button Click="UsbRefreshButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_UsbRefresh}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="UsbBindButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_UsbBind}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="UsbAttachButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_UsbAttach}" TextWrapping="Wrap"/>
+                                            </Button>
+                                            <Button Click="UsbDetachButton_Click">
+                                                <TextBlock Text="{StaticResource Wsl_UsbDetach}" TextWrapping="Wrap"/>
+                                            </Button>
+                                        </controls:WrapPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabViewItem>
+                        </TabView>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </Page>

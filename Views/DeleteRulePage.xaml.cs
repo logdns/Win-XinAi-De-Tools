@@ -65,7 +65,7 @@ public sealed partial class DeleteRulePage : Page
     {
         var dialog = new ContentDialog
         {
-            XamlRoot = XamlRoot,
+            XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
             Title = App.Text("Delete_ConfirmTitle"),
             Content = string.Format(App.Text("Delete_ConfirmFormat"), ruleName),
             PrimaryButtonText = App.Text("Common_Delete"),

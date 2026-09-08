@@ -286,11 +286,17 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.6.2</x:String>
+    <x:String x:Key="About_Version">Version 1.7.0</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>
     <x:String x:Key="About_FrameworkText">Microsoft WinUI 3 · Windows Community Toolkit · .NET 8 · optional Rust and Go WSL bridges</x:String>
     <x:String x:Key="About_Admin">Administrator access</x:String>
     <x:String x:Key="About_AdminText">Changing Windows Firewall rules requires administrator privileges.</x:String>
+    <x:String x:Key="Theme_Header">Appearance</x:String>
+    <x:String x:Key="Theme_System">Use system setting</x:String>
+    <x:String x:Key="Theme_Light">Light</x:String>
+    <x:String x:Key="Theme_Dark">Dark</x:String>
+    <x:String x:Key="Dashboard_Distribution">Firewall rule distribution</x:String>
+    <x:String x:Key="Dashboard_DistributionFormat">Inbound: {0} rules · Outbound: {1} rules</x:String>
 </ResourceDictionary>

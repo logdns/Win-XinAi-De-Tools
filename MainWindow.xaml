@@ -11,16 +11,23 @@
     <NavigationView
         x:Name="NavView"
         PaneDisplayMode="Auto"
-        IsBackButtonVisible="Collapsed"
+        IsBackButtonVisible="Visible"
         IsBackEnabled="False"
         IsSettingsVisible="False"
         IsPaneOpen="True"
+        CompactModeThresholdWidth="700"
+        ExpandedModeThresholdWidth="1120"
         OpenPaneLength="240"
         CompactPaneLength="48"
         SelectionChanged="NavView_SelectionChanged"
+        ItemInvoked="NavView_ItemInvoked"
         BackRequested="NavView_BackRequested"
         Loaded="NavView_Loaded">
 
+        <NavigationView.KeyboardAccelerators>
+            <KeyboardAccelerator Key="Left" Modifiers="Menu" Invoked="BackAccelerator_Invoked"/>
+            <KeyboardAccelerator Key="GoBack" Invoked="BackAccelerator_Invoked"/>
+        </NavigationView.KeyboardAccelerators>
         <NavigationView.PaneHeader>
             <StackPanel Orientation="Horizontal" Spacing="10" Margin="4,8,0,12">
                 <Image Source="ms-appx:///Assets/Square44x44Logo.png" Width="24" Height="24"/>
@@ -87,6 +94,12 @@
 
         <NavigationView.PaneFooter>
             <StackPanel Margin="8,8,8,12" Spacing="6">
+                <TextBlock x:Name="ThemeHeader" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <ComboBox x:Name="ThemeSelector" HorizontalAlignment="Stretch" SelectionChanged="ThemeSelector_SelectionChanged" AutomationProperties.AutomationId="ThemeSelector">
+                    <ComboBoxItem x:Name="SystemThemeOption"/>
+                    <ComboBoxItem x:Name="LightThemeOption"/>
+                    <ComboBoxItem x:Name="DarkThemeOption"/>
+                </ComboBox>
                 <TextBlock x:Name="LanguageHeader" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 <ComboBox x:Name="LanguageSelector" SelectedIndex="0" HorizontalAlignment="Stretch"
                           SelectionChanged="LanguageSelector_SelectionChanged">
@@ -96,6 +109,8 @@
             </StackPanel>
         </NavigationView.PaneFooter>
 
-        <Frame x:Name="ContentFrame" IsNavigationStackEnabled="False"/>
+        <Grid Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="12,0,0,0">
+            <Frame x:Name="ContentFrame" IsNavigationStackEnabled="False" CacheSize="16"/>
+        </Grid>
     </NavigationView>
 </Window>

@@ -9,7 +9,7 @@
 
   <Identity Name="Win-XinAi-De-Tools"
             Publisher="CN=Win-XinAi-De-Tools"
-            Version="1.6.2.0"/>
+            Version="1.7.0.0"/>
 
   <Properties>
     <DisplayName>Win-XinAi-De-Tools</DisplayName>

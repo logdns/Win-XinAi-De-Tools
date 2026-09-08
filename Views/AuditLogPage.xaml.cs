@@ -21,7 +21,7 @@ public sealed partial class AuditLogPage : Page
     }
     private async void ClearButton_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new ContentDialog { XamlRoot = XamlRoot, Title = App.Text("Audit_ClearConfirmTitle"), Content = App.Text("Audit_ClearConfirmFormat"), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
+        var dialog = new ContentDialog { XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme, Title = App.Text("Audit_ClearConfirmTitle"), Content = App.Text("Audit_ClearConfirmFormat"), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
         if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
         try { await AuditLogService.ClearAsync(); await LoadAsync(); }
         catch (Exception ex) { ErrorBar.Title = App.Text("Audit_Error"); ErrorBar.Message = ex.Message; ErrorBar.IsOpen = true; }

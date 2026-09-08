@@ -1,19 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page x:Class="PortManager.Views.RuleTransferPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Loaded="Page_Loaded">
-    <Grid Padding="32,28" RowSpacing="18">
-        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-        <StackPanel><TextBlock Text="{StaticResource Transfer_Title}" Style="{StaticResource PageTitle}"/><TextBlock Text="{StaticResource Transfer_Subtitle}" Style="{StaticResource PageSubtitle}"/></StackPanel>
-        <InfoBar x:Name="StatusBar" Grid.Row="1" IsOpen="False" IsClosable="True"/>
-        <Border Grid.Row="2" Style="{StaticResource CardPanel}" Padding="20" VerticalAlignment="Top">
-            <StackPanel Spacing="16">
-                <TextBlock x:Name="RuleCountText"/>
-                <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Button x:Name="ExportButton" Click="ExportButton_Click"><StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE74E;"/><TextBlock Text="{StaticResource Transfer_Export}"/></StackPanel></Button>
-                    <Button x:Name="ImportButton" Click="ImportButton_Click"><StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE8B5;"/><TextBlock Text="{StaticResource Transfer_Import}"/></StackPanel></Button>
-                    <ProgressRing x:Name="LoadingRing" Width="20" Height="20" IsActive="False" VerticalAlignment="Center"/>
-                </StackPanel>
-                <TextBlock x:Name="FileText" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+<?xml version='1.0' encoding='utf-8'?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="using:PortManager.Controls" x:Class="PortManager.Views.RuleTransferPage" Loaded="Page_Loaded">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+        <Grid Padding="32,28" RowSpacing="18">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="{StaticResource Transfer_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
+                <TextBlock Text="{StaticResource Transfer_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
             </StackPanel>
-        </Border>
-    </Grid>
+            <InfoBar x:Name="StatusBar" Grid.Row="1" IsOpen="False" IsClosable="True"/>
+            <Border Grid.Row="2" Style="{StaticResource CardPanel}" Padding="20" VerticalAlignment="Top">
+                <StackPanel Spacing="16">
+                    <TextBlock x:Name="RuleCountText" TextWrapping="Wrap"/>
+                    <controls:WrapPanel Spacing="10">
+                        <Button x:Name="ExportButton" Click="ExportButton_Click">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Transfer_Export}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
+                        <Button x:Name="ImportButton" Click="ImportButton_Click">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Transfer_Import}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
+                        <ProgressRing x:Name="LoadingRing" Width="20" Height="20" IsActive="False" VerticalAlignment="Center"/>
+                    </controls:WrapPanel>
+                    <TextBlock x:Name="FileText" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Page>

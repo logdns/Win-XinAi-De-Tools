@@ -27,12 +27,19 @@ public sealed partial class DashboardPage : Page
 
         try
         {
-            RuleCount.Text = (await FirewallService.ListRulesAsync()).Count.ToString();
+            var rules = await FirewallService.ListRulesAsync();
+            RuleCount.Text = rules.Count.ToString();
+            var inbound = rules.Count(r => r.Direction == "Inbound");
+            var outbound = rules.Count(r => r.Direction == "Outbound");
+            DistributionChart.SetCounts(inbound, outbound);
+            DistributionSummary.Text = string.Format(App.Text("Dashboard_DistributionFormat"), inbound, outbound);
             FirewallStatusText.Text = App.Text("Dashboard_Healthy");
         }
         catch (FirewallOperationException ex)
         {
             RuleCount.Text = "--";
+            DistributionChart.SetCounts(0, 0);
+            DistributionSummary.Text = App.Text("Common_FirewallError");
             ErrorBar.Message = $"{App.Text("Common_FirewallErrorDetail")}\n{ex.Message}";
             ErrorBar.IsOpen = true;
         }

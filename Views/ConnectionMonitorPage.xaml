@@ -1,47 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page x:Class="PortManager.Views.ConnectionMonitorPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:models="using:PortManager.Models"
-      Loaded="Page_Loaded">
+<?xml version='1.0' encoding='utf-8'?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:models="using:PortManager.Models" xmlns:controls="using:PortManager.Controls" x:Class="PortManager.Views.ConnectionMonitorPage" Loaded="Page_Loaded">
     <Grid Padding="32,28" RowSpacing="16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBlock Text="{StaticResource Connection_Title}" Style="{StaticResource PageTitle}"/>
-            <TextBlock Text="{StaticResource Connection_Subtitle}" Style="{StaticResource PageSubtitle}"/>
+            <TextBlock Text="{StaticResource Connection_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
+            <TextBlock Text="{StaticResource Connection_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
         </StackPanel>
-        <Grid Grid.Row="1" ColumnSpacing="10">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="*" MaxWidth="480"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <Grid Grid.Row="1" ColumnSpacing="10" controls:AdaptiveLayout.CompactBelow="560" RowSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MaxWidth="480"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <TextBox x:Name="SearchBox" PlaceholderText="{StaticResource Connection_SearchPlaceholder}" TextChanged="SearchBox_TextChanged"/>
-            <Button Grid.Column="1" Width="40" Height="36" Click="RefreshButton_Click" ToolTipService.ToolTip="{StaticResource Connection_Refresh}"><FontIcon Glyph="&#xE72C;"/></Button>
+            <Button Grid.Column="1" Width="40" Height="36" Click="RefreshButton_Click" ToolTipService.ToolTip="{StaticResource Connection_Refresh}" AutomationProperties.Name="{StaticResource Connection_Refresh}">
+                <FontIcon Glyph=""/>
+            </Button>
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                 <ProgressRing x:Name="LoadingRing" Width="20" Height="20" IsActive="False"/>
-                <TextBlock x:Name="CountText" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock x:Name="CountText" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="2">
             <ListView x:Name="ConnectionsList" SelectionMode="None">
-                <ListView.ItemContainerStyle><Style TargetType="ListViewItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,0,0,8"/></Style></ListView.ItemContainerStyle>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0,0,0,8"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:ConnectionModel">
                         <Border Style="{StaticResource CardPanel}" Padding="14,11">
-                            <Grid ColumnSpacing="14">
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="120"/><ColumnDefinition Width="120"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Protocol}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="1"><TextBlock Text="{StaticResource Connection_LocalEndpoint}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/><TextBlock Text="{x:Bind LocalEndpoint}" TextTrimming="CharacterEllipsis"/></StackPanel>
-                                <StackPanel Grid.Column="2"><TextBlock Text="{StaticResource Connection_RemoteEndpoint}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/><TextBlock Text="{x:Bind RemoteEndpoint}" TextTrimming="CharacterEllipsis"/></StackPanel>
-                                <TextBlock Grid.Column="3" Text="{x:Bind StateDisplay}" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="4"><TextBlock Text="{x:Bind ProcessName}" TextTrimming="CharacterEllipsis"/><TextBlock Text="{x:Bind ProcessId}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/></StackPanel>
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4"><Button Width="34" Height="32" Padding="0" Click="CloseConnection_Click" ToolTipService.ToolTip="{StaticResource Connection_Close}"><FontIcon Glyph="&#xE711;"/></Button><Button Width="34" Height="32" Padding="0" Click="TerminateProcess_Click" ToolTipService.ToolTip="{StaticResource Connection_Terminate}"><FontIcon Glyph="&#xE74D;"/></Button></StackPanel>
+                            <Grid ColumnSpacing="14" controls:AdaptiveLayout.CompactBelow="680" RowSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Protocol}" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{StaticResource Connection_LocalEndpoint}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{x:Bind LocalEndpoint}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind LocalEndpoint}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{StaticResource Connection_RemoteEndpoint}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{x:Bind RemoteEndpoint}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind RemoteEndpoint}"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="3" Text="{x:Bind StateDisplay}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="{x:Bind ProcessName}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" ToolTipService.ToolTip="{x:Bind ProcessName}"/>
+                                    <TextBlock Text="{x:Bind ProcessId}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <controls:WrapPanel Grid.Column="5" Spacing="4">
+                                    <Button Width="34" Height="32" Padding="0" Click="CloseConnection_Click" ToolTipService.ToolTip="{StaticResource Connection_Close}" AutomationProperties.Name="{StaticResource Connection_Close}">
+                                        <FontIcon Glyph=""/>
+                                    </Button>
+                                    <Button Width="34" Height="32" Padding="0" Click="TerminateProcess_Click" ToolTipService.ToolTip="{StaticResource Connection_Terminate}" AutomationProperties.Name="{StaticResource Connection_Terminate}">
+                                        <FontIcon Glyph=""/>
+                                    </Button>
+                                </controls:WrapPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
             <StackPanel x:Name="EmptyState" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-                <FontIcon Glyph="&#xE9D9;" FontSize="36" Opacity="0.35"/><TextBlock Text="{StaticResource Connection_Empty}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <FontIcon Glyph="" FontSize="36" Opacity="0.35"/>
+                <TextBlock Text="{StaticResource Connection_Empty}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
             </StackPanel>
             <InfoBar x:Name="ErrorBar" IsOpen="False" Severity="Error" VerticalAlignment="Top"/>
         </Grid>

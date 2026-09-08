@@ -32,7 +32,7 @@ public sealed partial class ConnectionMonitorPage : Page
     private async void TerminateProcess_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button button || button.DataContext is not ConnectionModel connection) return;
-        var dialog = new ContentDialog { XamlRoot = XamlRoot, Title = App.Text("Connection_ConfirmTerminateTitle"), Content = string.Format(App.Text("Connection_ConfirmTerminateFormat"), connection.ProcessName, connection.ProcessId), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
+        var dialog = new ContentDialog { XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme, Title = App.Text("Connection_ConfirmTerminateTitle"), Content = string.Format(App.Text("Connection_ConfirmTerminateFormat"), connection.ProcessName, connection.ProcessId), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
         if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
         try { await ConnectionService.TerminateProcessAsync(connection.ProcessId); AuditLogService.Record("TerminateProcess", $"PID {connection.ProcessId}"); await LoadConnectionsAsync(); }
         catch (Exception ex) { ShowActionError(ex); }

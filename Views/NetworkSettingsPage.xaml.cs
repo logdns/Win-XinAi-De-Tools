@@ -109,7 +109,7 @@ public sealed partial class NetworkSettingsPage : Page
         var address = request.UseDhcp ? App.Text("Network_Automatic") : $"{request.IPv4Address}/{request.PrefixLength}";
         var dialog = new ContentDialog
         {
-            XamlRoot = XamlRoot,
+            XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
             Title = App.Text("Network_ConfirmTitle"),
             Content = string.Format(App.Text("Network_ConfirmFormat"), adapter.Name, mode, address, request.Gateway, request.PrimaryDns, request.SecondaryDns),
             PrimaryButtonText = App.Text("Common_Confirm"),

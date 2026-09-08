@@ -123,7 +123,7 @@ public sealed partial class WslDashboardPage : Page
         content.Children.Add(picker);
         var dialog = new ContentDialog
         {
-            XamlRoot = XamlRoot,
+            XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
             Title = App.Text("Wsl_ChooseDistributionTitle"),
             Content = content,
             PrimaryButtonText = App.Text("Wsl_InstallSelected"),
@@ -160,7 +160,7 @@ public sealed partial class WslDashboardPage : Page
         if (!TrySelected(out var name)) return;
         var dialog = new ContentDialog
         {
-            XamlRoot = XamlRoot,
+            XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
             Title = App.Text("Wsl_UnregisterConfirmTitle"),
             Content = string.Format(App.Text("Wsl_UnregisterConfirmMessage"), name),
             PrimaryButtonText = App.Text("Wsl_Unregister"),
@@ -365,21 +365,16 @@ public sealed partial class WslDashboardPage : Page
         Grid.SetRow(DetailsCard, compact ? 1 : 0);
         Grid.SetColumn(DetailsCard, compact ? 0 : 1);
         Grid.SetColumnSpan(DetailsCard, compact ? 2 : 1);
-        DistributionList.MaxHeight = compact ? 150 : double.PositiveInfinity;
+        DistributionList.MaxHeight = compact ? 150 : 320;
 
         SetupActionColumn.Width = compact ? new GridLength(0) : GridLength.Auto;
         SetupActionRow.Height = compact ? GridLength.Auto : new GridLength(0);
         Grid.SetRow(SetupButtons, compact ? 1 : 0);
         Grid.SetColumn(SetupButtons, compact ? 0 : 1);
 
-        ActionColumnThree.Width = compact ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
-        ActionColumnFour.Width = compact ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
-        var actionButtons = new[] { StartButton, StopButton, DefaultButton, TerminalButton, ExplorerButton, VsCodeButton, DiskUsageButton, UnregisterButton };
-        for (var index = 0; index < actionButtons.Length; index++)
-        {
-            Grid.SetRow(actionButtons[index], compact ? index / 2 : index / 4);
-            Grid.SetColumn(actionButtons[index], compact ? index % 2 : index % 4);
-        }
+        // The outer page can scroll at short heights; the selected tab has its own bounded viewport.
+        DetailsCard.Height = Math.Max(440, ActualHeight - 160);
+
     }
 
     private void ShowNotice(InfoBarSeverity severity, string title, string message)

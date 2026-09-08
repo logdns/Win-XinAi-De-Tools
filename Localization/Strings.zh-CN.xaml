@@ -286,11 +286,17 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.6.2</x:String>
+    <x:String x:Key="About_Version">版本 1.7.0</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
     <x:String x:Key="About_FrameworkText">Microsoft WinUI 3 · Windows Community Toolkit · .NET 8 · 可选 Rust 和 Go WSL 桥接组件</x:String>
     <x:String x:Key="About_Admin">管理员权限</x:String>
     <x:String x:Key="About_AdminText">修改 Windows 防火墙规则需要管理员权限。</x:String>
+    <x:String x:Key="Theme_Header">外观</x:String>
+    <x:String x:Key="Theme_System">跟随系统</x:String>
+    <x:String x:Key="Theme_Light">浅色</x:String>
+    <x:String x:Key="Theme_Dark">深色</x:String>
+    <x:String x:Key="Dashboard_Distribution">防火墙规则分布</x:String>
+    <x:String x:Key="Dashboard_DistributionFormat">入站规则 {0} 条 · 出站规则 {1} 条</x:String>
 </ResourceDictionary>

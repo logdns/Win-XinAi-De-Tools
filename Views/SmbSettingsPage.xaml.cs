@@ -49,7 +49,7 @@ public sealed partial class SmbSettingsPage : Page
         var content = forceRestart ? App.Text("Smb_ConfirmRestartMessage") : App.Text("Smb_ConfirmMessage");
         var dialog = new ContentDialog
         {
-            XamlRoot = XamlRoot, Title = title, Content = content,
+            XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme, Title = title, Content = content,
             PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close
         };
         if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
@@ -79,7 +79,7 @@ public sealed partial class SmbSettingsPage : Page
 
     private async void RemoveShareButton_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new ContentDialog { XamlRoot = XamlRoot, Title = App.Text("Smb_RemoveConfirmTitle"), Content = App.Text("Smb_RemoveConfirmMessage"), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
+        var dialog = new ContentDialog { XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme, Title = App.Text("Smb_RemoveConfirmTitle"), Content = App.Text("Smb_RemoveConfirmMessage"), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
         if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
         SetBusy(true);
         try { await SmbConfigurationService.RemoveShareAsync(); ShareStatusText.Text = App.Text("Smb_ShareRemoved"); AuditLogService.Record("RemoveSmbShare", "Name=share"); }

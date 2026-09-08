@@ -1,48 +1,72 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page x:Class="PortManager.Views.SmbSettingsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Loaded="Page_Loaded">
+<?xml version='1.0' encoding='utf-8'?>
+<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="using:PortManager.Controls" x:Class="PortManager.Views.SmbSettingsPage" Loaded="Page_Loaded">
     <ScrollViewer Padding="32,28" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
         <StackPanel MaxWidth="900" HorizontalAlignment="Stretch" Spacing="18">
             <StackPanel Spacing="4">
-                <TextBlock Text="{StaticResource Smb_Title}" Style="{StaticResource PageTitle}"/>
-                <TextBlock Text="{StaticResource Smb_Subtitle}" Style="{StaticResource PageSubtitle}"/>
+                <TextBlock Text="{StaticResource Smb_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
+                <TextBlock Text="{StaticResource Smb_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
             </StackPanel>
-            <InfoBar IsOpen="True" IsClosable="False" Severity="Informational"
-                     Title="{StaticResource Smb_HelpTitle}" Message="{StaticResource Smb_HelpMessage}"/>
+            <InfoBar IsOpen="True" IsClosable="False" Severity="Informational" Title="{StaticResource Smb_HelpTitle}" Message="{StaticResource Smb_HelpMessage}"/>
             <Border Style="{StaticResource CardPanel}">
                 <StackPanel Spacing="14">
-                    <TextBlock Text="{StaticResource Smb_Features}" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="{StaticResource Smb_Features}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
                     <ToggleSwitch x:Name="SmbDirectToggle" Header="{StaticResource Smb_Direct}" OffContent="{StaticResource Common_Off}" OnContent="{StaticResource Common_On}" ToolTipService.ToolTip="{StaticResource Smb_DirectHelp}"/>
                     <ToggleSwitch x:Name="Smb1Toggle" Header="{StaticResource Smb_One}" OffContent="{StaticResource Common_Off}" OnContent="{StaticResource Common_On}" ToolTipService.ToolTip="{StaticResource Smb_OneHelp}"/>
                     <CheckBox x:Name="ForceRestartCheck" Content="{StaticResource Smb_ForceRestart}" ToolTipService.ToolTip="{StaticResource Smb_RestartHelp}"/>
-                    <StackPanel Orientation="Horizontal" Spacing="10">
+                    <controls:WrapPanel Spacing="10">
                         <Button x:Name="ApplyButton" Click="ApplyButton_Click">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE73E;"/><TextBlock Text="{StaticResource Smb_Apply}"/></StackPanel>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Smb_Apply}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
                         </Button>
                         <Button x:Name="RefreshButton" Click="RefreshButton_Click">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;"/><TextBlock Text="{StaticResource Smb_Refresh}"/></StackPanel>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Smb_Refresh}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
                         </Button>
                         <ProgressRing x:Name="LoadingRing" Width="20" Height="20" IsActive="False" VerticalAlignment="Center"/>
-                    </StackPanel>
+                    </controls:WrapPanel>
                     <TextBlock x:Name="StatusText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <InfoBar x:Name="ErrorBar" IsOpen="False" IsClosable="True" Severity="Error"/>
                 </StackPanel>
             </Border>
             <Border Style="{StaticResource CardPanel}">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="{StaticResource Smb_ShareTitle}" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="{StaticResource Smb_ShareTitle}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
                     <TextBlock Text="{StaticResource Smb_ShareDescription}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBox x:Name="SharePathBox" Header="{StaticResource Smb_SharePath}" PlaceholderText="C:\\Users\\Public\\Share" ToolTipService.ToolTip="{StaticResource Smb_SharePathHelp}"/>
-                    <StackPanel Orientation="Horizontal" Spacing="10">
+                    <controls:WrapPanel Spacing="10">
                         <Button x:Name="SetShareButton" Click="SetShareButton_Click">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE8B7;"/><TextBlock Text="{StaticResource Smb_SetShare}"/></StackPanel>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Smb_SetShare}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
                         </Button>
                         <Button x:Name="RemoveShareButton" Click="RemoveShareButton_Click">
-                            <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE74D;"/><TextBlock Text="{StaticResource Smb_RemoveShare}"/></StackPanel>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Smb_RemoveShare}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
                         </Button>
-                    </StackPanel>
+                    </controls:WrapPanel>
                     <TextBlock x:Name="ShareStatusText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
             </Border>
