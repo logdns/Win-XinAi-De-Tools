@@ -13,6 +13,7 @@ public sealed class RuleDistributionChart : UserControl
 {
     private readonly Image _image = new();
     private readonly AccessibilitySettings _accessibility = new();
+    private readonly UISettings _colors = new();
     private string? _renderKey;
     private int _inbound;
     private int _outbound;
@@ -26,13 +27,13 @@ public sealed class RuleDistributionChart : UserControl
         {
             _root = XamlRoot;
             _root.Changed += RootChanged;
-            _accessibility.HighContrastChanged += HighContrastChanged;
+            _colors.ColorValuesChanged += SystemColorsChanged;
             Render();
         };
         Unloaded += (_, _) =>
         {
             if (_root is not null) _root.Changed -= RootChanged;
-            _accessibility.HighContrastChanged -= HighContrastChanged;
+            _colors.ColorValuesChanged -= SystemColorsChanged;
             _root = null;
             _image.Source = null;
             _renderKey = null;
@@ -50,7 +51,7 @@ public sealed class RuleDistributionChart : UserControl
 
     private void RootChanged(XamlRoot sender, XamlRootChangedEventArgs args) => Render();
 
-    private void HighContrastChanged(AccessibilitySettings sender, object args) => DispatcherQueue.TryEnqueue(() =>
+    private void SystemColorsChanged(UISettings sender, object args) => DispatcherQueue.TryEnqueue(() =>
     {
         _renderKey = null;
         Render();
@@ -73,7 +74,7 @@ public sealed class RuleDistributionChart : UserControl
         var radius = Math.Min(h * .37f, w * .22f);
         var center = new SKPoint(w * .5f, h * .5f);
         var dark = ActualTheme == ElementTheme.Dark;
-        var systemForeground = new UISettings().GetColorValue(UIColorType.Foreground);
+        var systemForeground = _colors.GetColorValue(UIColorType.Foreground);
         var contrastColor = new SKColor(systemForeground.R, systemForeground.G, systemForeground.B);
         using var paint = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 16 };
         paint.Color = dark ? new SKColor(65, 70, 80) : new SKColor(222, 228, 237);
