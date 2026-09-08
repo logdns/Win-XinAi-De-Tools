@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.7.0 - 2026-09-08
+
+### Added
+
+- Saved System, Light, and Dark appearance and Chinese/English language preferences.
+- A DPI-aware SkiaSharp dashboard chart showing real inbound/outbound firewall rule counts, with accessible native text and demand-driven rendering.
+- Windows GUI validation across all 13 pages, two languages, two themes, three window sizes, and all WSL tabs, with screenshots and navigation/draft checks.
+
+### Fixed
+
+- Back now follows actual page history on every route, supports Alt+Left, and keeps sidebar selection synchronized.
+- Preserve in-memory tool form state during navigation; retain navigation history when reloading translations.
+- Adapt forms and list cards to content width, wrap toolbars and long labels, and keep WSL settings reachable at short window heights.
+- Use keyboard-accessible feature-card Click events, accessible names for icon buttons, themed confirmations, and Windows animation preferences.
+
+### Build and audit
+
+- Audit direct and transitive NuGet dependencies; exclude UI screenshots/logs from release downloads.
+- Document rendering boundaries, navigation semantics, automated coverage, hardware acceptance checks, and release/rollback procedures.
+
 ## 1.6.2 - 2026-09-03
 
 ### Fixed

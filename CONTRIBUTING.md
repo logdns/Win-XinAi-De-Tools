@@ -16,8 +16,9 @@ Thank you for helping improve Win-XinAi-De-Tools.
 3. Add or update tests for service and model behavior.
 4. Run `dotnet test Win-XinAi-De-Tools.Tests\Win-XinAi-De-Tools.Tests.csproj --configuration Release` on Windows.
 5. If a native WSL helper changed, run `cargo test --locked --manifest-path native/wsl-helper-rust/Cargo.toml` and `go test ./...` from `native/wsl-helper-go`.
-6. Run `git diff --check` and confirm that generated `bin/`, `obj/`, `target/`, and `artifacts/` files are not included.
-7. Describe architecture-specific or administrator-permission requirements in the pull request.
+6. For UI changes, run `scripts/ui-smoke.ps1` against a published x64 build and review the screenshots; follow [UI validation](docs/UI-AND-VALIDATION.md) for DPI, accessibility, and other manual checks.
+7. Run `git diff --check` and confirm that generated `bin/`, `obj/`, `target/`, and `artifacts/` files are not included.
+8. Describe architecture-specific or administrator-permission requirements in the pull request.
 
 ## Reporting Bugs
 

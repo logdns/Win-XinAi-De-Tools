@@ -54,7 +54,14 @@ public sealed partial class MainWindow
                                 tabs.SelectedIndex = 0;
                             }
                             if (language == 1 && route is "Dashboard" or "WslDashboard")
+                            {
+                                var deadline = DateTime.UtcNow.AddSeconds(15);
+                                while (page.FindName("LoadingRing") is ProgressRing { IsActive: true } && DateTime.UtcNow < deadline)
+                                    await Task.Delay(100);
+                                page.UpdateLayout();
+                                CheckLayout(page);
                                 await CaptureAsync($"{route}-{(theme == 1 ? "light" : "dark")}-{size.Width}.png");
+                            }
                         }
                     }
                 }

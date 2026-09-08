@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using SkiaSharp;
+using Windows.UI.ViewManagement;
 
 namespace PortManager.Controls;
 
@@ -11,6 +12,7 @@ namespace PortManager.Controls;
 public sealed class RuleDistributionChart : UserControl
 {
     private readonly Image _image = new();
+    private readonly AccessibilitySettings _accessibility = new();
     private string? _renderKey;
     private int _inbound;
     private int _outbound;
@@ -24,11 +26,13 @@ public sealed class RuleDistributionChart : UserControl
         {
             _root = XamlRoot;
             _root.Changed += RootChanged;
+            _accessibility.HighContrastChanged += HighContrastChanged;
             Render();
         };
         Unloaded += (_, _) =>
         {
             if (_root is not null) _root.Changed -= RootChanged;
+            _accessibility.HighContrastChanged -= HighContrastChanged;
             _root = null;
             _image.Source = null;
             _renderKey = null;
@@ -46,13 +50,15 @@ public sealed class RuleDistributionChart : UserControl
 
     private void RootChanged(XamlRoot sender, XamlRootChangedEventArgs args) => Render();
 
+    private void HighContrastChanged(AccessibilitySettings sender, object args) => DispatcherQueue.TryEnqueue(Render);
+
     private void Render()
     {
         if (_root is null || ActualWidth <= 0 || ActualHeight <= 0 || !_root.IsHostVisible) return;
         var scale = _root.RasterizationScale;
         var width = Math.Clamp((int)Math.Ceiling(ActualWidth * scale), 1, 2048);
         var height = Math.Clamp((int)Math.Ceiling(ActualHeight * scale), 1, 1024);
-        var key = $"{width}:{height}:{ActualTheme}:{_inbound}:{_outbound}";
+        var key = $"{width}:{height}:{ActualTheme}:{_accessibility.HighContrast}:{_inbound}:{_outbound}";
         if (key == _renderKey) return;
         using var bitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
         using var canvas = new SKCanvas(bitmap);
@@ -63,8 +69,11 @@ public sealed class RuleDistributionChart : UserControl
         var radius = Math.Min(h * .37f, w * .22f);
         var center = new SKPoint(w * .5f, h * .5f);
         var dark = ActualTheme == ElementTheme.Dark;
+        var systemForeground = new UISettings().GetColorValue(UIColorType.Foreground);
+        var contrastColor = new SKColor(systemForeground.R, systemForeground.G, systemForeground.B);
         using var paint = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 16 };
         paint.Color = dark ? new SKColor(65, 70, 80) : new SKColor(222, 228, 237);
+        if (_accessibility.HighContrast) paint.Color = contrastColor;
         canvas.DrawCircle(center, radius, paint);
         var total = (long)_inbound + _outbound;
         var bounds = new SKRect(center.X - radius, center.Y - radius, center.X + radius, center.Y + radius);
@@ -72,8 +81,10 @@ public sealed class RuleDistributionChart : UserControl
         {
             var sweep = 360f * _inbound / total;
             paint.Color = dark ? new SKColor(113, 190, 255) : new SKColor(0, 103, 192);
+            if (_accessibility.HighContrast) paint.Color = contrastColor;
             canvas.DrawArc(bounds, -90, sweep, false, paint);
             paint.Color = dark ? new SKColor(100, 220, 190) : new SKColor(0, 128, 104);
+            if (_accessibility.HighContrast) paint.Color = contrastColor;
             canvas.DrawArc(bounds, -90 + sweep, 360 - sweep, false, paint);
         }
         // Shield glyph is geometry so it remains sharp without a font dependency.
@@ -86,6 +97,7 @@ public sealed class RuleDistributionChart : UserControl
         shield.LineTo(center.X - 18, center.Y - 13);
         shield.Close();
         paint.Color = dark ? new SKColor(215, 227, 243) : new SKColor(40, 59, 85);
+        if (_accessibility.HighContrast) paint.Color = contrastColor;
         paint.StrokeWidth = 2.5f;
         canvas.DrawPath(shield, paint);
         canvas.Flush();

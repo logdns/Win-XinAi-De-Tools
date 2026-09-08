@@ -2,15 +2,18 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Win-XinAi-De-Tools is a native Windows utility for network configuration, Windows Defender Firewall rules, SMB sharing, and Windows Subsystem for Linux (WSL) management. It is built with WinUI 3, Windows App SDK, and Windows Community Toolkit, and its interface can switch between English and Simplified Chinese at runtime.
+Win-XinAi-De-Tools is a native Windows utility for network configuration, Windows Defender Firewall rules, SMB sharing, and Windows Subsystem for Linux (WSL) management. It is built with WinUI 3, Windows App SDK, and Windows Community Toolkit, with SkiaSharp chart rendering, and its interface can switch between English and Simplified Chinese at runtime.
 
 ## Current release
 
-**v1.6.2** — [Download from GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.6.2)
+**v1.7.0** — [Download from GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.7.0)
 
 See [CHANGELOG.md](CHANGELOG.md) for the release history.
 
 ## Features
+
+- Modern native UI with saved System/Light/Dark appearance, theme-aware dialogs, and Windows animation preferences.
+- A Skia-rendered dashboard chart, responsive layouts across all 13 pages, wrapping toolbars, and history-based Back/Alt+Left navigation.
 
 - Add, search, list, and delete TCP, UDP, or ANY Windows Firewall rules for inbound, outbound, or bidirectional traffic.
 - Configure adapter IPv4, DHCP, DNS, gateway, route metric, and the default route with validation and confirmation.
@@ -23,11 +26,15 @@ See [CHANGELOG.md](CHANGELOG.md) for the release history.
 
 ## Interface previews
 
-The following previews are rendered from the current WinUI layout and show the primary workflows:
+The following images are captured from the packaged Windows application by the UI verification workflow:
 
-![Dashboard preview](docs/screenshots/dashboard.png)
+![Light dashboard](docs/screenshots/dashboard.png)
+
+![Dark dashboard](docs/screenshots/dashboard-dark.png)
 
 ![WSL manager preview](docs/screenshots/wsl-manager.png)
+
+Appearance and language are available at the bottom of the sidebar and are restored on restart. Back returns to the actual previous page. Theme changes preserve drafts; changing language reloads pages and resets unsubmitted forms. See [UI behavior, validation, and release procedure](docs/UI-AND-VALIDATION.md).
 
 ## WSL integration
 
@@ -45,9 +52,9 @@ Choose the package matching your Windows architecture:
 
 | Architecture | Portable ZIP | Installer |
 |---|---|---|
-| x86 | [Win-XinAi-De-Tools-win-x86.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.6.2/Win-XinAi-De-Tools-win-x86.zip) | [Win-XinAi-De-Tools-Setup-x86.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.6.2/Win-XinAi-De-Tools-Setup-x86.exe) |
-| x64 | [Win-XinAi-De-Tools-win-x64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.6.2/Win-XinAi-De-Tools-win-x64.zip) | [Win-XinAi-De-Tools-Setup-x64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.6.2/Win-XinAi-De-Tools-Setup-x64.exe) |
-| ARM64 | [Win-XinAi-De-Tools-win-arm64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.6.2/Win-XinAi-De-Tools-win-arm64.zip) | [Win-XinAi-De-Tools-Setup-arm64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.6.2/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x86 | [Win-XinAi-De-Tools-win-x86.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-x86.zip) | [Win-XinAi-De-Tools-Setup-x86.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-x86.exe) |
+| x64 | [Win-XinAi-De-Tools-win-x64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-x64.zip) | [Win-XinAi-De-Tools-Setup-x64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-x64.exe) |
+| ARM64 | [Win-XinAi-De-Tools-win-arm64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-arm64.zip) | [Win-XinAi-De-Tools-Setup-arm64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
 The portable build is self-contained and does not require a separate .NET or Windows App SDK installation. Extract the ZIP and run `Win-XinAi-De-Tools.exe` as administrator. The installer creates a Start menu shortcut and can optionally create a desktop shortcut.
 
@@ -71,7 +78,7 @@ Replace `win-x64`/`x64` with `win-x86`/`x86` or `win-arm64`/`ARM64` for another 
 
 ## GitHub Actions
 
-[`.github/workflows/build.yml`](.github/workflows/build.yml) runs .NET and native-helper tests, Windows Firewall integration tests, x86/x64/ARM64 builds, x64 GUI and notification-area smoke tests, portable ZIP packaging, Inno Setup installer creation, and release publication for version-matched `v*` tags. Third-party actions are pinned to immutable commits, and only the release job has repository write permission.
+[`.github/workflows/build.yml`](.github/workflows/build.yml) runs .NET and native-helper tests, Windows Firewall integration tests, x86/x64/ARM64 builds, x64 GUI and notification-area smoke tests, all-page theme/layout/navigation checks with screenshots, direct/transitive dependency audits, portable ZIP packaging, Inno Setup installer creation, and release publication for version-matched `v*` tags. Third-party actions are pinned to immutable commits, and only the release job has repository write permission.
 
 ## Repository layout
 
