@@ -39,6 +39,8 @@ public sealed partial class MainWindow
                             PageHost.UpdateLayout();
                             Require(_history.Current == route, $"Wrong route: {route}");
                             Require(Equals(NavView.SelectedItem, FindNavigationItem(route) ?? MoreItem), $"Wrong selection: {route}");
+                            Require(NavView.IsPaneOpen || PanePreferences.Visibility == Visibility.Collapsed, "Preferences clipped in compact pane");
+                            Require(NavView.DisplayMode != NavigationViewDisplayMode.Minimal || PageHost.Margin.Top >= 48, "Overlay buttons overlap the page");
                             var page = (Page)PageHost.Content;
                             Require(page.ActualWidth > 0 && page.ActualHeight > 0, $"Empty page: {route}");
                             Require(page.ActualTheme == (theme == 1 ? ElementTheme.Light : ElementTheme.Dark), $"Wrong theme: {route}");
@@ -86,6 +88,19 @@ public sealed partial class MainWindow
             Require(GoBack(), "Draft back navigation");
             Require(((TextBox)((Page)PageHost.Content).FindName("RuleNameInput")).Text == "unsaved smoke test draft", "Draft was lost");
             var current = _history.Current;
+            var dialog = new ContentDialog
+            {
+                XamlRoot = NavView.XamlRoot, RequestedTheme = NavView.RequestedTheme,
+                Title = "UI smoke confirmation", CloseButtonText = "Cancel"
+            };
+            var shown = dialog.ShowAsync();
+            await Task.Delay(100);
+            try
+            {
+                Require(!GoBack() && _history.Current == current, "Back navigated behind a modal dialog");
+                Require(dialog.ActualTheme == NavView.ActualTheme, "Dialog theme mismatch");
+            }
+            finally { dialog.Hide(); await shown; }
             NavigateTo("invalid-route");
             Require(_history.Current == current, "Invalid route changed history");
             ThemeSelector.SelectedIndex = 0;

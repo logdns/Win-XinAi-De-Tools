@@ -115,7 +115,7 @@ public sealed partial class MainWindow : Window
         // Automated smoke tests send WM_CLOSE and must be able to terminate deterministically.
         if (_allowClose || string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase)) return;
         args.Cancel = true;
-        if (_closeDialogOpen) return;
+        if (_closeDialogOpen || HasOpenDialog()) return;
         _closeDialogOpen = true;
         var dialog = new ContentDialog
         {
@@ -216,14 +216,24 @@ public sealed partial class MainWindow : Window
 
     private void BackAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        // Do not navigate the page behind an active modal dialog.
-        if (Microsoft.UI.Xaml.Media.VisualTreeHelper.GetOpenPopupsForXamlRoot(NavView.XamlRoot)
-            .Any(p => p.Child is ContentDialog)) return;
         args.Handled = GoBack();
+    }
+
+    private bool HasOpenDialog() => Microsoft.UI.Xaml.Media.VisualTreeHelper.GetOpenPopupsForXamlRoot(NavView.XamlRoot)
+        .Any(p => ContainsDialog(p.Child));
+
+    private static bool ContainsDialog(DependencyObject? element)
+    {
+        if (element is ContentDialog) return true;
+        if (element is null) return false;
+        for (var index = 0; index < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(element); index++)
+            if (ContainsDialog(Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(element, index))) return true;
+        return false;
     }
 
     private bool GoBack()
     {
+        if (HasOpenDialog()) return false;
         if (_history.Previous is not string previous) return false;
         return NavigateFrame(previous, isBack: true);
     }

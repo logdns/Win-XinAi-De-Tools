@@ -34,14 +34,14 @@
     <x:String x:Key="Dashboard_Title">Dashboard</x:String>
     <x:String x:Key="Dashboard_Subtitle">Manage Windows Firewall port rules on this PC</x:String>
     <x:String x:Key="Dashboard_RuleCount">Enabled allow rules</x:String>
-    <x:String x:Key="Dashboard_Healthy">Firewall connection is healthy</x:String>
+    <x:String x:Key="Dashboard_Healthy">Current enabled allow rules loaded</x:String>
     <x:String x:Key="Dashboard_Loading">Loading rules</x:String>
     <x:String x:Key="Dashboard_QuickActions">Quick actions</x:String>
     <x:String x:Key="Dashboard_Add">Add port</x:String>
     <x:String x:Key="Dashboard_View">View rules</x:String>
     <x:String x:Key="Dashboard_Query">Query port</x:String>
-    <x:String x:Key="Dashboard_Extensions">Extension area</x:String>
-    <x:String x:Key="Dashboard_ExtensionsDescription">Reserved module entry points for connection monitoring, rule import and export, and audit logs.</x:String>
+    <x:String x:Key="Dashboard_Extensions">More tools</x:String>
+    <x:String x:Key="Dashboard_ExtensionsDescription">Inspect live connections, transfer firewall rules, or review operation logs.</x:String>
 
     <x:String x:Key="Add_Title">Add port rule</x:String>
     <x:String x:Key="Add_Subtitle">Create a Windows Firewall allow rule</x:String>
@@ -238,7 +238,7 @@
     <x:String x:Key="More_Live">Live connections</x:String>
     <x:String x:Key="More_Process">Process mapping</x:String>
     <x:String x:Key="More_Planned">Planned</x:String>
-    <x:String x:Key="More_Implemented">Implemented, click to open</x:String>
+    <x:String x:Key="More_Implemented">Open tool</x:String>
     <x:String x:Key="More_Import">Rule import and export</x:String>
     <x:String x:Key="More_ImportDescription">Back up and restore firewall rules</x:String>
     <x:String x:Key="More_Audit">Audit log</x:String>
