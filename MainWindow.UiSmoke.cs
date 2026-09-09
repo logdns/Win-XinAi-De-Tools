@@ -13,7 +13,8 @@ namespace PortManager;
 
 public sealed partial class MainWindow
 {
-    // Opt-in CI harness: visits real pages but never invokes configuration/mutation buttons.
+    // Opt-in CI harness: visits real pages and manages a dedicated temporary HTTP fixture.
+    // Other operating-system configuration/mutation buttons are not invoked.
     private async Task RunUiSmokeAsync()
     {
         try
