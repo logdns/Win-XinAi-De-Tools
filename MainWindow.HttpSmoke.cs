@@ -50,6 +50,7 @@ public sealed partial class MainWindow
             Require(await client.GetStringAsync($"http://127.0.0.1:{secondPort}/") == "temporary HTTP UI test", "Restarted HTTP response");
             await VerifyHttpAddressesAsync(page, secondPort);
             await WaitForHttpAsync(() => !((ProgressRing)page.FindName("ScanRing")).IsActive);
+            Require(((TemporaryHttpPage)page).DetectedServers.Any(server => server.Port == secondPort), "Restarted HTTP discovery");
             Require(!((TemporaryHttpPage)page).DetectedServers.Any(server => server.Port == firstPort), "Stale HTTP port after restart");
             await CaptureAsync("TemporaryHttp-discovery.png");
             ((Microsoft.UI.Xaml.FrameworkElement)page.FindName("AddressRows")).StartBringIntoView();
@@ -62,8 +63,15 @@ public sealed partial class MainWindow
             Require(((StackPanel)page.FindName("AddressRows")).Children.Count == 0, "Stopped HTTP addresses still visible");
             Require(fixture.IsRunning, "Detection stopped independent HTTP server");
             InvokeHttpButton(page, "RefreshButton");
+            await Task.Delay(100);
             await WaitForHttpAsync(() => !((ProgressRing)page.FindName("ScanRing")).IsActive);
             Require(((TemporaryHttpPage)page).DetectedServers.Any(server => server.Port == fixture.Active!.Port), "Manual HTTP refresh");
+            var discovered = (StackPanel)((StackPanel)page.FindName("DiscoveryRows")).Children[0];
+            var discoveredUrl = ((TextBlock)discovered.Children[1]).Text;
+            var copyDetected = (Button)((PortManager.Controls.WrapPanel)discovered.Children[2]).Children[0];
+            ((IInvokeProvider)new ButtonAutomationPeer(copyDetected).GetPattern(PatternInterface.Invoke)).Invoke();
+            await Task.Delay(100);
+            Require(await Clipboard.GetContent().GetTextAsync() == discoveredUrl, "Independent HTTP address copy while managed server stopped");
             App.LogStartup("Temporary HTTP UI lifecycle PASSED: start, serve, navigate, translate, restart, stop, and firewall cleanup; individual clipboard URLs, automatic/manual discovery, independent server, and stale-result removal.");
         }
         finally { await fixture.StopAsync(); await service.StopAsync(); Directory.Delete(root, true); }

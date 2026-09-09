@@ -62,7 +62,7 @@ public sealed class LocalHttpDiscovery
     {
         var address = listener.Address.Equals(IPAddress.Any) ? IPAddress.Loopback
             : listener.Address.Equals(IPAddress.IPv6Any) ? IPAddress.IPv6Loopback : listener.Address;
-        return new UriBuilder(Uri.UriSchemeHttp, address.ToString(), listener.Port).Uri.AbsoluteUri;
+        return new UriBuilder(Uri.UriSchemeHttp, address.ToString(), listener.Port).Uri.OriginalString;
     }
 
     private static string? ProcessName(int? pid)

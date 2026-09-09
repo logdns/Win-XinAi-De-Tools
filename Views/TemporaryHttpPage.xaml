@@ -19,7 +19,9 @@
                         <ProgressRing x:Name="ScanRing" Width="24" Height="24" IsActive="False"/>
                     </controls:WrapPanel>
                     <TextBlock x:Name="ScanStatusText" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
-                    <StackPanel x:Name="DiscoveryRows" Spacing="16"/>
+                    <ScrollViewer MaxHeight="320" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                        <StackPanel x:Name="DiscoveryRows" Spacing="16"/>
+                    </ScrollViewer>
                 </StackPanel>
             </Border>
             <InfoBar IsOpen="True" IsClosable="False" Severity="Informational"

@@ -182,6 +182,8 @@ public sealed partial class TemporaryHttpPage : Page
 
     internal async Task RefreshDiscoveryAsync()
     {
+        _displayedOptions = null;
+        UpdateState();
         _scan?.Cancel();
         using var scan = new CancellationTokenSource();
         _scan = scan;

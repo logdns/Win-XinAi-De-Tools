@@ -12,6 +12,7 @@ public sealed class LocalHttpDiscoveryTests
     [InlineData("0.0.0.0", "http://127.0.0.1:8980/")]
     [InlineData("::", "http://[::1]:8980/")]
     [InlineData("192.168.1.5", "http://192.168.1.5:8980/")]
+    [InlineData("fe80::1%7", "http://[fe80::1%7]:8980/")]
     [InlineData("2001:db8::1", "http://[2001:db8::1]:8980/")]
     public void WildcardBindingsUseLoopback(string address, string expected) =>
         Assert.Equal(expected, LocalHttpDiscovery.GetProbeUrl(new(IPAddress.Parse(address), 8980, null)));
