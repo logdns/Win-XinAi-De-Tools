@@ -24,7 +24,7 @@ public sealed class TemporaryHttpIntegrationTests
             await File.WriteAllTextAsync(Path.Combine(root, "index.html"), "HTTP integration OK");
             await service.StartAsync(new(port, root));
             var rules = await FirewallService.ListRulesAsync();
-            var owned = Assert.Single(rules.Where(r => r.Name.StartsWith("Win-XinAi-De-Tools Temporary HTTP ") && r.LocalPort == port.ToString()));
+            var owned = Assert.Single(rules, r => r.Name.StartsWith("Win-XinAi-De-Tools Temporary HTTP ") && r.LocalPort == port.ToString());
             Assert.Equal("Inbound", owned.Direction);
             Assert.Equal("TCP", owned.Protocol);
             Assert.Equal("Any", owned.Profile);
