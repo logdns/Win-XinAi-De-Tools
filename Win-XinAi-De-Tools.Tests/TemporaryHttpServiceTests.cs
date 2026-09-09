@@ -184,6 +184,34 @@ public sealed class TemporaryHttpServiceTests : IAsyncLifetime
         await Assert.ThrowsAsync<ObjectDisposedException>(() => _service.StartAsync(new(FreePort(), _root)));
     }
 
+    [Fact]
+    public void OpenedHandleCannotBeOutsideRootOnWindows()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        var outside = Path.GetTempFileName();
+        try
+        {
+            using var file = File.OpenRead(outside);
+            Assert.Throws<UnauthorizedAccessException>(() => HttpFileBoundary.VerifyOpenedFile(file, _root));
+        }
+        finally { File.Delete(outside); }
+    }
+
+    [Fact]
+    public async Task IPv6PortConflictRollsBackTheIpv4Listener()
+    {
+        if (!Socket.OSSupportsIPv6) return;
+        using var occupied = new TcpListener(IPAddress.IPv6Any, 0);
+        occupied.Server.DualMode = false;
+        occupied.Start();
+        var port = ((IPEndPoint)occupied.LocalEndpoint).Port;
+        await Assert.ThrowsAnyAsync<IOException>(() => _service.StartAsync(new(port, _root)));
+        Assert.False(_service.IsRunning);
+        Assert.Empty(_firewall.Rules);
+        using var ipv4 = new TcpListener(IPAddress.Any, port);
+        ipv4.Start();
+    }
+
     private sealed class FakeFirewall : ITemporaryHttpFirewall
     {
         public Dictionary<string, int> Rules { get; } = new();

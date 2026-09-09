@@ -1,4 +1,4 @@
-# Native interface and validation (1.7.0)
+# Native interface and validation (1.8.0)
 
 ## Rendering and appearance
 
@@ -20,7 +20,7 @@ The sidebar offers System, Light, and Dark appearance plus Chinese and English l
 
 ## Responsive layout
 
-All 13 pages share adaptive grid behavior and wrapping action bars. Grid cells collapse in row/column reading order using the grid's available content width, including side-pane consumption. Forms use a 560-DIP breakpoint and list cards use 680 DIP; the dashboard summary uses 520 DIP. Label text can wrap and icon-only action buttons have accessible names.
+All 14 pages share adaptive grid behavior and wrapping action bars. Grid cells collapse in row/column reading order using the grid's available content width, including side-pane consumption. Forms use a 560-DIP breakpoint and list cards use 680 DIP; the dashboard summary uses 520 DIP. Label text can wrap and icon-only action buttons have accessible names.
 
 The navigation pane switches between expanded, compact, and overlay modes. Page padding reduces at 600 DIP of content width. The window can shrink to 480 × 480 native pixels. WSL distribution/detail sections switch to a vertical arrangement on narrow pages; an outer scroll viewer keeps both sections reachable at short heights, while each settings tab retains its own viewport. Existing list virtualization is preserved.
 
@@ -38,13 +38,13 @@ After publishing the Windows x64 application, exercise the real packaged interfa
 ./scripts/ui-smoke.ps1 -Executable artifacts/portable/win-x64/Win-XinAi-De-Tools.exe
 ```
 
-The harness requires `CI=true` and `--ui-smoke` (set by the script). It only visits pages and changes UI state; it does not click firewall/network/SMB/WSL mutation buttons. Read-only page initialization still queries the host and can write application audit entries. Use a disposable Windows test account: theme/language preferences are changed by the test.
+The harness requires `CI=true` and `--ui-smoke` (set by the script). In addition to visiting pages, it starts/restarts/stops a temporary HTTP server over a generated test directory and verifies firewall cleanup. It does not invoke other firewall/network/SMB/WSL mutation buttons. Read-only page initialization still queries the host and can write application audit entries. Use a disposable Windows test account: theme/language preferences are changed by the test.
 
 Requested native window sizes can be constrained by the runner display; the log records the actual XAML viewport in DIP for every size.
 
-Coverage: 13 pages × 2 languages × 2 explicit themes × 3 window sizes (480 × 640, 800 × 600, 1400 × 900), all four WSL tabs, layout bounds, selected navigation item, history after changing language, draft retention, unknown routes, empty history, modal-dialog theme/back protection, compact-pane visibility, and restoring System appearance. CI also validates startup, native window/tray icons, minimize/restore, clean shutdown, Windows Firewall integration, Rust/Go helper builds, NuGet vulnerability data for direct/transitive dependencies, and x86/x64/ARM64 portable and installer builds.
+Coverage: 14 pages × 2 languages × 2 explicit themes × 3 window sizes (480 × 640, 800 × 600, 1400 × 900), all four WSL tabs, layout bounds, selected navigation item, history after changing language, draft retention, unknown routes, empty history, modal-dialog theme/back protection, compact-pane visibility, and restoring System appearance. CI also validates startup, native window/tray icons, minimize/restore, clean shutdown, Windows Firewall integration, Rust/Go helper builds, NuGet vulnerability data for direct/transitive dependencies, and x86/x64/ARM64 portable and installer builds.
 
-The `ui-verification` Actions artifact contains actual dashboard/WSL screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
+The `ui-verification` Actions artifact contains actual dashboard/WSL/HTTP screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
 
 ## Manual acceptance matrix
 

@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Services\TemporaryHttpFirewall.cs" Link="Services\TemporaryHttpFirewall.cs" />
+    <Compile Include="..\Services\HttpFileBoundary.cs" Link="Services\HttpFileBoundary.cs" />
     <Compile Include="..\Services\TemporaryHttpService.cs" Link="Services\TemporaryHttpService.cs" />
     <Compile Include="..\Services\NavigationHistory.cs" Link="Services\NavigationHistory.cs" />
     <Compile Include="..\Services\UiPreferences.cs" Link="Services\UiPreferences.cs" />

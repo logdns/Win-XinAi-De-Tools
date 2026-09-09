@@ -191,13 +191,13 @@ public sealed class TemporaryHttpService(ITemporaryHttpFirewall firewall) : IAsy
                 foreach (var index in new[] { "index.html", "index.htm" })
                 {
                     var candidate = Path.Combine(path, index);
-                    if (File.Exists(candidate) && !IsLink(candidate)) { await SendFileAsync(context, candidate).ConfigureAwait(false); return; }
+                    if (File.Exists(candidate) && !IsLink(candidate)) { await SendFileAsync(context, candidate, options.Directory).ConfigureAwait(false); return; }
                 }
                 await ListDirectoryAsync(context, path, options.Directory).ConfigureAwait(false);
                 return;
             }
             if (!File.Exists(path)) { context.Response.StatusCode = 404; return; }
-            await SendFileAsync(context, path).ConfigureAwait(false);
+            await SendFileAsync(context, path, options.Directory).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
         {
@@ -226,11 +226,12 @@ public sealed class TemporaryHttpService(ITemporaryHttpFirewall firewall) : IAsy
     private static bool IsLink(string path) => (File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0;
     private static string EscapeUrlPath(string path) => "/" + string.Join('/', path.TrimStart('/').Split('/').Select(Uri.EscapeDataString));
 
-    private async Task SendFileAsync(HttpContext context, string path)
+    private async Task SendFileAsync(HttpContext context, string path, string root)
     {
         // Stream from one open handle; cancellation on stop/client disconnect releases the file.
         await using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete,
             65536, FileOptions.Asynchronous | FileOptions.SequentialScan);
+        HttpFileBoundary.VerifyOpenedFile(file, root);
         context.Response.ContentType = _contentTypes.TryGetContentType(path, out var type) ? type : "application/octet-stream";
         context.Response.ContentLength = file.Length;
         if (!HttpMethods.IsHead(context.Request.Method))
