@@ -13,6 +13,8 @@ Open **Temporary HTTP server / 临时 HTTP 服务** in the sidebar or More featu
 
 ## Existing local HTTP servers / 本机已开启的 HTTP 服务
 
+![Detected local HTTP services](screenshots/temporary-http-discovery.png)
+
 进入页面后，顶部自动列出本机已响应 HTTP 的地址，显示端口、HTTP 状态码、PID 和可读取的进程名称。每条地址可单独复制或打开；点击 **刷新检测** 重新检测。启动、停止或重启本工具的服务后也会刷新。列表用“本工具启动”标识当前受控实例；其他应用的服务仅显示，不会被停止或修改。
 
 Discovery reads the Windows IPv4/IPv6 TCP listener tables and sends `HEAD /` to their local addresses (wildcard binds use loopback). Any valid HTTP status, including redirects, authentication errors, 404, and 405, confirms HTTP. Multiple addresses can belong to one server. Process details are best effort and represent the listener snapshot, not an ownership guarantee after the scan.
