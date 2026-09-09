@@ -1,13 +1,33 @@
 # Contributing
 
-Thank you for helping improve Win-XinAi-De-Tools.
+Build and test on Windows. Keep user documentation focused on current behavior.
 
 ## Development Environment
 
 - Windows 10 version 1809 or later.
-- Visual Studio 2022 with the Windows App SDK workload.
+- Visual Studio 2022 configured for .NET desktop and WinUI development.
+- Windows SDK 10.0.19041.0 or newer.
 - .NET 8 SDK.
 - Administrator access for firewall integration tests and manual feature testing.
+
+## Build and test
+
+```powershell
+dotnet publish Win-XinAi-De-Tools.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:WindowsPackageType=None --output artifacts/portable/win-x64
+dotnet test Win-XinAi-De-Tools.Tests/Win-XinAi-De-Tools.Tests.csproj --configuration Release
+python scripts/audit-ui.py
+```
+
+For another architecture, use `win-x86` / `x86` or `win-arm64` / `ARM64`.
+To enable actual firewall integration tests in an elevated Windows session:
+
+```powershell
+$env:PORTMANAGER_RUN_INTEGRATION = "1"
+dotnet test Win-XinAi-De-Tools.Tests/Win-XinAi-De-Tools.Tests.csproj -c Release --filter "Category=WindowsIntegration"
+Remove-Item Env:PORTMANAGER_RUN_INTEGRATION
+```
+
+The app calls `wsl.exe` directly. Optional bridge setup and build instructions are in [native/README.md](native/README.md).
 
 ## Before Opening A Pull Request
 

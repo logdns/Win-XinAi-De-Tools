@@ -50,6 +50,6 @@ The app displays interface addresses, not a verified public URL. Use a separate 
 
 ## Validation and cleanup
 
-Automated tests cover real HTTP GET/HEAD, MIME types, directory listings, CORS, unsupported methods, traversal/link rejection, port conflicts, restart, disposal, and firewall failure rollback/retry. Opt-in Windows integration creates an application-scoped rule, verifies all profiles and an interface HTTP request, and verifies removal. The packaged GUI test invokes Start/Restart/Stop, checks requests and survival across navigation/language changes, verifies individual clipboard URLs, automatic/manual discovery of managed and independent fixtures, and removal of stale ports, then cleans up its test directory and firewall rule. Discovery unit tests also cover IPv4/IPv6 listener enumeration and PID mapping, non-HTTP/silent sockets, cancellation, duplicate endpoints, every HTTP status class, and redirect/body suppression.
+Current test coverage and release evidence are summarized in the [audit and validation record](AUDIT.md).
 
 A forced process kill, power loss, or OS crash can leave a firewall rule named `Win-XinAi-De-Tools Temporary HTTP <unique-id>`. The listener closes with the process. Any residual rule is restricted to this executable and port and can be removed in the existing firewall-rule page. Normal Stop and Exit remove the rule automatically. Public-internet routing, folder-picker interaction, and Explorer/browser opening require Windows/manual environment verification.

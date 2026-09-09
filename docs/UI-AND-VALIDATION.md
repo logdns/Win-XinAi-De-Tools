@@ -1,4 +1,4 @@
-# Native interface and validation (1.8.0)
+# Native interface and validation
 
 ## Rendering and appearance
 
