@@ -38,7 +38,7 @@ After publishing the Windows x64 application, exercise the real packaged interfa
 ./scripts/ui-smoke.ps1 -Executable artifacts/portable/win-x64/Win-XinAi-De-Tools.exe
 ```
 
-The harness requires `CI=true` and `--ui-smoke` (set by the script). In addition to visiting pages, it starts/restarts/stops a temporary HTTP server over a generated test directory and verifies firewall cleanup. It does not invoke other firewall/network/SMB/WSL mutation buttons. Read-only page initialization still queries the host and can write application audit entries. Use a disposable Windows test account: theme/language preferences are changed by the test.
+The harness requires `CI=true` and `--ui-smoke` (set by the script). In addition to visiting pages, it starts/restarts/stops a temporary HTTP server over a generated test directory and verifies firewall cleanup, individual address clipboard actions, automatic/manual HTTP discovery, an independent server fixture, and stale results after restart/stop. It does not invoke other firewall/network/SMB/WSL mutation buttons. Read-only page initialization still queries the host and can write application audit entries. Use a disposable Windows test account: theme/language preferences are changed by the test.
 
 Requested native window sizes can be constrained by the runner display; the log records the actual XAML viewport in DIP for every size.
 

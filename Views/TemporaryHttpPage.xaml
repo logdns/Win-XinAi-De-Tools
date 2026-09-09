@@ -10,6 +10,18 @@
                 <TextBlock Text="{StaticResource Http_Title}" Style="{StaticResource PageTitle}"/>
                 <TextBlock Text="{StaticResource Http_Subtitle}" Style="{StaticResource PageSubtitle}"/>
             </StackPanel>
+            <Border Style="{StaticResource CardPanel}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="{StaticResource Http_DiscoveryTitle}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                    <TextBlock Text="{StaticResource Http_DiscoveryHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <controls:WrapPanel Spacing="10">
+                        <Button x:Name="RefreshButton" Content="{StaticResource Http_Refresh}" Click="RefreshButton_Click"/>
+                        <ProgressRing x:Name="ScanRing" Width="24" Height="24" IsActive="False"/>
+                    </controls:WrapPanel>
+                    <TextBlock x:Name="ScanStatusText" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+                    <StackPanel x:Name="DiscoveryRows" Spacing="16"/>
+                </StackPanel>
+            </Border>
             <InfoBar IsOpen="True" IsClosable="False" Severity="Informational"
                      Title="{StaticResource Http_PublicTitle}" Message="{StaticResource Http_PublicHelp}"/>
             <Border Style="{StaticResource CardPanel}">
@@ -42,10 +54,10 @@
                     <TextBlock x:Name="ActiveDirectoryText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
                     <TextBlock x:Name="CountText" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock Text="{StaticResource Http_Addresses}" FontWeight="SemiBold"/>
-                    <TextBlock x:Name="AddressesText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                    <TextBlock x:Name="NoAddressText" Text="{StaticResource Http_NoAddress}" TextWrapping="Wrap"/>
+                    <StackPanel x:Name="AddressRows" Spacing="12"/>
                     <controls:WrapPanel Spacing="10">
                         <Button x:Name="OpenBrowserButton" Content="{StaticResource Http_OpenBrowser}" Click="OpenBrowserButton_Click"/>
-                        <Button x:Name="CopyButton" Content="{StaticResource Http_Copy}" Click="CopyButton_Click"/>
                     </controls:WrapPanel>
                     <TextBlock Text="{StaticResource Http_NatHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock Text="{StaticResource Http_LifetimeHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>

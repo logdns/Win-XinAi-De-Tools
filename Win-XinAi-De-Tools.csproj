@@ -19,9 +19,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <SatelliteResourceLanguages>en-US;zh-CN;zh-Hans</SatelliteResourceLanguages>
     <LangVersion>latest</LangVersion>
-    <Version>1.8.0</Version>
-    <AssemblyVersion>1.8.0.0</AssemblyVersion>
-    <FileVersion>1.8.0.0</FileVersion>
+    <Version>1.9.0</Version>
+    <AssemblyVersion>1.9.0.0</AssemblyVersion>
+    <FileVersion>1.9.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

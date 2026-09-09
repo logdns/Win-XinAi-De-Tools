@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.9.0 - 2026-09-09
+
+- Give each temporary HTTP access URL its own Copy and Open actions, including local, IPv4, and IPv6 addresses.
+- Automatically detect existing local HTTP servers when opening the page; add manual refresh and refresh after Start/Restart/Stop. List confirmed URLs, HTTP status, port, PID/process when available, and identify the instance managed by this app.
+- Probe actual local IPv4/IPv6 TCP listeners with bounded HEAD requests, without proxies, credentials, cookies, redirects, or response-body downloads. Cancel on navigation; distinguish empty, failed, and incomplete scans.
+- Add protocol, cancellation, listener/PID, IPv6, clipboard and packaged discovery regression coverage. Update bilingual UI, usage guide, and feature audit.
+
 ## 1.8.0 - 2026-09-09
 
 - Add an embedded temporary HTTP file server: default port 8980, selectable directory, open folder/browser, copy addresses, start, stop, and restart.

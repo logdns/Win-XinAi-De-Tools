@@ -286,7 +286,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.8.0</x:String>
+    <x:String x:Key="About_Version">版本 1.9.0</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
@@ -329,4 +329,16 @@
     <x:String x:Key="Http_InvalidDirectory">请选择一个已存在的目录。</x:String>
     <x:String x:Key="Http_Error">HTTP 服务操作失败</x:String>
     <x:String x:Key="Http_ErrorHelp">请检查端口是否被占用、目录是否可读，以及防火墙操作是否具备管理员权限。</x:String>
+    <x:String x:Key="Http_CopyOne">复制此地址</x:String>
+    <x:String x:Key="Http_DiscoveryTitle">本机已开启的 HTTP 服务</x:String>
+    <x:String x:Key="Http_DiscoveryHelp">进入页面时自动检测本机 TCP 监听端口的 HTTP 响应，也可手动刷新。列表可能包含其他应用的服务，无法判断它们是否为临时服务；仅检测，不控制其他应用。</x:String>
+    <x:String x:Key="Http_Refresh">刷新检测</x:String>
+    <x:String x:Key="Http_Scanning">正在检测本机 HTTP 服务…</x:String>
+    <x:String x:Key="Http_ServerDetails">端口 {0} · HTTP {1} · PID {2} · {3}</x:String>
+    <x:String x:Key="Http_Unknown">未知</x:String>
+    <x:String x:Key="Http_Managed">本工具启动</x:String>
+    <x:String x:Key="Http_ScanEmpty">未检测到可响应的 HTTP 服务。仅支持 HTTP；仅 HTTPS、要求特定主机名或响应过慢的服务可能不会显示。</x:String>
+    <x:String x:Key="Http_ScanCount">检测到 {0} 个 HTTP 地址（同一服务可能有多个地址）。</x:String>
+    <x:String x:Key="Http_ScanPartial">已达到检测时限，结果可能不完整，请刷新重试。</x:String>
+    <x:String x:Key="Http_ScanError">检测失败，请刷新重试。</x:String>
 </ResourceDictionary>

@@ -17,6 +17,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Services\LocalHttpDiscovery.cs" Link="Services\LocalHttpDiscovery.cs" />
     <Compile Include="..\Services\TemporaryHttpFirewall.cs" Link="Services\TemporaryHttpFirewall.cs" />
     <Compile Include="..\Services\HttpFileBoundary.cs" Link="Services\HttpFileBoundary.cs" />
     <Compile Include="..\Services\TemporaryHttpService.cs" Link="Services\TemporaryHttpService.cs" />

@@ -286,7 +286,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.8.0</x:String>
+    <x:String x:Key="About_Version">Version 1.9.0</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>
@@ -322,11 +322,23 @@
     <x:String x:Key="Http_NoAddress">Start the server to display its addresses.</x:String>
     <x:String x:Key="Http_OpenBrowser">Open in browser</x:String>
     <x:String x:Key="Http_Copy">Copy addresses</x:String>
-    <x:String x:Key="Http_Copied">Addresses copied</x:String>
+    <x:String x:Key="Http_Copied">Address copied</x:String>
     <x:String x:Key="Http_NatHelp">Internet clients use http://PUBLIC-IP:PORT/. Routers require port forwarding, and cloud hosts may require a security-group rule. Carrier NAT may require a public IP or tunnel. Listed LAN addresses are not public addresses.</x:String>
     <x:String x:Key="Http_LifetimeHelp">The server keeps running across page changes and tray minimization. Stop or exit closes the listener and removes the temporary firewall rule created by this tool.</x:String>
     <x:String x:Key="Http_InvalidPort">Enter a whole-number port from 1 to 65535.</x:String>
     <x:String x:Key="Http_InvalidDirectory">Select an existing directory.</x:String>
     <x:String x:Key="Http_Error">HTTP server operation failed</x:String>
     <x:String x:Key="Http_ErrorHelp">Check that the port is free, the directory is readable, and firewall operations have administrator permissions.</x:String>
+    <x:String x:Key="Http_CopyOne">Copy this address</x:String>
+    <x:String x:Key="Http_DiscoveryTitle">HTTP servers running on this computer</x:String>
+    <x:String x:Key="Http_DiscoveryHelp">Automatically checks local TCP listeners for HTTP responses on entry. Refresh to check again. Results may include other applications; detection cannot tell whether they are temporary. Other applications are not controlled.</x:String>
+    <x:String x:Key="Http_Refresh">Refresh detection</x:String>
+    <x:String x:Key="Http_Scanning">Checking local HTTP servers…</x:String>
+    <x:String x:Key="Http_ServerDetails">Port {0} · HTTP {1} · PID {2} · {3}</x:String>
+    <x:String x:Key="Http_Unknown">Unknown</x:String>
+    <x:String x:Key="Http_Managed">Started by this app</x:String>
+    <x:String x:Key="Http_ScanEmpty">No responding HTTP servers detected. HTTPS-only servers, servers requiring a specific hostname, or slow servers may not appear.</x:String>
+    <x:String x:Key="Http_ScanCount">Detected {0} HTTP addresses (one server may have multiple addresses).</x:String>
+    <x:String x:Key="Http_ScanPartial">Scan time limit reached; results may be incomplete. Refresh to retry.</x:String>
+    <x:String x:Key="Http_ScanError">Detection failed. Refresh to retry.</x:String>
 </ResourceDictionary>
