@@ -14,8 +14,8 @@ The sidebar offers System, Light, and Dark appearance plus Chinese and English l
 - Back and Alt+Left return to the page actually visited before the current page, including top-level network, SMB, and WSL pages. They do not jump to an unrelated feature category.
 - A repeated navigation to the same route does not add history. Unknown routes do nothing. History is limited to the most recent 64 transitions.
 - Sidebar selection follows the displayed page. Connection monitor, rule transfer, and audit log highlight More features; clicking that category opens its landing page.
-- Add-port, port-query, network, SMB, and WSL pages retain in-memory form state while navigating. Data listing pages reload on entry. Refresh controls retrieve current system state.
-- Changing language recreates pages to apply translated resources while retaining route history. **Unsubmitted form values are reset when changing language**, so finish or copy a draft before switching language. Theme changes preserve drafts.
+- Add-port, port-query, network, SMB, WSL, and temporary HTTP pages retain in-memory form state while navigating. Data listing pages reload on entry. Refresh controls retrieve current system state.
+- Changing language recreates pages to apply translated resources while retaining route history. **Unsubmitted form values are reset when changing language**, so finish or copy a draft before switching language. Theme changes preserve drafts. A running temporary HTTP server is owned by the application and survives translation reloads; its active port and directory repopulate the new page.
 - Feature cards use the native Click event so keyboard activation works as well as pointer activation. Back keyboard accelerators do not navigate behind a modal dialog.
 
 ## Responsive layout

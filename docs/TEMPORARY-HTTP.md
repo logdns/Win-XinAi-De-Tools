@@ -2,6 +2,8 @@
 
 Open **Temporary HTTP server / 临时 HTTP 服务** in the sidebar or More features.
 
+![Temporary HTTP server](screenshots/temporary-http.png)
+
 1. Choose a directory, or enter its existing path. **Open folder / 打开目录** opens this configured path in Explorer.
 2. Keep port **8980**, or enter an integer from 1 to 65535.
 3. Click **Start / 启动**. The server listens on all IPv4 interfaces and on all IPv6 interfaces when IPv6 is supported. A temporary inbound TCP Windows Firewall rule allows any remote address on all profiles, scoped to this application and the chosen port.
