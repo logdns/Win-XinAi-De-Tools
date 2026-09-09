@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page x:Class="PortManager.Views.TemporaryHttpPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:PortManager.Controls"
+      Loaded="Page_Loaded" Unloaded="Page_Unloaded">
+    <ScrollViewer Padding="28,24" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Stretch" Spacing="20">
+            <StackPanel>
+                <TextBlock Text="{StaticResource Http_Title}" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="{StaticResource Http_Subtitle}" Style="{StaticResource PageSubtitle}"/>
+            </StackPanel>
+            <InfoBar IsOpen="True" IsClosable="False" Severity="Informational"
+                     Title="{StaticResource Http_PublicTitle}" Message="{StaticResource Http_PublicHelp}"/>
+            <Border Style="{StaticResource CardPanel}">
+                <StackPanel Spacing="16">
+                    <NumberBox x:Name="PortInput" Header="{StaticResource Http_Port}" Value="8980"
+                               Minimum="1" Maximum="65535" SpinButtonPlacementMode="Compact"
+                               HorizontalAlignment="Left" Width="220"/>
+                    <TextBox x:Name="DirectoryInput" Header="{StaticResource Http_Directory}"
+                             PlaceholderText="{StaticResource Http_DirectoryPlaceholder}" TextWrapping="Wrap"/>
+                    <controls:WrapPanel Spacing="10">
+                        <Button x:Name="BrowseButton" Content="{StaticResource Http_Browse}" Click="BrowseButton_Click"/>
+                        <Button x:Name="FolderButton" Content="{StaticResource Http_OpenDirectory}" Click="FolderButton_Click"/>
+                    </controls:WrapPanel>
+                    <CheckBox x:Name="CorsCheckBox">
+                        <TextBlock Text="{StaticResource Http_Cors}" TextWrapping="Wrap"/>
+                    </CheckBox>
+                    <TextBlock Text="{StaticResource Http_RestartHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <controls:WrapPanel Spacing="10">
+                        <Button x:Name="StartButton" Content="{StaticResource Http_Start}" Style="{ThemeResource AccentButtonStyle}" Click="StartButton_Click"/>
+                        <Button x:Name="StopButton" Content="{StaticResource Http_Stop}" Click="StopButton_Click"/>
+                        <Button x:Name="RestartButton" Content="{StaticResource Http_Restart}" Click="RestartButton_Click"/>
+                        <ProgressRing x:Name="BusyRing" Width="24" Height="24" IsActive="False"/>
+                    </controls:WrapPanel>
+                </StackPanel>
+            </Border>
+            <InfoBar x:Name="OperationBar" IsOpen="False" IsClosable="True"/>
+            <Border Style="{StaticResource CardPanel}">
+                <StackPanel Spacing="12">
+                    <TextBlock x:Name="StateText" Style="{StaticResource SectionTitle}" AutomationProperties.LiveSetting="Polite"/>
+                    <TextBlock x:Name="ActiveDirectoryText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                    <TextBlock x:Name="CountText" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="{StaticResource Http_Addresses}" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="AddressesText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                    <controls:WrapPanel Spacing="10">
+                        <Button x:Name="OpenBrowserButton" Content="{StaticResource Http_OpenBrowser}" Click="OpenBrowserButton_Click"/>
+                        <Button x:Name="CopyButton" Content="{StaticResource Http_Copy}" Click="CopyButton_Click"/>
+                    </controls:WrapPanel>
+                    <TextBlock Text="{StaticResource Http_NatHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="{StaticResource Http_LifetimeHelp}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

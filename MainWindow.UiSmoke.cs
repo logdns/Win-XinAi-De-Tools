@@ -20,7 +20,7 @@ public sealed partial class MainWindow
         {
             var routes = new[] { "Dashboard", "AddPort", "ListRules", "DeleteRule", "PortStatus",
                 "NetworkSettings", "SmbSettings", "WslDashboard", "ComingSoon", "ConnectionMonitor",
-                "RuleTransfer", "AuditLog", "About" };
+                "RuleTransfer", "AuditLog", "TemporaryHttp", "About" };
             foreach (var language in new[] { 0, 1 })
             {
                 LanguageSelector.SelectedIndex = language;
@@ -56,7 +56,7 @@ public sealed partial class MainWindow
                                 }
                                 tabs.SelectedIndex = 0;
                             }
-                            if (language == 1 && route is "Dashboard" or "WslDashboard")
+                            if (language == 1 && route is "Dashboard" or "WslDashboard" or "TemporaryHttp")
                             {
                                 var deadline = DateTime.UtcNow.AddSeconds(15);
                                 while (page.FindName("LoadingRing") is ProgressRing { IsActive: true } && DateTime.UtcNow < deadline)
@@ -72,6 +72,7 @@ public sealed partial class MainWindow
                 }
             }
 
+            await VerifyTemporaryHttpAsync();
             NavigateTo("Dashboard");
             NavigateTo("ComingSoon");
             NavigateTo("ConnectionMonitor");
@@ -107,7 +108,7 @@ public sealed partial class MainWindow
             Require(NavView.RequestedTheme == ElementTheme.Default, "System theme was not restored");
             while (_history.CanGoBack) Require(GoBack(), "Back stack stalled");
             Require(!NavView.IsBackEnabled && !GoBack(), "Root back must be disabled");
-            App.LogStartup("UI smoke PASSED: 156 page/theme/language/size combinations, WSL tabs, navigation, and draft retention.");
+            App.LogStartup("UI smoke PASSED: 168 page/theme/language/size combinations, WSL tabs, navigation, draft retention, and temporary HTTP lifecycle.");
         }
         catch (Exception ex)
         {

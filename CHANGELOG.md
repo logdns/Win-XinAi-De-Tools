@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.0 - 2026-09-09
+
+- Add an embedded temporary HTTP file server: default port 8980, selectable directory, open folder/browser, copy addresses, start, stop, and restart.
+- Listen on all IPv4/IPv6 interfaces and manage application-scoped temporary inbound TCP firewall rules for all profiles; document public IP, NAT, forwarding, and cloud security-group requirements.
+- Serve directory indexes, JSON and other static files with optional CORS; reject traversal, links, and write methods. Keep running across navigation and stop on application exit.
+- Add HTTP lifecycle/security tests, real Windows firewall integration, and packaged GUI lifecycle checks; expand layout/theme/language coverage to 14 pages (168 combinations).
+
 ## 1.7.0 - 2026-09-08
 
 ### Added

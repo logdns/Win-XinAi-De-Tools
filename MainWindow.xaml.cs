@@ -184,6 +184,8 @@ public sealed partial class MainWindow : Window
             try { WslService.ShutdownAll(); App.LogStartup("WSL distributions terminated on exit."); }
             catch (Exception ex) { App.LogStartup($"WSL shutdown on exit failed: {ex.Message}"); }
         }
+        try { ((App)Application.Current).TemporaryHttp.DisposeAsync().AsTask().GetAwaiter().GetResult(); }
+        catch (Exception ex) { App.LogStartup($"HTTP shutdown/firewall cleanup failed: {ex.Message}"); }
         TrayIconService.Dispose();
         Application.Current.Exit();
         ExitProcess(0);
@@ -270,6 +272,7 @@ public sealed partial class MainWindow : Window
         NetworkItem.Content = App.Text("Nav_Network");
         SmbItem.Content = App.Text("Nav_Smb");
         WslItem.Content = App.Text("Nav_Wsl");
+        HttpItem.Content = App.Text("Http_Title");
         MoreItem.Content = App.Text("Nav_More");
         AboutItem.Content = App.Text("Nav_About");
         LanguageHeader.Text = App.Text("Language_Header");
@@ -299,13 +302,14 @@ public sealed partial class MainWindow : Window
             "ConnectionMonitor" => typeof(ConnectionMonitorPage),
             "RuleTransfer" => typeof(RuleTransferPage),
             "AuditLog" => typeof(AuditLogPage),
+            "TemporaryHttp" => typeof(TemporaryHttpPage),
             "About" => typeof(AboutPage),
             _ => null
         };
 
         if (pageType is null) return false;
         if (!force && PageHost.Content?.GetType() == pageType) return false;
-        var retainForm = tag is "AddPort" or "PortStatus" or "NetworkSettings" or "SmbSettings" or "WslDashboard";
+        var retainForm = tag is "AddPort" or "PortStatus" or "NetworkSettings" or "SmbSettings" or "WslDashboard" or "TemporaryHttp";
         if (!_formPages.TryGetValue(tag, out var page))
         {
             page = (Page)Activator.CreateInstance(pageType)!;

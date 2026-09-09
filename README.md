@@ -6,14 +6,16 @@ Win-XinAi-De-Tools is a native Windows utility for network configuration, Window
 
 ## Current release
 
-**v1.7.0** — [Download from GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.7.0)
+**v1.8.0** — [Download from GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.8.0)
 
 See [CHANGELOG.md](CHANGELOG.md) for the release history.
 
 ## Features
 
+- Temporary HTTP server on port 8980 (customizable), with a selectable/openable folder, Start/Stop/Restart, all-interface access, and automatic temporary Windows Firewall rules. See [usage and internet access](docs/TEMPORARY-HTTP.md).
+
 - Modern native UI with saved System/Light/Dark appearance, theme-aware dialogs, and Windows animation preferences.
-- A Skia-rendered dashboard chart, responsive layouts across all 13 pages, wrapping toolbars, and history-based Back/Alt+Left navigation.
+- A Skia-rendered dashboard chart, responsive layouts across all 14 pages, wrapping toolbars, and history-based Back/Alt+Left navigation.
 
 - Add, search, list, and delete TCP, UDP, or ANY Windows Firewall rules for inbound, outbound, or bidirectional traffic.
 - Configure adapter IPv4, DHCP, DNS, gateway, route metric, and the default route with validation and confirmation.
@@ -52,9 +54,9 @@ Choose the package matching your Windows architecture:
 
 | Architecture | Portable ZIP | Installer |
 |---|---|---|
-| x86 | [Win-XinAi-De-Tools-win-x86.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-x86.zip) | [Win-XinAi-De-Tools-Setup-x86.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-x86.exe) |
-| x64 | [Win-XinAi-De-Tools-win-x64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-x64.zip) | [Win-XinAi-De-Tools-Setup-x64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-x64.exe) |
-| ARM64 | [Win-XinAi-De-Tools-win-arm64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-arm64.zip) | [Win-XinAi-De-Tools-Setup-arm64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x86 | [Win-XinAi-De-Tools-win-x86.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-win-x86.zip) | [Win-XinAi-De-Tools-Setup-x86.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-Setup-x86.exe) |
+| x64 | [Win-XinAi-De-Tools-win-x64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-win-x64.zip) | [Win-XinAi-De-Tools-Setup-x64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-Setup-x64.exe) |
+| ARM64 | [Win-XinAi-De-Tools-win-arm64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-win-arm64.zip) | [Win-XinAi-De-Tools-Setup-arm64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
 The portable build is self-contained and does not require a separate .NET or Windows App SDK installation. Extract the ZIP and run `Win-XinAi-De-Tools.exe` as administrator. The installer creates a Start menu shortcut and can optionally create a desktop shortcut.
 

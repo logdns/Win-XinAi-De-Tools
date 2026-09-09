@@ -6,14 +6,16 @@ Win-XinAi-De-Tools 是一款原生 Windows 工具，用于管理网络配置、W
 
 ## 当前版本
 
-**v1.7.0** — [从 GitHub Releases 下载](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.7.0)
+**v1.8.0** — [从 GitHub Releases 下载](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.8.0)
 
 版本记录请参阅 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 功能
 
+- 临时 HTTP 服务：默认 8980、自定义端口、选择/打开目录、启动/停止/重启，监听所有网卡并自动管理临时防火墙规则。详见 [使用方法及外网访问](docs/TEMPORARY-HTTP.md)。
+
 - 现代原生 UI：支持并保存跟随系统、深色和浅色外观，弹窗同步主题，页面动画遵循 Windows 动画设置。
-- Skia 绘制的规则分布图，全部 13 个页面自适应布局、操作栏换行，以及按访问历史返回的按钮与 Alt+← 快捷键。
+- Skia 绘制的规则分布图，全部 14 个页面自适应布局、操作栏换行，以及按访问历史返回的按钮与 Alt+← 快捷键。
 
 - 添加、查询、列出和删除 TCP、UDP 或 ANY 防火墙规则，支持入站、出站和双向流量。
 - 配置网卡 IPv4、DHCP、DNS、网关、路由跃点和默认路由，并提供校验及确认提示。
@@ -52,9 +54,9 @@ WSL 页面是本仓库实现的原生 WinUI 管理界面。未安装 WSL 时，�
 
 | 架构 | 免安装 ZIP | 安装包 |
 |---|---|---|
-| x86 | [Win-XinAi-De-Tools-win-x86.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-x86.zip) | [Win-XinAi-De-Tools-Setup-x86.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-x86.exe) |
-| x64 | [Win-XinAi-De-Tools-win-x64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-x64.zip) | [Win-XinAi-De-Tools-Setup-x64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-x64.exe) |
-| ARM64 | [Win-XinAi-De-Tools-win-arm64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-win-arm64.zip) | [Win-XinAi-De-Tools-Setup-arm64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.7.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x86 | [Win-XinAi-De-Tools-win-x86.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-win-x86.zip) | [Win-XinAi-De-Tools-Setup-x86.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-Setup-x86.exe) |
+| x64 | [Win-XinAi-De-Tools-win-x64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-win-x64.zip) | [Win-XinAi-De-Tools-Setup-x64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-Setup-x64.exe) |
+| ARM64 | [Win-XinAi-De-Tools-win-arm64.zip](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-win-arm64.zip) | [Win-XinAi-De-Tools-Setup-arm64.exe](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.8.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
 免安装版本为自包含程序，不需要另外安装 .NET 或 Windows App SDK。解压 ZIP 后，以管理员身份运行 `Win-XinAi-De-Tools.exe`。安装包会创建开始菜单快捷方式，也可以选择创建桌面快捷方式。
 

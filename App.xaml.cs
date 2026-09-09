@@ -7,6 +7,7 @@ namespace PortManager;
 
 public partial class App : Application
 {
+    internal TemporaryHttpService TemporaryHttp { get; } = new(new TemporaryHttpFirewall());
     private MainWindow? _mainWindow;
     private ResourceDictionary? _languageDictionary;
 

@@ -76,6 +76,9 @@
                     <FontIcon Glyph="&#xE756;"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
+            <NavigationViewItem x:Name="HttpItem" Tag="TemporaryHttp">
+                <NavigationViewItem.Icon><FontIcon Glyph="&#xE774;"/></NavigationViewItem.Icon>
+            </NavigationViewItem>
             <NavigationViewItemSeparator/>
             <NavigationViewItem x:Name="MoreItem" Tag="ComingSoon">
                 <NavigationViewItem.Icon>

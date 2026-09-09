@@ -6,6 +6,9 @@
                 <TextBlock Text="{StaticResource More_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
                 <TextBlock Text="{StaticResource More_Subtitle}" Style="{StaticResource PageSubtitle}" TextWrapping="Wrap"/>
             </StackPanel>
+            <toolkit:SettingsCard Header="{StaticResource Http_Title}" Description="{StaticResource Http_Subtitle}" IsClickEnabled="True" Click="TemporaryHttp_Click">
+                <toolkit:SettingsCard.HeaderIcon><FontIcon Glyph="&#xE774;"/></toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
             <toolkit:SettingsExpander Header="{StaticResource More_Connection}" Description="{StaticResource More_ConnectionDescription}">
                 <toolkit:SettingsExpander.Items>
                     <toolkit:SettingsCard Header="{StaticResource More_Live}" Description="{StaticResource More_Implemented}" IsClickEnabled="True" Click="ConnectionMonitor_Click">

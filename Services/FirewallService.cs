@@ -55,13 +55,13 @@ public static class FirewallService
     }
 
     public static async Task<OperationResult> AddRuleAsync(
-        int port, string protocol, string direction, string ruleName)
+        int port, string protocol, string direction, string ruleName, string? applicationPath = null)
     {
         await OperationGate.WaitAsync().ConfigureAwait(false);
         try
         {
             var result = await RunNativeAsync(
-                    () => AddRulesCore(port, protocol, direction, ruleName),
+                    () => AddRulesCore(port, protocol, direction, ruleName, applicationPath),
                     "Could not add the Windows Firewall rule.")
                 .ConfigureAwait(false);
             InvalidateCache();
@@ -213,7 +213,7 @@ public static class FirewallService
     }
 
     private static OperationResult AddRulesCore(
-        int port, string protocol, string direction, string ruleName)
+        int port, string protocol, string direction, string ruleName, string? applicationPath)
     {
         object? policy = null;
         object? rules = null;
@@ -244,7 +244,7 @@ public static class FirewallService
 
                     try
                     {
-                        AddSingleRule(rules, name, port, proto, dir);
+                        AddSingleRule(rules, name, port, proto, dir, applicationPath);
                         result.SuccessCount++;
                     }
                     catch (Exception ex)
@@ -400,7 +400,7 @@ public static class FirewallService
         return profiles == 0 ? AllProfiles : profiles;
     }
 
-    private static void AddSingleRule(object rules, string name, int port, string protocol, string direction)
+    private static void AddSingleRule(object rules, string name, int port, string protocol, string direction, string? applicationPath)
     {
         object? ruleObject = null;
         try
@@ -410,6 +410,7 @@ public static class FirewallService
             rule.Name = name;
             rule.Description = "Managed by Win-XinAi-De-Tools";
             rule.Grouping = "Win-XinAi-De-Tools";
+            if (applicationPath is not null) rule.ApplicationName = applicationPath;
             rule.Protocol = protocol == "UDP" ? ProtocolUdp : ProtocolTcp;
             rule.Direction = direction == "out" ? DirectionOutbound : DirectionInbound;
             if (direction == "out")

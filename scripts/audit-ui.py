@@ -35,4 +35,5 @@ manifest = ET.parse(ROOT / 'Package.appxmanifest').getroot()
 assert list(manifest)[0].get('Version') == version + '.0'
 assert project.findtext('PropertyGroup/AssemblyVersion') == version + '.0'
 assert project.findtext('PropertyGroup/FileVersion') == version + '.0'
-print(f'UI audit passed: {len(chinese)} bilingual resources, 13 pages, version {version}.')
+page_count = len(list((ROOT / 'Views').glob('*.xaml')))
+print(f'UI audit passed: {len(chinese)} bilingual resources, {page_count} pages, version {version}.')
