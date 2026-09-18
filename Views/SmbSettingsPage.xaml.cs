@@ -71,18 +71,6 @@ public sealed partial class SmbSettingsPage : Page
 
     private async void SetShareButton_Click(object sender, RoutedEventArgs e)
     {
-        var warningDialog = new ContentDialog
-        {
-            XamlRoot = XamlRoot,
-            RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
-            Title = App.Text("Smb_GuestConfirmTitle"),
-            Content = App.Text("Smb_GuestConfirmMessage"),
-            PrimaryButtonText = App.Text("Smb_GuestConfirmButton"),
-            CloseButtonText = App.Text("Common_Cancel"),
-            DefaultButton = ContentDialogButton.Close
-        };
-        if (await warningDialog.ShowAsync() != ContentDialogResult.Primary) return;
-
         SetBusy(true);
         try
         {

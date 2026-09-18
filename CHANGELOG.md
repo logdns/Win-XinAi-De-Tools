@@ -3,6 +3,11 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.9.5 · 2026-09-18
+
+- 设置 share 共享时自动开启无密码 Guest 模式，仅保留页面风险警示，不再弹出阻断式确认。
+- Setting a share now enables passwordless Guest access immediately; the persistent warning remains without a blocking confirmation dialog.
+
 ## 1.9.4 · 2026-09-18
 
 - SMB 共享默认开启无密码 Guest 访问，设置前显示高风险确认，移除共享时恢复 SMB 身份验证并停用 Guest。

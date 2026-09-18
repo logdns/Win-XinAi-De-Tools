@@ -164,9 +164,6 @@
     <x:String x:Key="Smb_MacAddress">Mac link</x:String>
     <x:String x:Key="Smb_AccessEmpty">No usable LAN address was detected. Check the network adapters.</x:String>
     <x:String x:Key="Smb_AuthHelp">Guest access is enabled by default. On Windows, choose Guest; on Mac, choose Guest instead of Registered User. No account password is required. If a Windows client still prompts, enable “Allow insecure guest logons” on that client or use Windows account authentication.</x:String>
-    <x:String x:Key="Smb_GuestConfirmTitle">Enable passwordless Guest access?</x:String>
-    <x:String x:Key="Smb_GuestConfirmMessage">This enables the local Guest account, disables SMB share authentication, and grants anonymous LAN users modify access to the selected folder and its contents. Use only on a trusted LAN with temporary files. Continue?</x:String>
-    <x:String x:Key="Smb_GuestConfirmButton">Enable Guest and set share</x:String>
     <x:String x:Key="Smb_CopyAddresses">Copy all addresses</x:String>
     <x:String x:Key="Smb_Copied">SMB addresses copied</x:String>
     <x:String x:Key="Smb_ShareMissing">The share has not been created.</x:String>
@@ -299,7 +296,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.9.4</x:String>
+    <x:String x:Key="About_Version">Version 1.9.5</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>

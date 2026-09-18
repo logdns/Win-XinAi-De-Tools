@@ -164,9 +164,6 @@
     <x:String x:Key="Smb_MacAddress">Mac 链接</x:String>
     <x:String x:Key="Smb_AccessEmpty">未检测到可用的局域网地址，请检查网卡连接。</x:String>
     <x:String x:Key="Smb_AuthHelp">已默认开启 Guest 访问。Windows 请选择 Guest；Mac 请选择“访客”后连接，不需要账户密码。如果 Windows 客户端仍提示账户密码，请在该客户端启用“允许不安全的 Guest 登录”，或改用 Windows 账户认证。</x:String>
-    <x:String x:Key="Smb_GuestConfirmTitle">确认开启无密码 Guest 访问</x:String>
-    <x:String x:Key="Smb_GuestConfirmMessage">这会启用本机 Guest 账户、关闭 SMB 共享身份验证，并将所选文件夹及其内容开放给局域网内的匿名用户读写。仅用于可信局域网和临时文件，确定继续吗？</x:String>
-    <x:String x:Key="Smb_GuestConfirmButton">开启 Guest 并设置共享</x:String>
     <x:String x:Key="Smb_CopyAddresses">复制全部地址</x:String>
     <x:String x:Key="Smb_Copied">SMB 地址已复制</x:String>
     <x:String x:Key="Smb_ShareMissing">尚未创建 share 共享。</x:String>
@@ -299,7 +296,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.9.4</x:String>
+    <x:String x:Key="About_Version">版本 1.9.5</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
