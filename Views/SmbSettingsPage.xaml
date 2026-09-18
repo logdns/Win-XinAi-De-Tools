@@ -82,6 +82,7 @@
                         <TextBlock Text="{StaticResource Smb_AccessTitle}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
                         <StackPanel x:Name="SmbAccessRows" Spacing="4"/>
                         <TextBlock x:Name="SmbAccessEmptyText" Text="{StaticResource Smb_AccessEmpty}" Foreground="#D13438" TextWrapping="Wrap" Visibility="Collapsed"/>
+                        <TextBlock Text="{StaticResource Smb_AuthHelp}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
                         <Button x:Name="CopySmbAddressesButton" Click="CopySmbAddressesButton_Click" HorizontalAlignment="Left">
                             <Grid ColumnSpacing="8">
                                 <Grid.ColumnDefinitions>

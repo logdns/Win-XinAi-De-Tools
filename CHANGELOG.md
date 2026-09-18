@@ -3,6 +3,11 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.9.3 · 2026-09-18
+
+- SMB 共享页明确说明 Windows 和 Mac 访问时需要共享主机上的 Windows 账户凭据；继续显示并复制 Win/Mac 链接。
+- SMB sharing now explains the expected Windows-account authentication prompt on Windows and Mac while retaining the Win/Mac links and one-click copy.
+
 ## 1.9.2 · 2026-09-18
 
 - SMB 共享页新增 Windows 和 Mac 访问地址展示，支持一键复制全部地址。

@@ -149,7 +149,7 @@
     <x:String x:Key="Smb_ConfirmRestartTitle">确认修改并重启系统</x:String>
     <x:String x:Key="Smb_ConfirmRestartMessage">应用后电脑将立即强制重启，未保存的数据可能丢失。确定继续吗？</x:String>
     <x:String x:Key="Smb_ShareTitle">共享文件夹</x:String>
-    <x:String x:Key="Smb_ShareDescription">创建或更新名为 share 的 Windows SMB 共享，默认授予 Everyone 更改权限。</x:String>
+    <x:String x:Key="Smb_ShareDescription">创建或更新名为 share 的 Windows SMB 共享，默认授予 Everyone 更改权限。访问时请使用本机 Windows 账户凭据。</x:String>
     <x:String x:Key="Smb_SharePath">共享文件夹路径</x:String>
     <x:String x:Key="Smb_SharePathHelp">选择本机已存在的文件夹。共享地址为 \\本机名\share。</x:String>
     <x:String x:Key="Smb_Browse">选择本机文件夹</x:String>
@@ -158,9 +158,10 @@
     <x:String x:Key="Smb_ShareActiveFormat">共享已启用：{0} → {1}</x:String>
     <x:String x:Key="Smb_ShareSetFormat">共享 share 已设置：{0}</x:String>
     <x:String x:Key="Smb_AccessTitle">共享访问地址</x:String>
-    <x:String x:Key="Smb_WindowsAddress">Windows 服务地址</x:String>
-    <x:String x:Key="Smb_MacAddress">Mac 访问地址</x:String>
+    <x:String x:Key="Smb_WindowsAddress">Win 链接</x:String>
+    <x:String x:Key="Smb_MacAddress">Mac 链接</x:String>
     <x:String x:Key="Smb_AccessEmpty">未检测到可用的局域网地址，请检查网卡连接。</x:String>
+    <x:String x:Key="Smb_AuthHelp">出现账户密码提示是正常的系统认证行为。Windows 请输入共享主机上的本地账户；Mac 请选择“注册用户”，输入同一组凭据。Windows 可使用“主机名\\用户名”格式；默认不会启用无密码 Guest 访问。</x:String>
     <x:String x:Key="Smb_CopyAddresses">复制全部地址</x:String>
     <x:String x:Key="Smb_Copied">SMB 地址已复制</x:String>
     <x:String x:Key="Smb_ShareMissing">尚未创建 share 共享。</x:String>
@@ -293,7 +294,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.9.2</x:String>
+    <x:String x:Key="About_Version">版本 1.9.3</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
