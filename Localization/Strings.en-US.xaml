@@ -149,7 +149,9 @@
     <x:String x:Key="Smb_ConfirmRestartTitle">Apply changes and restart?</x:String>
     <x:String x:Key="Smb_ConfirmRestartMessage">The computer will force-restart immediately after applying. Unsaved data may be lost. Continue?</x:String>
     <x:String x:Key="Smb_ShareTitle">Shared folder</x:String>
-    <x:String x:Key="Smb_ShareDescription">Create or update a Windows SMB share named share, granting Everyone change access by default. Access uses a Windows account on this computer.</x:String>
+    <x:String x:Key="Smb_ShareDescription">Create or update a Windows SMB share named share with passwordless Guest access enabled automatically.</x:String>
+    <x:String x:Key="Smb_GuestWarningTitle">High risk: passwordless Guest sharing</x:String>
+    <x:String x:Key="Smb_GuestWarningMessage">Setting share enables Windows Guest, disables SMB share authentication, and grants Everyone modify access to the selected folder and its contents. Anyone on the LAN may read or change these files; do not share sensitive data.</x:String>
     <x:String x:Key="Smb_SharePath">Shared folder path</x:String>
     <x:String x:Key="Smb_SharePathHelp">Enter an existing local folder. The network address is \\computer-name\share.</x:String>
     <x:String x:Key="Smb_Browse">Choose local folder</x:String>
@@ -161,13 +163,16 @@
     <x:String x:Key="Smb_WindowsAddress">Win link</x:String>
     <x:String x:Key="Smb_MacAddress">Mac link</x:String>
     <x:String x:Key="Smb_AccessEmpty">No usable LAN address was detected. Check the network adapters.</x:String>
-    <x:String x:Key="Smb_AuthHelp">The password prompt is expected. On Windows, enter a local account from the sharing computer; on Mac, choose Registered User and enter the same credentials. Windows can use the “computer-name\\username” format. Passwordless Guest access is not enabled by default.</x:String>
+    <x:String x:Key="Smb_AuthHelp">Guest access is enabled by default. On Windows, choose Guest; on Mac, choose Guest instead of Registered User. No account password is required. If a Windows client still prompts, enable “Allow insecure guest logons” on that client or use Windows account authentication.</x:String>
+    <x:String x:Key="Smb_GuestConfirmTitle">Enable passwordless Guest access?</x:String>
+    <x:String x:Key="Smb_GuestConfirmMessage">This enables the local Guest account, disables SMB share authentication, and grants anonymous LAN users modify access to the selected folder and its contents. Use only on a trusted LAN with temporary files. Continue?</x:String>
+    <x:String x:Key="Smb_GuestConfirmButton">Enable Guest and set share</x:String>
     <x:String x:Key="Smb_CopyAddresses">Copy all addresses</x:String>
     <x:String x:Key="Smb_Copied">SMB addresses copied</x:String>
     <x:String x:Key="Smb_ShareMissing">The share has not been created.</x:String>
     <x:String x:Key="Smb_ShareRemoved">The share was removed.</x:String>
     <x:String x:Key="Smb_RemoveConfirmTitle">Remove share?</x:String>
-    <x:String x:Key="Smb_RemoveConfirmMessage">This stops SMB access to the folder but does not delete its files. Continue?</x:String>
+    <x:String x:Key="Smb_RemoveConfirmMessage">This stops SMB access to the folder, restores SMB authentication, and disables the Guest account without deleting files. Other Guest shares may be affected. Continue?</x:String>
     <x:String x:Key="Smb_Error">SMB operation failed</x:String>
 
     <x:String x:Key="Wsl_Title">WSL manager</x:String>
@@ -294,7 +299,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.9.3</x:String>
+    <x:String x:Key="About_Version">Version 1.9.4</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>

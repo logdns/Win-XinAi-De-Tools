@@ -74,14 +74,15 @@ public static class SmbConfigurationService
         if (string.IsNullOrWhiteSpace(path))
             throw new SmbOperationException(Message("请输入共享文件夹路径。", "Enter a shared folder path."));
         var escaped = EscapePowerShell(Path.GetFullPath(path.Trim()));
-        var script = $"$path='{escaped}'; if(-not (Test-Path -LiteralPath $path -PathType Container)){{throw 'Folder does not exist.'}}; $existing=Get-SmbShare -Name '{ShareName}' -ErrorAction SilentlyContinue; if($existing -and $existing.Path -ne $path){{Remove-SmbShare -Name '{ShareName}' -Force -ErrorAction Stop; $existing=$null}}; if(-not $existing){{New-SmbShare -Name '{ShareName}' -Path $path -ChangeAccess 'Everyone' -ErrorAction Stop | Out-Null}}";
+        var script = $"$ErrorActionPreference='Stop'; $path='{escaped}'; if(-not (Test-Path -LiteralPath $path -PathType Container)){{throw 'Folder does not exist.'}}; $serverCommand=Get-Command Set-SmbServerConfiguration -ErrorAction SilentlyContinue; if(-not $serverCommand -or -not $serverCommand.Parameters.ContainsKey('EnableAuthenticateUserSharing')){{throw 'This Windows version does not support unauthenticated SMB sharing.'}}; $clientCommand=Get-Command Set-SmbClientConfiguration -ErrorAction SilentlyContinue; if(-not $clientCommand -or -not $clientCommand.Parameters.ContainsKey('EnableInsecureGuestLogons')){{throw 'This Windows version does not support insecure SMB guest logons.'}}; $guest=Get-CimInstance Win32_UserAccount -Filter \"LocalAccount=True AND SID LIKE '%-501'\" | Select-Object -First 1; if(-not $guest){{throw 'The built-in Guest account was not found.'}}; & net.exe user $guest.Name /active:yes | Out-Null; if($LASTEXITCODE -ne 0){{throw 'Could not enable the built-in Guest account.'}}; Set-SmbServerConfiguration -EnableAuthenticateUserSharing $false -Force; Set-SmbClientConfiguration -EnableInsecureGuestLogons $true -Force; $existing=Get-SmbShare -Name '{ShareName}' -ErrorAction SilentlyContinue; if($existing -and $existing.Path -ne $path){{Remove-SmbShare -Name '{ShareName}' -Force -ErrorAction Stop; $existing=$null}}; if(-not $existing){{New-SmbShare -Name '{ShareName}' -Path $path -ChangeAccess 'Everyone' -ErrorAction Stop | Out-Null}} else {{Grant-SmbShareAccess -Name '{ShareName}' -AccountName 'Everyone' -AccessRight Change -Force -ErrorAction Stop | Out-Null}}; & icacls.exe $path /grant '*S-1-1-0:(OI)(CI)M' /T /C | Out-Null; if($LASTEXITCODE -ne 0){{throw 'Could not grant Everyone modify access to the shared folder.'}}";
         RunPowerShell<object>(script, parseOutput: false);
     });
 
     public static Task RemoveShareAsync() => Task.Run(() =>
     {
         EnsureWindows();
-        RunPowerShell<object>($"Get-SmbShare -Name '{ShareName}' -ErrorAction SilentlyContinue | Remove-SmbShare -Force -ErrorAction SilentlyContinue", parseOutput: false);
+        const string script = "$ErrorActionPreference='Stop'; Get-SmbShare -Name 'share' -ErrorAction SilentlyContinue | Remove-SmbShare -Force -ErrorAction SilentlyContinue; Set-SmbServerConfiguration -EnableAuthenticateUserSharing $true -Force; Set-SmbClientConfiguration -EnableInsecureGuestLogons $false -Force; $guest=Get-CimInstance Win32_UserAccount -Filter \"LocalAccount=True AND SID LIKE '%-501'\" | Select-Object -First 1; if($guest){& net.exe user $guest.Name /active:no | Out-Null; if($LASTEXITCODE -ne 0){throw 'Could not disable the built-in Guest account.'}}";
+        RunPowerShell<object>(script, parseOutput: false);
     });
 
     private static T RunPowerShell<T>(string script, bool parseOutput = true)

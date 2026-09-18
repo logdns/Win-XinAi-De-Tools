@@ -44,6 +44,7 @@
                 <StackPanel Spacing="12">
                     <TextBlock Text="{StaticResource Smb_ShareTitle}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
                     <TextBlock Text="{StaticResource Smb_ShareDescription}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <InfoBar IsOpen="True" IsClosable="False" Severity="Warning" Title="{StaticResource Smb_GuestWarningTitle}" Message="{StaticResource Smb_GuestWarningMessage}"/>
                     <TextBox x:Name="SharePathBox" Header="{StaticResource Smb_SharePath}" PlaceholderText="C:\\Users\\Public\\Share" ToolTipService.ToolTip="{StaticResource Smb_SharePathHelp}"/>
                     <controls:WrapPanel Spacing="10">
                         <Button x:Name="BrowseShareButton" Click="BrowseShareButton_Click">

@@ -3,6 +3,11 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.9.4 · 2026-09-18
+
+- SMB 共享默认开启无密码 Guest 访问，设置前显示高风险确认，移除共享时恢复 SMB 身份验证并停用 Guest。
+- SMB sharing now enables passwordless Guest access by default with a prominent warning, and restores authenticated SMB access when the share is removed.
+
 ## 1.9.3 · 2026-09-18
 
 - SMB 共享页明确说明 Windows 和 Mac 访问时需要共享主机上的 Windows 账户凭据；继续显示并复制 Win/Mac 链接。

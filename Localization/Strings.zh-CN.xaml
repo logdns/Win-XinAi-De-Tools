@@ -149,7 +149,9 @@
     <x:String x:Key="Smb_ConfirmRestartTitle">确认修改并重启系统</x:String>
     <x:String x:Key="Smb_ConfirmRestartMessage">应用后电脑将立即强制重启，未保存的数据可能丢失。确定继续吗？</x:String>
     <x:String x:Key="Smb_ShareTitle">共享文件夹</x:String>
-    <x:String x:Key="Smb_ShareDescription">创建或更新名为 share 的 Windows SMB 共享，默认授予 Everyone 更改权限。访问时请使用本机 Windows 账户凭据。</x:String>
+    <x:String x:Key="Smb_ShareDescription">创建或更新名为 share 的 Windows SMB 共享，自动开启无密码 Guest 访问。</x:String>
+    <x:String x:Key="Smb_GuestWarningTitle">高风险：无密码 Guest 共享</x:String>
+    <x:String x:Key="Smb_GuestWarningMessage">设置 share 时会启用 Windows Guest、关闭共享身份验证，并给所选文件夹及其内容授予 Everyone 修改权限。局域网内任何人都可能读写该目录，请勿共享敏感文件。</x:String>
     <x:String x:Key="Smb_SharePath">共享文件夹路径</x:String>
     <x:String x:Key="Smb_SharePathHelp">选择本机已存在的文件夹。共享地址为 \\本机名\share。</x:String>
     <x:String x:Key="Smb_Browse">选择本机文件夹</x:String>
@@ -161,13 +163,16 @@
     <x:String x:Key="Smb_WindowsAddress">Win 链接</x:String>
     <x:String x:Key="Smb_MacAddress">Mac 链接</x:String>
     <x:String x:Key="Smb_AccessEmpty">未检测到可用的局域网地址，请检查网卡连接。</x:String>
-    <x:String x:Key="Smb_AuthHelp">出现账户密码提示是正常的系统认证行为。Windows 请输入共享主机上的本地账户；Mac 请选择“注册用户”，输入同一组凭据。Windows 可使用“主机名\\用户名”格式；默认不会启用无密码 Guest 访问。</x:String>
+    <x:String x:Key="Smb_AuthHelp">已默认开启 Guest 访问。Windows 请选择 Guest；Mac 请选择“访客”后连接，不需要账户密码。如果 Windows 客户端仍提示账户密码，请在该客户端启用“允许不安全的 Guest 登录”，或改用 Windows 账户认证。</x:String>
+    <x:String x:Key="Smb_GuestConfirmTitle">确认开启无密码 Guest 访问</x:String>
+    <x:String x:Key="Smb_GuestConfirmMessage">这会启用本机 Guest 账户、关闭 SMB 共享身份验证，并将所选文件夹及其内容开放给局域网内的匿名用户读写。仅用于可信局域网和临时文件，确定继续吗？</x:String>
+    <x:String x:Key="Smb_GuestConfirmButton">开启 Guest 并设置共享</x:String>
     <x:String x:Key="Smb_CopyAddresses">复制全部地址</x:String>
     <x:String x:Key="Smb_Copied">SMB 地址已复制</x:String>
     <x:String x:Key="Smb_ShareMissing">尚未创建 share 共享。</x:String>
     <x:String x:Key="Smb_ShareRemoved">share 共享已移除。</x:String>
     <x:String x:Key="Smb_RemoveConfirmTitle">移除 share 共享？</x:String>
-    <x:String x:Key="Smb_RemoveConfirmMessage">这会停止通过 SMB 访问该文件夹，但不会删除文件。是否继续？</x:String>
+    <x:String x:Key="Smb_RemoveConfirmMessage">这会停止通过 SMB 访问该文件夹、恢复 SMB 身份验证并停用 Guest 账户，但不会删除文件。依赖 Guest 的其他共享也会受影响，是否继续？</x:String>
     <x:String x:Key="Smb_Error">SMB 操作失败</x:String>
 
     <x:String x:Key="Wsl_Title">WSL 管理</x:String>
@@ -294,7 +299,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.9.3</x:String>
+    <x:String x:Key="About_Version">版本 1.9.4</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
