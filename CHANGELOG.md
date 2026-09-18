@@ -3,6 +3,11 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.9.2 · 2026-09-18
+
+- SMB 共享页新增 Windows 和 Mac 访问地址展示，支持一键复制全部地址。
+- SMB sharing now shows Windows and Mac access addresses with one-click copy for sharing configuration details.
+
 ## 1.9.1 · 2026-09-18
 
 - SMB 共享设置新增本机文件夹选择器，选择后可直接设置 share 共享。

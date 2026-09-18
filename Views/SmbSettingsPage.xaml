@@ -78,6 +78,21 @@
                         </Button>
                     </controls:WrapPanel>
                     <TextBlock x:Name="ShareStatusText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <StackPanel x:Name="SmbAccessPanel" Spacing="8" Visibility="Collapsed">
+                        <TextBlock Text="{StaticResource Smb_AccessTitle}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                        <StackPanel x:Name="SmbAccessRows" Spacing="4"/>
+                        <TextBlock x:Name="SmbAccessEmptyText" Text="{StaticResource Smb_AccessEmpty}" Foreground="#D13438" TextWrapping="Wrap" Visibility="Collapsed"/>
+                        <Button x:Name="CopySmbAddressesButton" Click="CopySmbAddressesButton_Click" HorizontalAlignment="Left">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Smb_CopyAddresses}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </StackPanel>

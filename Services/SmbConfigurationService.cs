@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text.Json;
 using PortManager.Models;
 
@@ -8,6 +11,33 @@ public static class SmbConfigurationService
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private const string ShareName = "share";
+
+    public static IReadOnlyList<SmbAccessAddress> GetAccessAddresses(string shareName = ShareName)
+    {
+        if (string.IsNullOrWhiteSpace(shareName)) return Array.Empty<SmbAccessAddress>();
+
+        try
+        {
+            return NetworkInterface.GetAllNetworkInterfaces()
+                .Where(adapter => adapter.OperationalStatus == OperationalStatus.Up
+                    && adapter.NetworkInterfaceType is not NetworkInterfaceType.Loopback
+                    and not NetworkInterfaceType.Tunnel)
+                .SelectMany(adapter => adapter.GetIPProperties().UnicastAddresses)
+                .Select(unicast => unicast.Address)
+                .Where(address => address.AddressFamily == AddressFamily.InterNetwork
+                    && !IPAddress.IsLoopback(address)
+                    && !address.GetAddressBytes().AsSpan().StartsWith(new byte[] { 169, 254 }))
+                .Select(address => address.ToString())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(address => address, StringComparer.OrdinalIgnoreCase)
+                .Select(address => new SmbAccessAddress($@"\\{address}\{shareName}", $"smb://{address}/{Uri.EscapeDataString(shareName)}"))
+                .ToArray();
+        }
+        catch (NetworkInformationException)
+        {
+            return Array.Empty<SmbAccessAddress>();
+        }
+    }
 
     public static Task<SmbFeatureStatus> GetStatusAsync() => Task.Run(() =>
     {

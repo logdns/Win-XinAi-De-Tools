@@ -18,6 +18,8 @@ public sealed class SmbFeatureRequest
     public bool ForceRestart { get; init; }
 }
 
+public sealed record SmbAccessAddress(string WindowsPath, string MacUrl);
+
 public sealed class SmbOperationException : Exception
 {
     public SmbOperationException(string message) : base(message) { }

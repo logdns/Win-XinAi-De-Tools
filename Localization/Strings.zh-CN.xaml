@@ -157,6 +157,12 @@
     <x:String x:Key="Smb_RemoveShare">移除 share 共享</x:String>
     <x:String x:Key="Smb_ShareActiveFormat">共享已启用：{0} → {1}</x:String>
     <x:String x:Key="Smb_ShareSetFormat">共享 share 已设置：{0}</x:String>
+    <x:String x:Key="Smb_AccessTitle">共享访问地址</x:String>
+    <x:String x:Key="Smb_WindowsAddress">Windows 服务地址</x:String>
+    <x:String x:Key="Smb_MacAddress">Mac 访问地址</x:String>
+    <x:String x:Key="Smb_AccessEmpty">未检测到可用的局域网地址，请检查网卡连接。</x:String>
+    <x:String x:Key="Smb_CopyAddresses">复制全部地址</x:String>
+    <x:String x:Key="Smb_Copied">SMB 地址已复制</x:String>
     <x:String x:Key="Smb_ShareMissing">尚未创建 share 共享。</x:String>
     <x:String x:Key="Smb_ShareRemoved">share 共享已移除。</x:String>
     <x:String x:Key="Smb_RemoveConfirmTitle">移除 share 共享？</x:String>
@@ -287,7 +293,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.9.1</x:String>
+    <x:String x:Key="About_Version">版本 1.9.2</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>

@@ -157,6 +157,12 @@
     <x:String x:Key="Smb_RemoveShare">Remove share</x:String>
     <x:String x:Key="Smb_ShareActiveFormat">Share active: {0} -> {1}</x:String>
     <x:String x:Key="Smb_ShareSetFormat">Share configured: {0}</x:String>
+    <x:String x:Key="Smb_AccessTitle">Share access addresses</x:String>
+    <x:String x:Key="Smb_WindowsAddress">Windows service address</x:String>
+    <x:String x:Key="Smb_MacAddress">Mac access address</x:String>
+    <x:String x:Key="Smb_AccessEmpty">No usable LAN address was detected. Check the network adapters.</x:String>
+    <x:String x:Key="Smb_CopyAddresses">Copy all addresses</x:String>
+    <x:String x:Key="Smb_Copied">SMB addresses copied</x:String>
     <x:String x:Key="Smb_ShareMissing">The share has not been created.</x:String>
     <x:String x:Key="Smb_ShareRemoved">The share was removed.</x:String>
     <x:String x:Key="Smb_RemoveConfirmTitle">Remove share?</x:String>
@@ -287,7 +293,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.9.1</x:String>
+    <x:String x:Key="About_Version">Version 1.9.2</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>
