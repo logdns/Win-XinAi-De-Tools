@@ -3,6 +3,11 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.9.1 · 2026-09-18
+
+- SMB 共享设置新增本机文件夹选择器，选择后可直接设置 share 共享。
+- SMB sharing now includes a local folder picker so a selected directory can be configured directly.
+
 ## 1.9.0 · 2026-09-09
 
 - HTTP 地址支持逐条复制和打开；自动检测本机 HTTP 服务，显示端口、状态和进程，并支持手动刷新及启停后刷新。

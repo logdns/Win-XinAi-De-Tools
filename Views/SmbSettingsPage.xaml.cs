@@ -77,6 +77,24 @@ public sealed partial class SmbSettingsPage : Page
         finally { SetBusy(false); }
     }
 
+    private async void BrowseShareButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_busy) return;
+        SetBusy(true);
+        try
+        {
+            var window = ((App)Application.Current).MainWindow;
+            if (window is null) return;
+
+            var picker = new Microsoft.Windows.Storage.Pickers.FolderPicker(window.AppWindow.Id);
+            var result = await picker.PickSingleFolderAsync();
+            if (result is not null)
+                SharePathBox.Text = result.Path;
+        }
+        catch (Exception ex) { ShowError(ex.Message); }
+        finally { SetBusy(false); }
+    }
+
     private async void RemoveShareButton_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new ContentDialog { XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme, Title = App.Text("Smb_RemoveConfirmTitle"), Content = App.Text("Smb_RemoveConfirmMessage"), PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"), DefaultButton = ContentDialogButton.Close };
@@ -87,6 +105,6 @@ public sealed partial class SmbSettingsPage : Page
         finally { SetBusy(false); }
     }
 
-    private void SetBusy(bool busy) { _busy = busy; LoadingRing.IsActive = busy; ApplyButton.IsEnabled = !busy; RefreshButton.IsEnabled = !busy; SetShareButton.IsEnabled = !busy; RemoveShareButton.IsEnabled = !busy; }
+    private void SetBusy(bool busy) { _busy = busy; LoadingRing.IsActive = busy; ApplyButton.IsEnabled = !busy; RefreshButton.IsEnabled = !busy; BrowseShareButton.IsEnabled = !busy; SetShareButton.IsEnabled = !busy; RemoveShareButton.IsEnabled = !busy; }
     private void ShowError(string message) { ErrorBar.Title = App.Text("Smb_Error"); ErrorBar.Message = message; ErrorBar.IsOpen = true; }
 }

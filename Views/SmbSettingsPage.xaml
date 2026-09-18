@@ -46,6 +46,16 @@
                     <TextBlock Text="{StaticResource Smb_ShareDescription}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBox x:Name="SharePathBox" Header="{StaticResource Smb_SharePath}" PlaceholderText="C:\\Users\\Public\\Share" ToolTipService.ToolTip="{StaticResource Smb_SharePathHelp}"/>
                     <controls:WrapPanel Spacing="10">
+                        <Button x:Name="BrowseShareButton" Click="BrowseShareButton_Click">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="" Grid.Column="0"/>
+                                <TextBlock Text="{StaticResource Smb_Browse}" Grid.Column="1" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Button>
                         <Button x:Name="SetShareButton" Click="SetShareButton_Click">
                             <Grid ColumnSpacing="8">
                                 <Grid.ColumnDefinitions>

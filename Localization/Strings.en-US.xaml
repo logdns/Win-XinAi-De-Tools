@@ -152,6 +152,7 @@
     <x:String x:Key="Smb_ShareDescription">Create or update a Windows SMB share named share, granting Everyone change access by default.</x:String>
     <x:String x:Key="Smb_SharePath">Shared folder path</x:String>
     <x:String x:Key="Smb_SharePathHelp">Enter an existing local folder. The network address is \\computer-name\share.</x:String>
+    <x:String x:Key="Smb_Browse">Choose local folder</x:String>
     <x:String x:Key="Smb_SetShare">Set share</x:String>
     <x:String x:Key="Smb_RemoveShare">Remove share</x:String>
     <x:String x:Key="Smb_ShareActiveFormat">Share active: {0} -> {1}</x:String>
@@ -286,7 +287,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.9.0</x:String>
+    <x:String x:Key="About_Version">Version 1.9.1</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>

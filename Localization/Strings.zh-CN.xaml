@@ -152,6 +152,7 @@
     <x:String x:Key="Smb_ShareDescription">创建或更新名为 share 的 Windows SMB 共享，默认授予 Everyone 更改权限。</x:String>
     <x:String x:Key="Smb_SharePath">共享文件夹路径</x:String>
     <x:String x:Key="Smb_SharePathHelp">选择本机已存在的文件夹。共享地址为 \\本机名\share。</x:String>
+    <x:String x:Key="Smb_Browse">选择本机文件夹</x:String>
     <x:String x:Key="Smb_SetShare">设置 share 共享</x:String>
     <x:String x:Key="Smb_RemoveShare">移除 share 共享</x:String>
     <x:String x:Key="Smb_ShareActiveFormat">共享已启用：{0} → {1}</x:String>
@@ -286,7 +287,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.9.0</x:String>
+    <x:String x:Key="About_Version">版本 1.9.1</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
