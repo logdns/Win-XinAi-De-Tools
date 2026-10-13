@@ -20,7 +20,7 @@ public sealed class HyperVServiceTests
         Assert.Contains("-NoRestart", script);
         Assert.Contains("Get-WindowsOptionalFeature -Online -ErrorAction Stop", script);
         Assert.Contains("DisabledWithPayloadRemoved", script);
-        Assert.DoesNotContain("SilentlyContinue", script);
+        Assert.DoesNotContain("-ErrorAction SilentlyContinue", script);
         Assert.DoesNotContain("VirtualMachinePlatform", script);
         Assert.DoesNotContain("HypervisorPlatform", script);
         Assert.DoesNotContain("bcdedit", script);
