@@ -205,6 +205,18 @@ public sealed class HyperVServiceTests
         await RunHarnessAsync(fixtures + "try { " + HyperVService.BuildRemoveSwitchScript(SwitchId) + " } catch { if($_.Exception.Message -notmatch 'Only WinXinAi|Disconnect all'){throw} }; " + $"if($removed -ne ${shouldRemove.ToString().ToLowerInvariant()}){{throw 'Unexpected removal result'}}");
     }
 
+    [Fact]
+    [Trait("Category", "HyperVReadOnly")]
+    public async Task WindowsStatusProbeCompletesWithoutChangingHostConfiguration()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        var status = await HyperVService.GetStatusAsync();
+        Assert.Equal(3, status.Features.Count);
+        Assert.All(status.Features, feature => Assert.False(string.IsNullOrWhiteSpace(feature.State)));
+        Assert.False(string.IsNullOrWhiteSpace(status.BootLaunchType));
+        Assert.All(status.VirtualAdapters, adapter => Assert.NotEqual(Guid.Empty, adapter.Id));
+    }
+
     private static async Task RunHarnessAsync(string script)
     {
         var executable = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "WindowsPowerShell", "v1.0", "powershell.exe");

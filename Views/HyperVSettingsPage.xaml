@@ -3,7 +3,7 @@
     <ScrollViewer Padding="32,28" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
         <StackPanel MaxWidth="900" HorizontalAlignment="Stretch" Spacing="18">
             <TextBlock Text="{StaticResource HyperV_Title}" Style="{StaticResource PageTitle}" TextWrapping="Wrap"/>
-            <InfoBar IsOpen="True" IsClosable="False" Severity="Warning" Title="{StaticResource HyperV_RiskTitle}" Message="{StaticResource HyperV_Risk}"/>
+            <InfoBar IsOpen="True" IsClosable="False" Severity="Warning" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Title="{StaticResource HyperV_RiskTitle}" Message="{StaticResource HyperV_Risk}"/>
             <controls:WrapPanel Spacing="10">
                 <Button x:Name="RefreshButton" Content="{StaticResource Network_Refresh}" Click="RefreshButton_Click"/>
                 <ProgressRing x:Name="LoadingRing" Width="20" Height="20" IsActive="False"/>

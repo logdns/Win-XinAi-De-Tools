@@ -14,26 +14,31 @@ public static class HyperVService
     internal const string VirtualAdapterQuery = "$ids=@(Get-CimInstance Win32_NetworkAdapter -ErrorAction Stop | Where-Object { $_.ServiceName -eq 'VMSMP' -and $_.GUID } | ForEach-Object { [guid]$_.GUID }); $virtual=@(Get-NetAdapter -IncludeHidden -ErrorAction Stop | Where-Object { $ids -contains [guid]$_.InterfaceGuid }); ";
 
     internal const string StatusScript = Preamble + """
+        [Console]::Error.WriteLine('Hyper-V probe: optional features');
         $availableFeatures=@(Get-WindowsOptionalFeature -Online -ErrorAction Stop);
         $features=@(foreach($name in @('Microsoft-Hyper-V-All','VirtualMachinePlatform','HypervisorPlatform')) {
             $f=$availableFeatures | Where-Object FeatureName -eq $name | Select-Object -First 1
             if($f){[pscustomobject]@{Name=$name;State=[string]$f.State}}else{[pscustomobject]@{Name=$name;State='Unavailable'}}
         });
         $virtualRows=@(); $physicalRows=@(); $networkError='';
+        [Console]::Error.WriteLine('Hyper-V probe: network adapters');
         try {
         """ + VirtualAdapterQuery + """
             $virtualRows=@($virtual | ForEach-Object { [pscustomobject]@{Id=[string]$_.InterfaceGuid;Name=$_.Name;Status=[string]$_.Status} });
             $physicalRows=@(Get-NetAdapter -Physical | Where-Object { $_.HardwareInterface -and -not $_.Virtual } | ForEach-Object { [pscustomobject]@{Id=[string]$_.InterfaceGuid;Name=$_.Name;Status=[string]$_.Status} });
         } catch { $networkError=$_.Exception.Message }
         $available=$null -ne (Get-Command Get-VMSwitch -ErrorAction SilentlyContinue); $switches=@(); $switchError='';
+        [Console]::Error.WriteLine('Hyper-V probe: virtual switches');
         if($available){try{$switches=@(Get-VMSwitch | ForEach-Object { [pscustomobject]@{Id=[string]$_.Id;Name=$_.Name;SwitchType=[string]$_.SwitchType;AllowManagementOS=[bool]$_.AllowManagementOS} })}catch{$switchError=$_.Exception.Message}}
+        [Console]::Error.WriteLine('Hyper-V probe: boot configuration');
         $boot=& "$env:SystemRoot\System32\bcdedit.exe" /enum '{current}' 2>&1;
         if($LASTEXITCODE -ne 0){throw "Cannot read boot configuration: $boot"}
         $launch='Default'; foreach($line in $boot){if([string]$line -match '^\s*hypervisorlaunchtype\s+(\S+)'){$launch=$Matches[1]}}
+        [Console]::Error.WriteLine('Hyper-V probe: hypervisor presence');
         [pscustomobject]@{Features=$features;VirtualAdapters=$virtualRows;PhysicalAdapters=$physicalRows;Switches=$switches;HypervisorPresent=[bool](Get-CimInstance Win32_ComputerSystem).HypervisorPresent;BootLaunchType=$launch;ManagementAvailable=$available;NetworkError=$networkError;SwitchError=$switchError} | ConvertTo-Json -Compress -Depth 5
         """;
 
-    public static Task<HyperVStatus> GetStatusAsync() => RunAsync<HyperVStatus>(StatusScript);
+    public static Task<HyperVStatus> GetStatusAsync() => Task.Run(() => RunAsync<HyperVStatus>(StatusScript, timeoutDuration: TimeSpan.FromSeconds(45)));
 
     internal static string BuildFeatureScript(bool enable, bool completeDisable = false)
     {
@@ -111,7 +116,7 @@ public static class HyperVService
         finally { OperationGate.Release(); }
     }
 
-    private static async Task<T> RunAsync<T>(string script, bool parseOutput = true)
+    private static async Task<T> RunAsync<T>(string script, bool parseOutput = true, TimeSpan? timeoutDuration = null)
     {
         if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Hyper-V configuration is available only on Windows.");
         // Use the inbox executable, not a PATH-resolved replacement. Sysnative is needed from x86 on x64.
@@ -132,17 +137,17 @@ public static class HyperVService
         // Drain both pipes concurrently so verbose DISM output cannot deadlock the application.
         var outputTask = process.StandardOutput.ReadToEndAsync();
         var errorTask = process.StandardError.ReadToEndAsync();
-        using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(15));
-        try { await process.WaitForExitAsync(timeout.Token); }
+        using var timeout = new CancellationTokenSource(timeoutDuration ?? TimeSpan.FromMinutes(15));
+        try { await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false); }
         catch (OperationCanceledException)
         {
             process.Kill(entireProcessTree: true);
-            await process.WaitForExitAsync();
-            await Task.WhenAll(outputTask, errorTask);
-            throw new TimeoutException("Hyper-V operation timed out. Changes may be partial; refresh status and restart Windows before retrying.");
+            await process.WaitForExitAsync().ConfigureAwait(false);
+            await Task.WhenAll(outputTask, errorTask).ConfigureAwait(false);
+            throw new TimeoutException("Hyper-V operation timed out. Changes may be partial; refresh status and restart Windows before retrying. " + await errorTask.ConfigureAwait(false));
         }
-        var output = await outputTask;
-        var error = await errorTask;
+        var output = await outputTask.ConfigureAwait(false);
+        var error = await errorTask.ConfigureAwait(false);
         if (process.ExitCode != 0)
             throw new InvalidOperationException(string.IsNullOrWhiteSpace(error) ? $"Hyper-V command failed ({process.ExitCode}). Refresh to check for partial changes." : error.Trim());
         if (!parseOutput) return default!;

@@ -59,14 +59,26 @@ public sealed partial class MainWindow
                             }
                             if (language == 1 && route is "Dashboard" or "WslDashboard" or "HyperVSettings" or "TemporaryHttp")
                             {
-                                var deadline = DateTime.UtcNow.AddSeconds(15);
+                                var deadline = DateTime.UtcNow.AddSeconds(route == "HyperVSettings" ? 60 : 15);
                                 while (page.FindName("LoadingRing") is ProgressRing { IsActive: true } && DateTime.UtcNow < deadline)
                                     await Task.Delay(100);
+                                if (route == "HyperVSettings")
+                                {
+                                    Require(page.FindName("LoadingRing") is ProgressRing { IsActive: false }, "Hyper-V status never completed");
+                                    Require(page.FindName("StatusText") is TextBlock { Text.Length: > 0 }, "Hyper-V status failed to load");
+                                }
                                 page.UpdateLayout();
                                 CheckLayout(page);
                                 if (page.Content is ScrollViewer scroll) scroll.ChangeView(null, 0, null, true);
                                 await Task.Delay(100);
                                 await CaptureAsync($"{route}-{(theme == 1 ? "light" : "dark")}-{size.Width}.png");
+                                if (route == "HyperVSettings" && size.Width == 1400 && page.Content is ScrollViewer switchScroll)
+                                {
+                                    switchScroll.ChangeView(null, switchScroll.ScrollableHeight, null, true);
+                                    await Task.Delay(100);
+                                    await CaptureAsync($"{route}-switches-{(theme == 1 ? "light" : "dark")}.png");
+                                    switchScroll.ChangeView(null, 0, null, true);
+                                }
                             }
                         }
                     }

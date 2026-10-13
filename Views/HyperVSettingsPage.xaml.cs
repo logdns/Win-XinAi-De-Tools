@@ -24,7 +24,7 @@ public sealed partial class HyperVSettingsPage : Page
         if (_busy) return;
         SetBusy(true);
         try { await LoadStatusAsync(); ResultBar.IsOpen = false; }
-        catch (Exception ex) { _status = null; ShowResult(ex.Message, false); AuditLogService.Record("ReadHyperV", ex.Message, false); }
+        catch (Exception ex) { _status = null; ShowResult(ex.Message, false); AuditLogService.Record("ReadHyperV", ex.Message, false); App.LogStartup($"Hyper-V status read failed: {ex.Message}"); }
         finally { SetBusy(false); }
     }
 
@@ -34,6 +34,7 @@ public sealed partial class HyperVSettingsPage : Page
         var physicalId = (PhysicalAdapterSelector.SelectedItem as HyperVAdapter)?.Id;
         var switchId = (SwitchSelector.SelectedItem as HyperVSwitch)?.Id;
         _status = await HyperVService.GetStatusAsync();
+        App.LogStartup($"Hyper-V status loaded: {_status.Features.Count} features, {_status.VirtualAdapters.Count} virtual adapters, {_status.Switches.Count} switches.");
         StatusText.Text = string.Join(Environment.NewLine, _status.Features.Select(f => f.DisplayName))
             + Environment.NewLine + string.Format(App.Text("HyperV_Status"),
                 _status.HypervisorPresent ? App.Text("Common_On") : App.Text("Common_Off"), _status.BootLaunchType,
