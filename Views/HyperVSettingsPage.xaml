@@ -31,7 +31,7 @@
                         <Button x:Name="DisableAdapterButton" Content="{StaticResource HyperV_DisableAdapter}" Click="DisableAdapterButton_Click"/>
                         <Button x:Name="EnableAllButton" Content="{StaticResource HyperV_EnableAll}" Click="EnableAllButton_Click"/>
                         <Button x:Name="DisableAllButton" Content="{StaticResource HyperV_DisableAll}" Click="DisableAllButton_Click"/>
-                        <Button Content="{StaticResource HyperV_IpSettings}" Click="IpSettingsButton_Click"/>
+                        <Button x:Name="IpSettingsButton" Content="{StaticResource HyperV_IpSettings}" Click="IpSettingsButton_Click"/>
                     </controls:WrapPanel>
                 </StackPanel>
             </Border>
