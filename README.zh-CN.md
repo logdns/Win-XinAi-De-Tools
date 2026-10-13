@@ -6,17 +6,19 @@
 
 ## 下载
 
-**v1.10.0** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
+**v1.10.1** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
 
 需要 Windows 10 1809 或更高版本。解压便携 ZIP 或运行安装程序，以管理员身份启动应用。软件包自包含，无需另装 .NET 或 Windows App SDK。
 
+安装时可独立选择**创建桌面快捷方式**和**创建开始菜单快捷方式**，默认均勾选；即使取消安装完成后立即运行，也能通过快捷方式找到软件。在开始菜单搜索 `Win-XinAi-De-Tools` 或打开同名文件夹即可。ZIP 便携版不会自动创建快捷方式，详见[安装与快捷方式说明](docs/INSTALLATION.md)。
+
 | 架构 | 便携版 | 安装版 |
 |---|---|---|
-| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-Setup-x64.exe) |
-| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-Setup-x86.exe) |
-| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-x64.exe) |
+| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-x86.exe) |
+| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
-[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/SHA256SUMS.txt) 用于校验下载文件。
+[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/SHA256SUMS.txt) 用于校验下载文件。
 
 ## 功能
 

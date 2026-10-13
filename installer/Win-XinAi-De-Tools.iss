@@ -5,7 +5,7 @@
   #error BuildArch is required
 #endif
 #ifndef AppVersion
-  #define AppVersion "1.10.0"
+  #define AppVersion "1.10.1"
 #endif
 
 [Setup]
@@ -16,6 +16,7 @@ AppPublisher=Fengge Network (沨哥网络)
 DefaultDirName={autopf}\Win-XinAi-De-Tools
 DefaultGroupName=Win-XinAi-De-Tools
 DisableProgramGroupPage=yes
+UsePreviousTasks=no
 OutputDir=..\artifacts\installer
 OutputBaseFilename=Win-XinAi-De-Tools-Setup-{#BuildArch}
 Compression=lzma2
@@ -40,12 +41,31 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+[InstallDelete]
+; Remove only our shortcuts so reinstalling applies the newly selected tasks.
+Type: files; Name: "{autoprograms}\Win-XinAi-De-Tools.lnk"
+Type: files; Name: "{autoprograms}\Win-XinAi-De-Tools\Win-XinAi-De-Tools.lnk"
+Type: files; Name: "{autoprograms}\Win-XinAi-De-Tools\Uninstall Win-XinAi-De-Tools.lnk"
+Type: files; Name: "{autodesktop}\Win-XinAi-De-Tools.lnk"
+
 [Icons]
-Name: "{autoprograms}\Win-XinAi-De-Tools"; Filename: "{app}\Win-XinAi-De-Tools.exe"
-Name: "{autodesktop}\Win-XinAi-De-Tools"; Filename: "{app}\Win-XinAi-De-Tools.exe"; Tasks: desktopicon
+Name: "{autoprograms}\Win-XinAi-De-Tools\Win-XinAi-De-Tools"; Filename: "{app}\Win-XinAi-De-Tools.exe"; WorkingDir: "{app}"; IconFilename: "{app}\Win-XinAi-De-Tools.exe"; Tasks: startmenuicon
+Name: "{autoprograms}\Win-XinAi-De-Tools\Uninstall Win-XinAi-De-Tools"; Filename: "{uninstallexe}"; WorkingDir: "{app}"; Tasks: startmenuicon
+Name: "{autodesktop}\Win-XinAi-De-Tools"; Filename: "{app}\Win-XinAi-De-Tools.exe"; WorkingDir: "{app}"; IconFilename: "{app}\Win-XinAi-De-Tools.exe"; Tasks: desktopicon
 
 [Tasks]
-Name: "desktopicon"; Description: "Create a desktop shortcut / 创建桌面快捷方式"; GroupDescription: "Additional icons / 附加图标"
+Name: "desktopicon"; Description: "{cm:DesktopShortcut}"; GroupDescription: "{cm:ShortcutGroup}"
+Name: "startmenuicon"; Description: "{cm:StartMenuShortcut}"; GroupDescription: "{cm:ShortcutGroup}"
+
+[CustomMessages]
+english.ShortcutGroup=Shortcuts (available even if you do not launch the app now):
+english.DesktopShortcut=Create a desktop shortcut
+english.StartMenuShortcut=Create Start Menu shortcuts
+english.LaunchApp=Launch Win-XinAi-De-Tools
+chinesesimplified.ShortcutGroup=快捷方式（安装后不立即运行也可使用）：
+chinesesimplified.DesktopShortcut=创建桌面快捷方式
+chinesesimplified.StartMenuShortcut=创建开始菜单快捷方式
+chinesesimplified.LaunchApp=启动 Win-XinAi-De-Tools
 
 [Run]
-Filename: "{app}\Win-XinAi-De-Tools.exe"; Description: "Launch Win-XinAi-De-Tools / 启动 Win-XinAi-De-Tools"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Win-XinAi-De-Tools.exe"; WorkingDir: "{app}"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent

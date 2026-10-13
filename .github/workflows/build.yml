@@ -30,6 +30,8 @@ jobs:
           }
       - name: Audit localization and release metadata
         run: python scripts/audit-ui.py
+      - name: Verify installer source contracts
+        run: python scripts/test-installer.py
       - name: Run unit tests
         run: dotnet test Win-XinAi-De-Tools.Tests/Win-XinAi-De-Tools.Tests.csproj --configuration Release
       - name: Run Windows Firewall integration test
@@ -306,6 +308,17 @@ jobs:
           $version = @($project.Project.PropertyGroup.Version)[0]
           if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "Invalid project version: $version" }
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DSourceDir=$pwd\artifacts\installer-source" "/DBuildArch=${{ matrix.installer_arch }}" "/DAppVersion=$version" installer/Win-XinAi-De-Tools.iss
+          if ($LASTEXITCODE -ne 0) { throw "Installer compilation failed." }
+      - name: Verify installer shortcut choices and installed application
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: ./scripts/installer-smoke.ps1 -Installer artifacts/installer/Win-XinAi-De-Tools-Setup-x64.exe
+      - name: Upload installer verification logs
+        if: always() && matrix.rid == 'win-x64'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: installer-verification
+          path: artifacts/installer-smoke
       - name: Upload installer artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:

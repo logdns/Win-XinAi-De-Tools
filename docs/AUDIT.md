@@ -1,7 +1,16 @@
 # Current audit and validation / 当前审计与验证
 
-当前版本：**1.10.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前版本：**1.10.1**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## Installer 1.10.1 focused review / 安装入口专项审查
+
+- Scope: Inno Setup shortcut tasks, exact-path shortcut migration, installer regression harness and workflow. This is a focused source review, not a complete codebase audit.
+- Desktop and Start Menu tasks are independent and checked by default; `UsePreviousTasks=no` prevents an old unchecked selection from suppressing a new default. The optional postinstall launch is independent, and silent installation does not launch the app.
+- Shortcuts target the installed executable with an explicit installation working directory and embedded application icon. Start Menu uninstall targets Inno's uninstaller. The existing administrator/all-users install identity and architecture restrictions remain unchanged.
+- Reinstall cleanup deletes only four exact application-owned `.lnk` paths; no wildcard, recursive directory removal, registry/service/network change or startup registration is added to the installer. Unrelated Start Menu entries are outside that cleanup.
+- The regression harness is restricted to elevated disposable Windows CI and refuses pre-existing app registrations, processes and shared shortcut paths. x64 checks execute the installer with all task combinations, read real `.lnk` properties, start the installed app from its shortcut and verify reinstallation/uninstall cleanup. Source-only checks run on every platform.
+- Candidate/release results will be recorded after Windows CI completes. Interactive wizard presentation, search indexing and physical x86/ARM64 installation are manual acceptance, not implied by silent x64 testing. The verified 1.10.0 results below remain historical evidence only.
 
 ## Hyper-V 1.10.0 focused review / 新增功能专项审查
 

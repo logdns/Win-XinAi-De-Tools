@@ -3,6 +3,13 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.10.1 · 2026-10-13
+
+- 安装向导提供独立的桌面与开始菜单快捷方式选项，默认均勾选；不立即启动软件也可找到入口。
+- 开始菜单使用同名文件夹，包含程序与卸载入口；程序快捷方式明确设置图标与工作目录。
+- 重新安装按本次选择更新快捷方式，迁移旧入口并避免沿用旧的取消勾选状态；增加实际 Windows 安装、快捷方式启动与卸载回归检查。
+- Added independent, default-selected desktop and Start Menu shortcut choices, explicit icon/working-directory settings, legacy shortcut migration and Windows installer regression checks. Shortcut creation does not depend on launching after installation.
+
 ## 1.10.0 · 2026-10-13
 
 - 新增中英文 Hyper-V 管理页面：功能状态、启用、仅关闭 Hyper-V 与关闭虚拟化平台及启动加载（手动重启生效）。

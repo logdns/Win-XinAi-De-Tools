@@ -16,9 +16,11 @@ Build and test on Windows. Keep user documentation focused on current behavior.
 dotnet publish Win-XinAi-De-Tools.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:WindowsPackageType=None --output artifacts/portable/win-x64
 dotnet test Win-XinAi-De-Tools.Tests/Win-XinAi-De-Tools.Tests.csproj --configuration Release
 python scripts/audit-ui.py
+python scripts/test-installer.py
 ```
 
 For another architecture, use `win-x86` / `x86` or `win-arm64` / `ARM64`.
+Installer changes also require the elevated, disposable Windows x64 checks in [installation validation](docs/INSTALLATION.md#verification--验证); do not run them on a machine with an existing installation.
 To enable actual firewall integration tests in an elevated Windows session:
 
 ```powershell
