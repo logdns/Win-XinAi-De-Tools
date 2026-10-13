@@ -25,7 +25,7 @@ $menuLink = Join-Path $menuDirectory 'Win-XinAi-De-Tools.lnk'
 $uninstallLink = Join-Path $menuDirectory 'Uninstall Win-XinAi-De-Tools.lnk'
 $desktopLink = Join-Path $desktop 'Win-XinAi-De-Tools.lnk'
 $legacyLink = Join-Path $programs 'Win-XinAi-De-Tools.lnk'
-$uninstallKey = 'AD8E0A23-F4C1-4DA9-9F52-26E5A6D38DC7_is1'
+$uninstallKey = '{AD8E0A23-F4C1-4DA9-9F52-26E5A6D38DC7}_is1'
 
 # Refuse to interfere with an existing installation or another user's shortcuts.
 foreach ($key in @(
