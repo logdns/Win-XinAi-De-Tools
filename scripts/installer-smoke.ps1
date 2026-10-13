@@ -16,7 +16,20 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 $Installer = (Resolve-Path $Installer).Path
 $output = Join-Path $pwd 'artifacts/installer-smoke'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
-$installDirectory = Join-Path $env:TEMP ('WinXinAiInstaller-' + [guid]::NewGuid().ToString('N'))
+# Runner TEMP can contain an 8.3 alias; Shell resolves .lnk targets to long paths.
+Add-Type @'
+using System.Runtime.InteropServices;
+using System.Text;
+public static class InstallerSmokePath
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern uint GetLongPathName(string path, StringBuilder result, uint capacity);
+}
+'@
+$tempPath = [Text.StringBuilder]::new(32768)
+$length = [InstallerSmokePath]::GetLongPathName($env:TEMP, $tempPath, 32768)
+if ($length -eq 0 -or $length -ge 32768) { throw 'Cannot resolve the runner temporary directory.' }
+$installDirectory = Join-Path $tempPath.ToString() ('WinXinAiInstaller-' + [guid]::NewGuid().ToString('N'))
 $executable = Join-Path $installDirectory 'Win-XinAi-De-Tools.exe'
 $programs = [Environment]::GetFolderPath('CommonPrograms')
 $desktop = [Environment]::GetFolderPath('CommonDesktopDirectory')
