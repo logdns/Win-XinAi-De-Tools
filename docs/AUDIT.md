@@ -29,6 +29,16 @@ This page summarizes the current implementation and completed validation.
 
 Early harness runs exposed Windows 8.3/long-path comparison and Inno uninstaller helper timing issues. The successful run normalizes the temporary directory and waits for the uninstaller process tree before reinstalling. These corrections affect the test harness, not the application's feature behavior. Interactive installer display and search indexing remain manual acceptance.
 
+## Verified release 1.10.1 / 安装修复发布与下载校验
+
+[Successful tag workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38403144791) and [published v1.10.1 release](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.10.1), verified 2026-10-13:
+
+- Published tag resolves to `901f2edfe6190d4e335992749ee67706ac4c3dcc`; the commit adds validation documentation/screenshots to the tested implementation. No published tag was retargeted.
+- Tag workflow repeated all six installer source contracts, all real x64 installer cases and installed-shortcut launch, 131 Windows tests, two firewall integration tests, 180 native UI combinations, dependency audits, helper checks and all six builds successfully.
+- Exactly seven non-empty release assets: three portable ZIPs, three installers and `SHA256SUMS.txt`. The release is neither a draft nor a prerelease. UI/installer verification logs remain Actions artifacts, not downloadable release assets.
+- Downloaded all six packages and matched every SHA-256 against the published checksum file. All portable ZIP CRCs, native PE architectures, versioned bilingual resources, included .NET/WinUI/Skia runtimes and license files passed verification. README screenshots now come from the tag workflow.
+- Actual installer execution coverage is Windows x64 on the hosted runner. Interactive wizard presentation, Start Menu search indexing, physical x86/ARM64 execution and environment-specific desktop policies remain manual checks. Download checksums are not code signing.
+
 ## Hyper-V 1.10.0 focused review / 新增功能专项审查
 
 - Scope: `Services/HyperVService.cs`, `Models/HyperVModels.cs`, Hyper-V page/shell/UI smoke, bilingual strings, regression tests and release metadata. This is a focused source review, not a complete codebase penetration test or an independent audit.

@@ -46,6 +46,8 @@ Coverage: 15 pages × 2 languages × 2 explicit themes × 3 window sizes (480 ×
 
 The `ui-verification` Actions artifact contains actual dashboard/WSL/Hyper-V/HTTP screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
 
+The x64 installer job also executes the real installer with every shortcut selection, verifies the installed Start Menu launch, reinstallation and uninstall cleanup. See [installer validation and its manual limits](INSTALLATION.md#verification--验证). Its logs are in the separate `installer-verification` artifact.
+
 Hyper-V screenshots require completed status initialization, not an indefinitely spinning loader. A read-only Windows test verifies the status probe and unsupported-feature detection; mocked cmdlets cover mutation safety without changing the runner's Hyper-V setup. See [Hyper-V hardware acceptance and recovery](HYPER-V.md).
 
 ## Manual acceptance matrix
@@ -67,7 +69,7 @@ The automated GUI run is on a Windows x64 hosted runner. These remain hardware/O
 ## Release procedure
 
 1. Update the project, package manifest, installer fallback, About resources, README links, and changelog to the same version.
-2. Run the Actions workflow on the candidate branch; review test logs, screenshots, dependency audit, and all six package builds.
+2. Run the Actions workflow on the candidate branch; review test logs, screenshots, actual installer shortcut/reinstall/uninstall checks, dependency audit, and all six package builds.
 3. Integrate the reviewed candidate into `main`, then push the matching `v<version>` tag. The workflow rejects tag/project mismatch.
 4. Wait for the tag workflow to pass and publish three portable ZIPs, three installers, and `SHA256SUMS.txt`. Refresh `docs/screenshots/` from that run's `ui-verification` artifact and update both README interface sections with the current screenshots and source run.
 5. Verify release asset names, non-zero sizes, tag commit, and downloaded SHA-256 checksums. Never retarget an already published version tag.
