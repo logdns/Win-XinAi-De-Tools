@@ -69,7 +69,7 @@ The automated GUI run is on a Windows x64 hosted runner. These remain hardware/O
 1. Update the project, package manifest, installer fallback, About resources, README links, and changelog to the same version.
 2. Run the Actions workflow on the candidate branch; review test logs, screenshots, dependency audit, and all six package builds.
 3. Integrate the reviewed candidate into `main`, then push the matching `v<version>` tag. The workflow rejects tag/project mismatch.
-4. Wait for the tag workflow to pass and publish three portable ZIPs, three installers, and `SHA256SUMS.txt`.
+4. Wait for the tag workflow to pass and publish three portable ZIPs, three installers, and `SHA256SUMS.txt`. Refresh `docs/screenshots/` from that run's `ui-verification` artifact and update both README interface sections with the current screenshots and source run.
 5. Verify release asset names, non-zero sizes, tag commit, and downloaded SHA-256 checksums. Never retarget an already published version tag.
 
 Rollback: install the preceding published version. UI preferences are separate from firewall/network/WSL configuration; reverting the application does not undo operating-system changes made through its tools.

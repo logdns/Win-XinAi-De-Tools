@@ -31,9 +31,23 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-![Dashboard](docs/screenshots/dashboard.png)
+Actual Windows x64 screenshots from the [v1.10.0 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38360187805). System status and available controls depend on the host configuration.
 
-![Local HTTP discovery](docs/screenshots/temporary-http-discovery.png)
+### Dashboard
+
+![v1.10.0 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
+
+### Hyper-V features and boot configuration
+
+![Hyper-V feature status, enable and disable controls](docs/screenshots/hyper-v.png)
+
+### Hyper-V virtual adapters and switches
+
+![Hyper-V virtual adapter controls and virtual switch configuration](docs/screenshots/hyper-v-switches.png)
+
+### Local HTTP discovery
+
+![v1.10.0 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
 
 ## Documentation and development
 

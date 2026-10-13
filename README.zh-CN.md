@@ -31,9 +31,23 @@
 
 ## 界面
 
-![概览](docs/screenshots/dashboard.png)
+以下为 [v1.10.0 发布构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38360187805)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
 
-![本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
+### 概览
+
+![v1.10.0 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
+
+### Hyper-V 功能与启动配置
+
+![Hyper-V 功能状态、启用与关闭操作](docs/screenshots/hyper-v.png)
+
+### Hyper-V 虚拟网卡与交换机
+
+![Hyper-V 虚拟网卡启停与虚拟交换机设置](docs/screenshots/hyper-v-switches.png)
+
+### 本机 HTTP 服务检测
+
+![v1.10.0 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
 
 ## 文档与开发
 
