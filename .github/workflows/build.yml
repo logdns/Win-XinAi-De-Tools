@@ -311,6 +311,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Installer compilation failed." }
       - name: Verify installer shortcut choices and installed application
         if: matrix.rid == 'win-x64'
+        timeout-minutes: 10
         shell: pwsh
         run: ./scripts/installer-smoke.ps1 -Installer artifacts/installer/Win-XinAi-De-Tools-Setup-x64.exe
       - name: Upload installer verification logs

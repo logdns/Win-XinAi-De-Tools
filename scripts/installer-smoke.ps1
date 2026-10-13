@@ -58,11 +58,9 @@ if (Get-Process -Name 'Win-XinAi-De-Tools' -ErrorAction SilentlyContinue) {
 $shell = New-Object -ComObject WScript.Shell
 
 function Invoke-SetupProcess([string]$File, [string[]]$Arguments) {
-    $process = Start-Process -FilePath $File -ArgumentList $Arguments -PassThru
-    if (-not $process.WaitForExit(180000)) {
-        Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
-        throw "Installer process timed out: $File"
-    }
+    # Inno's uninstaller spawns a temporary helper. Wait for the entire process tree
+    # before reinstalling, or its delayed cleanup can delete the next installation.
+    $process = Start-Process -FilePath $File -ArgumentList $Arguments -PassThru -Wait
     if ($process.ExitCode -ne 0) {
         throw "Installer process failed: $File (exit $($process.ExitCode))"
     }
