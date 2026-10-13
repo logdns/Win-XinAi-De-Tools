@@ -128,12 +128,15 @@ public static class HyperVService
             StartInfo = new ProcessStartInfo
             {
                 FileName = executable, UseShellExecute = false, CreateNoWindow = true,
+                RedirectStandardInput = true,
                 RedirectStandardOutput = true, RedirectStandardError = true,
                 StandardOutputEncoding = Encoding.UTF8, StandardErrorEncoding = Encoding.UTF8,
                 ArgumentList = { "-NoLogo", "-NoProfile", "-NonInteractive", "-EncodedCommand", Convert.ToBase64String(Encoding.Unicode.GetBytes(script)) }
             }
         };
         if (!process.Start()) throw new InvalidOperationException("Could not start Windows PowerShell.");
+        // Do not inherit an open CI/GUI input pipe: servicing cmdlets must see EOF, never wait for input.
+        process.StandardInput.Close();
         // Drain both pipes concurrently so verbose DISM output cannot deadlock the application.
         var outputTask = process.StandardOutput.ReadToEndAsync();
         var errorTask = process.StandardError.ReadToEndAsync();
