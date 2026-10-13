@@ -18,7 +18,7 @@ public sealed class HyperVServiceTests
         var script = HyperVService.BuildFeatureScript(false);
         Assert.Contains("Disable-WindowsOptionalFeature", script);
         Assert.Contains("-NoRestart", script);
-        Assert.Contains("Get-WindowsOptionalFeature -Online -ErrorAction Stop", script);
+        Assert.Contains("Get-WindowsOptionalFeature -Online -FeatureName $Name -ErrorAction Stop", script);
         Assert.Contains("DisabledWithPayloadRemoved", script);
         Assert.DoesNotContain("-ErrorAction SilentlyContinue", script);
         Assert.DoesNotContain("VirtualMachinePlatform", script);
@@ -138,6 +138,8 @@ public sealed class HyperVServiceTests
     public void StatusPreservesUnavailableAndPartialQueryErrors()
     {
         Assert.Contains("State='Unavailable'", HyperVService.StatusScript);
+        Assert.Contains("Id=([guid]$_.InterfaceGuid).ToString('D')", HyperVService.StatusScript);
+        Assert.Contains("Id=([guid]$_.Id).ToString('D')", HyperVService.StatusScript);
         Assert.Contains("NetworkError=$networkError", HyperVService.StatusScript);
         Assert.Contains("SwitchError=$switchError", HyperVService.StatusScript);
         var status = JsonSerializer.Deserialize<HyperVStatus>("""
@@ -215,6 +217,41 @@ public sealed class HyperVServiceTests
         Assert.All(status.Features, feature => Assert.False(string.IsNullOrWhiteSpace(feature.State)));
         Assert.False(string.IsNullOrWhiteSpace(status.BootLaunchType));
         Assert.All(status.VirtualAdapters, adapter => Assert.NotEqual(Guid.Empty, adapter.Id));
+        await RunHarnessAsync(HyperVService.OptionalFeatureReader + "$missing=Read-OptionalFeature 'WinXinAi-NoSuchFeature'; if($null -ne $missing){throw 'An unknown optional feature must return null'}");
+    }
+
+    [Theory]
+    [InlineData("Enabled", true, false)]
+    [InlineData("Disabled", false, false)]
+    [InlineData("DisabledWithPayloadRemoved", false, false)]
+    [InlineData("EnablePending", false, true)]
+    [InlineData("DisablePending", false, true)]
+    [Trait("Category", "HyperVContract")]
+    public async Task MockedFeaturePreflightRejectsPendingAndSkipsAlreadyDisabledComponents(string state, bool shouldDisable, bool shouldReject)
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        var fixtures = $$"""
+            $script:disabled=$false; $script:rejected=$false;
+            function Get-WindowsOptionalFeature { param([switch]$Online,$FeatureName,$ErrorAction) [pscustomobject]@{FeatureName=$FeatureName;State='{{state}}'} }
+            function Disable-WindowsOptionalFeature { param([switch]$Online,$FeatureName,[switch]$NoRestart) $script:disabled=$true }
+            """;
+        await RunHarnessAsync(fixtures + "try { " + HyperVService.BuildFeatureScript(false) + " } catch { if($_.Exception.Message -notlike '*pending*'){throw}; $script:rejected=$true }; "
+            + $"if($disabled -ne ${shouldDisable.ToString().ToLowerInvariant()} -or $rejected -ne ${shouldReject.ToString().ToLowerInvariant()}){{throw 'Unexpected feature preflight result'}}");
+    }
+
+    [Theory]
+    [InlineData(-2146498548, true)]
+    [InlineData(-2147024891, false)]
+    [Trait("Category", "HyperVContract")]
+    public async Task MockedFeatureReaderOnlyTreatsUnknownFeatureAsUnavailable(int hresult, bool unavailable)
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        var fixtures = $$"""
+            function Get-WindowsOptionalFeature { param([switch]$Online,$FeatureName,$ErrorAction) throw [System.Runtime.InteropServices.COMException]::new('fixture failure',{{hresult}}) }
+            $script:unavailable=$false;
+            """;
+        await RunHarnessAsync(fixtures + HyperVService.OptionalFeatureReader + "try { $f=Read-OptionalFeature 'test'; $script:unavailable=$null -eq $f } catch { if($_.Exception.Message -notlike '*fixture failure*'){throw} }; "
+            + $"if($unavailable -ne ${unavailable.ToString().ToLowerInvariant()}){{throw 'Query failure was misclassified'}}");
     }
 
     private static async Task RunHarnessAsync(string script)

@@ -10,26 +10,27 @@ public static class HyperVService
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly SemaphoreSlim OperationGate = new(1, 1);
     private const string Preamble = "$ErrorActionPreference='Stop'; $ProgressPreference='SilentlyContinue'; [Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false); ";
+    // DISM_E_UNKNOWN_FEATURE is the only query error treated as an unsupported component.
+    internal const string OptionalFeatureReader = "function Read-OptionalFeature { param([string]$Name) try { Get-WindowsOptionalFeature -Online -FeatureName $Name -ErrorAction Stop } catch { $exception=$_.Exception; while($exception){if($exception.HResult -eq -2146498548){return $null}; $exception=$exception.InnerException}; throw } }; ";
     // Classify by the Windows driver service, never by an editable/localized adapter alias.
     internal const string VirtualAdapterQuery = "$ids=@(Get-CimInstance Win32_NetworkAdapter -ErrorAction Stop | Where-Object { $_.ServiceName -eq 'VMSMP' -and $_.GUID } | ForEach-Object { [guid]$_.GUID }); $virtual=@(Get-NetAdapter -IncludeHidden -ErrorAction Stop | Where-Object { $ids -contains [guid]$_.InterfaceGuid }); ";
 
-    internal const string StatusScript = Preamble + """
+    internal const string StatusScript = Preamble + OptionalFeatureReader + """
         [Console]::Error.WriteLine('Hyper-V probe: optional features');
-        $availableFeatures=@(Get-WindowsOptionalFeature -Online -ErrorAction Stop);
         $features=@(foreach($name in @('Microsoft-Hyper-V-All','VirtualMachinePlatform','HypervisorPlatform')) {
-            $f=$availableFeatures | Where-Object FeatureName -eq $name | Select-Object -First 1
+            $f=Read-OptionalFeature $name
             if($f){[pscustomobject]@{Name=$name;State=[string]$f.State}}else{[pscustomobject]@{Name=$name;State='Unavailable'}}
         });
         $virtualRows=@(); $physicalRows=@(); $networkError='';
         [Console]::Error.WriteLine('Hyper-V probe: network adapters');
         try {
         """ + VirtualAdapterQuery + """
-            $virtualRows=@($virtual | ForEach-Object { [pscustomobject]@{Id=[string]$_.InterfaceGuid;Name=$_.Name;Status=[string]$_.Status} });
-            $physicalRows=@(Get-NetAdapter -Physical | Where-Object { $_.HardwareInterface -and -not $_.Virtual } | ForEach-Object { [pscustomobject]@{Id=[string]$_.InterfaceGuid;Name=$_.Name;Status=[string]$_.Status} });
+            $virtualRows=@($virtual | ForEach-Object { [pscustomobject]@{Id=([guid]$_.InterfaceGuid).ToString('D');Name=$_.Name;Status=[string]$_.Status} });
+            $physicalRows=@(Get-NetAdapter -Physical | Where-Object { $_.HardwareInterface -and -not $_.Virtual } | ForEach-Object { [pscustomobject]@{Id=([guid]$_.InterfaceGuid).ToString('D');Name=$_.Name;Status=[string]$_.Status} });
         } catch { $networkError=$_.Exception.Message }
         $available=$null -ne (Get-Command Get-VMSwitch -ErrorAction SilentlyContinue); $switches=@(); $switchError='';
         [Console]::Error.WriteLine('Hyper-V probe: virtual switches');
-        if($available){try{$switches=@(Get-VMSwitch | ForEach-Object { [pscustomobject]@{Id=[string]$_.Id;Name=$_.Name;SwitchType=[string]$_.SwitchType;AllowManagementOS=[bool]$_.AllowManagementOS} })}catch{$switchError=$_.Exception.Message}}
+        if($available){try{$switches=@(Get-VMSwitch | ForEach-Object { [pscustomobject]@{Id=([guid]$_.Id).ToString('D');Name=$_.Name;SwitchType=[string]$_.SwitchType;AllowManagementOS=[bool]$_.AllowManagementOS} })}catch{$switchError=$_.Exception.Message}}
         [Console]::Error.WriteLine('Hyper-V probe: boot configuration');
         $boot=& "$env:SystemRoot\System32\bcdedit.exe" /enum '{current}' 2>&1;
         if($LASTEXITCODE -ne 0){throw "Cannot read boot configuration: $boot"}
@@ -50,7 +51,7 @@ public static class HyperVService
             ? "if([string]$f.State -ne 'Enabled'){Enable-WindowsOptionalFeature -Online -FeatureName $f.FeatureName -All -NoRestart | Out-Null}"
             : "if([string]$f.State -eq 'Enabled'){Disable-WindowsOptionalFeature -Online -FeatureName $f.FeatureName -NoRestart | Out-Null}";
         // Check all features first. A missing optional component is skipped only on complete disable (e.g. Home).
-        return Preamble + $"$names={names}; $available=@(Get-WindowsOptionalFeature -Online -ErrorAction Stop); $features=@(); foreach($name in $names){{$f=$available | Where-Object FeatureName -eq $name | Select-Object -First 1; if($f){{$features+=,$f}}elseif(-not ${completeDisable.ToString().ToLowerInvariant()}){{throw 'Hyper-V is unavailable on this Windows edition or architecture.'}}}}; "
+        return Preamble + OptionalFeatureReader + $"$names={names}; $features=@(); foreach($name in $names){{$f=Read-OptionalFeature $name; if($f){{$features+=,$f}}elseif(-not ${completeDisable.ToString().ToLowerInvariant()}){{throw 'Hyper-V is unavailable on this Windows edition or architecture.'}}}}; "
             + "foreach($f in $features){if([string]$f.State -notin @('Disabled','Enabled','DisabledWithPayloadRemoved')){throw 'A feature is pending or unavailable. Restart Windows and refresh before retrying.'}}; "
             + $"foreach($f in $features){{{command}}}; "
             + (enable || completeDisable
@@ -147,7 +148,7 @@ public static class HyperVService
             process.Kill(entireProcessTree: true);
             await process.WaitForExitAsync().ConfigureAwait(false);
             await Task.WhenAll(outputTask, errorTask).ConfigureAwait(false);
-            throw new TimeoutException("Hyper-V operation timed out. Changes may be partial; refresh status and restart Windows before retrying. " + await errorTask.ConfigureAwait(false));
+            throw new TimeoutException((parseOutput ? "Hyper-V status query timed out. No configuration was changed by this query. " : "Hyper-V operation timed out. Changes may be partial; refresh status and restart Windows before retrying. ") + await errorTask.ConfigureAwait(false));
         }
         var output = await outputTask.ConfigureAwait(false);
         var error = await errorTask.ConfigureAwait(false);
