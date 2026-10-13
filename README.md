@@ -33,11 +33,11 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-Actual Windows x64 screenshots from the [v1.10.0 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38360187805). System status and available controls depend on the host configuration.
+Actual Windows x64 screenshots from the [v1.10.1 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38401799847). System status and available controls depend on the host configuration.
 
 ### Dashboard
 
-![v1.10.0 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
+![v1.10.1 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
 
 ### Hyper-V features and boot configuration
 
@@ -49,7 +49,7 @@ Actual Windows x64 screenshots from the [v1.10.0 release UI verification](https:
 
 ### Local HTTP discovery
 
-![v1.10.0 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
+![v1.10.1 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
 
 ## Documentation and development
 

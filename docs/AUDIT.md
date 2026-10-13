@@ -10,7 +10,24 @@ This page summarizes the current implementation and completed validation.
 - Shortcuts target the installed executable with an explicit installation working directory and embedded application icon. Start Menu uninstall targets Inno's uninstaller. The existing administrator/all-users install identity and architecture restrictions remain unchanged.
 - Reinstall cleanup deletes only four exact application-owned `.lnk` paths; no wildcard, recursive directory removal, registry/service/network change or startup registration is added to the installer. Unrelated Start Menu entries are outside that cleanup.
 - The regression harness is restricted to elevated disposable Windows CI and refuses pre-existing app registrations, processes and shared shortcut paths. x64 checks execute the installer with all task combinations, read real `.lnk` properties, start the installed app from its shortcut and verify reinstallation/uninstall cleanup. Source-only checks run on every platform.
-- Candidate/release results will be recorded after Windows CI completes. Interactive wizard presentation, search indexing and physical x86/ARM64 installation are manual acceptance, not implied by silent x64 testing. The verified 1.10.0 results below remain historical evidence only.
+- Interactive wizard presentation, search indexing and physical x86/ARM64 installation are manual acceptance, not implied by silent x64 testing. The verified 1.10.0 results below remain historical evidence only.
+
+## Verified 1.10.1 candidate / 已完成安装修复候选验证
+
+[Successful candidate workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38401799847), implementation commit `a1ff4f1`, 2026-10-13:
+
+| Check | Result |
+|---|---|
+| Installer source contracts | 6 passed: defaults, task scoping, localization, launch independence, exact migration paths, stable elevated install identity |
+| Actual Windows x64 installation | Default, none, desktop-only, Start-Menu-only and both choices passed without postinstall launch; real .lnk targets, icons and working directories checked |
+| Installed app startup | Actual Start Menu shortcut launched the installed executable, loaded the dashboard and closed normally |
+| Reinstallation and cleanup | Legacy flat shortcut migration, deselecting both options, restoring fresh defaults and all five uninstall checks passed |
+| .NET 8 Windows tests | 131 passed; separate elevated firewall integration: 2 passed |
+| UI and metadata | 411 bilingual resources, 15 pages, 1.10.1; 180 native UI combinations passed |
+| Dependencies and helpers | Three direct/transitive NuGet vulnerability audits and Rust/Go helper compilation checks passed |
+| Packages | x86/x64/ARM64 portable ZIPs and installers built |
+
+Early harness runs exposed Windows 8.3/long-path comparison and Inno uninstaller helper timing issues. The successful run normalizes the temporary directory and waits for the uninstaller process tree before reinstalling. These corrections affect the test harness, not the application's feature behavior. Interactive installer display and search indexing remain manual acceptance.
 
 ## Hyper-V 1.10.0 focused review / 新增功能专项审查
 
