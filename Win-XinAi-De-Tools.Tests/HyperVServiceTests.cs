@@ -208,13 +208,14 @@ public sealed class HyperVServiceTests
         using var process = Process.Start(new ProcessStartInfo
         {
             FileName = executable, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true,
-            ArgumentList = { "-NoProfile", "-NonInteractive", "-EncodedCommand", Convert.ToBase64String(Encoding.Unicode.GetBytes("$ErrorActionPreference='Stop'; " + script)) }
+            // Expected, caught fixture errors can leave PowerShell's $? false; exit only after all assertions ran.
+            ArgumentList = { "-NoProfile", "-NonInteractive", "-EncodedCommand", Convert.ToBase64String(Encoding.Unicode.GetBytes("$ErrorActionPreference='Stop'; " + script + "; exit 0")) }
         })!;
         var output = process.StandardOutput.ReadToEndAsync();
         var error = process.StandardError.ReadToEndAsync();
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         try { await process.WaitForExitAsync(timeout.Token); }
         catch (OperationCanceledException) { process.Kill(entireProcessTree: true); throw; }
-        Assert.True(process.ExitCode == 0, await error + await output);
+        Assert.True(process.ExitCode == 0, $"PowerShell fixture exited with {process.ExitCode}: " + await error + await output);
     }
 }
