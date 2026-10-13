@@ -20,7 +20,7 @@ public sealed partial class MainWindow
         try
         {
             var routes = new[] { "Dashboard", "AddPort", "ListRules", "DeleteRule", "PortStatus",
-                "NetworkSettings", "SmbSettings", "WslDashboard", "ComingSoon", "ConnectionMonitor",
+                "NetworkSettings", "SmbSettings", "WslDashboard", "HyperVSettings", "ComingSoon", "ConnectionMonitor",
                 "RuleTransfer", "AuditLog", "TemporaryHttp", "About" };
             foreach (var language in new[] { 0, 1 })
             {
@@ -57,7 +57,7 @@ public sealed partial class MainWindow
                                 }
                                 tabs.SelectedIndex = 0;
                             }
-                            if (language == 1 && route is "Dashboard" or "WslDashboard" or "TemporaryHttp")
+                            if (language == 1 && route is "Dashboard" or "WslDashboard" or "HyperVSettings" or "TemporaryHttp")
                             {
                                 var deadline = DateTime.UtcNow.AddSeconds(15);
                                 while (page.FindName("LoadingRing") is ProgressRing { IsActive: true } && DateTime.UtcNow < deadline)
@@ -74,6 +74,12 @@ public sealed partial class MainWindow
             }
 
             await VerifyTemporaryHttpAsync();
+            NavigateTo("HyperVSettings");
+            var hyperV = (Page)PageHost.Content;
+            ((TextBox)hyperV.FindName("SwitchNameBox")).Text = "unsaved switch draft";
+            NavigateTo("About");
+            Require(GoBack(), "Hyper-V back navigation");
+            Require(((TextBox)((Page)PageHost.Content).FindName("SwitchNameBox")).Text == "unsaved switch draft", "Hyper-V draft was lost");
             NavigateTo("Dashboard");
             NavigateTo("ComingSoon");
             NavigateTo("ConnectionMonitor");
@@ -109,7 +115,7 @@ public sealed partial class MainWindow
             Require(NavView.RequestedTheme == ElementTheme.Default, "System theme was not restored");
             while (_history.CanGoBack) Require(GoBack(), "Back stack stalled");
             Require(!NavView.IsBackEnabled && !GoBack(), "Root back must be disabled");
-            App.LogStartup("UI smoke PASSED: 168 page/theme/language/size combinations, WSL tabs, navigation, draft retention, and temporary HTTP lifecycle.");
+            App.LogStartup("UI smoke PASSED: 180 page/theme/language/size combinations, Hyper-V read-only initialization, WSL tabs, navigation, draft retention, and temporary HTTP lifecycle.");
         }
         catch (Exception ex)
         {

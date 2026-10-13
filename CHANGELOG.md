@@ -3,6 +3,14 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## 1.10.0 · 2026-10-13
+
+- 新增中英文 Hyper-V 管理页面：功能状态、启用、仅关闭 Hyper-V 与关闭虚拟化平台及启动加载（手动重启生效）。
+- 按驱动和 GUID 识别虚拟网卡，支持单独或全部启停，提供 IP/DNS 设置入口；不直接禁用物理网卡。
+- 支持内部、专用、外部交换机创建，设置主机共享物理网卡；删除限于 WinXinAi- 前缀且无虚拟机连接的交换机，保护系统交换机。
+- 所有修改均有安全默认的确认框与操作日志，说明断网、WSL2/Docker 和虚拟化安全影响，不清理系统 HNS/NAT 服务或虚拟磁盘。
+- Added bilingual Hyper-V feature/boot management, GUID-scoped virtual adapter controls, guarded switch creation/removal, risk confirmations, and operation logging. Feature changes require a manual restart.
+
 ## 1.9.5 · 2026-09-18
 
 - 设置 share 共享时自动开启无密码 Guest 模式，仅保留页面风险警示，不再弹出阻断式确认。

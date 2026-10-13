@@ -29,6 +29,14 @@ Remove-Item Env:PORTMANAGER_RUN_INTEGRATION
 
 The app calls `wsl.exe` directly. Optional bridge setup and build instructions are in [native/README.md](native/README.md).
 
+Hyper-V tests generate scripts and use mocked cmdlets on Windows; they do not change real Hyper-V configuration. To run those contracts explicitly:
+
+```powershell
+dotnet test Win-XinAi-De-Tools.Tests/Win-XinAi-De-Tools.Tests.csproj -c Release --filter "Category=HyperVContract"
+```
+
+Actual feature/adapter/switch changes and reboot recovery need a disposable, locally accessible Windows machine with supported hardware. Follow [Hyper-V acceptance and recovery](docs/HYPER-V.md). Never run destructive networking checks over a remote session using the target adapter.
+
 ## Before Opening A Pull Request
 
 1. Keep changes focused and preserve the existing WinUI 3 and Community Toolkit patterns.

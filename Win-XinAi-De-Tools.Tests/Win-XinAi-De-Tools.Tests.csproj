@@ -8,6 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Models\HyperVModels.cs" Link="Models\HyperVModels.cs" />
+    <Compile Include="..\Services\HyperVService.cs" Link="Services\HyperVService.cs" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="xunit" Version="2.9.2" />

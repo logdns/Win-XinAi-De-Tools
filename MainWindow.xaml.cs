@@ -272,6 +272,7 @@ public sealed partial class MainWindow : Window
         NetworkItem.Content = App.Text("Nav_Network");
         SmbItem.Content = App.Text("Nav_Smb");
         WslItem.Content = App.Text("Nav_Wsl");
+        HyperVItem.Content = App.Text("HyperV_Title");
         HttpItem.Content = App.Text("Http_Title");
         MoreItem.Content = App.Text("Nav_More");
         AboutItem.Content = App.Text("Nav_About");
@@ -298,6 +299,7 @@ public sealed partial class MainWindow : Window
             "NetworkSettings" => typeof(NetworkSettingsPage),
             "SmbSettings" => typeof(SmbSettingsPage),
             "WslDashboard" => typeof(WslDashboardPage),
+            "HyperVSettings" => typeof(HyperVSettingsPage),
             "ComingSoon" => typeof(ComingSoonPage),
             "ConnectionMonitor" => typeof(ConnectionMonitorPage),
             "RuleTransfer" => typeof(RuleTransferPage),
@@ -309,7 +311,7 @@ public sealed partial class MainWindow : Window
 
         if (pageType is null) return false;
         if (!force && PageHost.Content?.GetType() == pageType) return false;
-        var retainForm = tag is "AddPort" or "PortStatus" or "NetworkSettings" or "SmbSettings" or "WslDashboard" or "TemporaryHttp";
+        var retainForm = tag is "AddPort" or "PortStatus" or "NetworkSettings" or "SmbSettings" or "WslDashboard" or "HyperVSettings" or "TemporaryHttp";
         if (!_formPages.TryGetValue(tag, out var page))
         {
             page = (Page)Activator.CreateInstance(pageType)!;

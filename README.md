@@ -2,21 +2,21 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-A native Windows utility for firewall rules, network settings, SMB, WSL, and temporary HTTP serving. Built with WinUI 3 and Skia dashboard graphics, with English/Chinese, light/dark themes, responsive layouts, and Back navigation.
+A native Windows utility for firewall rules, network settings, SMB, WSL, Hyper-V, and temporary HTTP serving. Built with WinUI 3 and Skia dashboard graphics, with English/Chinese, light/dark themes, responsive layouts, and Back navigation.
 
 ## Download
 
-**v1.9.5** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
+**v1.10.0** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
 
 Requires Windows 10 1809 or later. Extract the portable ZIP or run the installer, then launch the app as administrator. Packages include the .NET and Windows App SDK runtimes.
 
 | Architecture | Portable | Installer |
 |---|---|---|
-| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/Win-XinAi-De-Tools-Setup-x64.exe) |
-| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/Win-XinAi-De-Tools-Setup-x86.exe) |
-| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-Setup-x64.exe) |
+| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-Setup-x86.exe) |
+| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
-[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.9.5/SHA256SUMS.txt) provides download checksums.
+[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.0/SHA256SUMS.txt) provides download checksums.
 
 ## Features
 
@@ -24,6 +24,7 @@ Requires Windows 10 1809 or later. Extract the portable ZIP or run the installer
 - **Firewall and networking**: manage rules, query ports, configure adapters/DNS/routes, inspect connections and processes, import/export rules, and review operation logs.
 - **SMB**: manage SMB Direct, SMB 1.0/CIFS, and folder sharing.
 - **WSL**: install and manage distributions, open terminals, import/export/migrate, and manage storage, proxies, port forwarding, and USB devices.
+- **Hyper-V**: feature-only or complete platform/boot disable, virtual adapter controls, internal/private/external switches and host NIC sharing. See the [Hyper-V/network guide](docs/HYPER-V.md).
 - **Desktop**: saved appearance/language, history-based Back, notification-area support, logon startup, and `/silent`.
 
 System configuration changes require administrator privileges. Enable the legacy SMB 1.0 protocol only when needed. One-command WSL installation requires Windows 10 2004 or later.
@@ -36,6 +37,7 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Documentation and development
 
+- [Hyper-V settings, network risks and recovery](docs/HYPER-V.md)
 - [HTTP usage and internet access](docs/TEMPORARY-HTTP.md)
 - [UI behavior and validation](docs/UI-AND-VALIDATION.md)
 - [Build, test, and contribute](CONTRIBUTING.md)
