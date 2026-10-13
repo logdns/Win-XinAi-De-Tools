@@ -149,7 +149,7 @@ public sealed partial class HyperVSettingsPage : Page
     {
         var ready = !_busy && _status is not null;
         var feature = _status?.Features.FirstOrDefault(f => f.Name == "Microsoft-Hyper-V-All");
-        var stable = feature?.State is "Enabled" or "Disabled";
+        var stable = feature?.State is "Enabled" or "Disabled" or "DisabledWithPayloadRemoved";
         EnableFeatureButton.IsEnabled = ready && stable;
         DisableFeatureButton.IsEnabled = ready && stable;
         CompleteDisableButton.IsEnabled = ready;

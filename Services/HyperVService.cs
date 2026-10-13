@@ -14,8 +14,9 @@ public static class HyperVService
     internal const string VirtualAdapterQuery = "$ids=@(Get-CimInstance Win32_NetworkAdapter -ErrorAction Stop | Where-Object { $_.ServiceName -eq 'VMSMP' -and $_.GUID } | ForEach-Object { [guid]$_.GUID }); $virtual=@(Get-NetAdapter -IncludeHidden -ErrorAction Stop | Where-Object { $ids -contains [guid]$_.InterfaceGuid }); ";
 
     internal const string StatusScript = Preamble + """
+        $availableFeatures=@(Get-WindowsOptionalFeature -Online -ErrorAction Stop);
         $features=@(foreach($name in @('Microsoft-Hyper-V-All','VirtualMachinePlatform','HypervisorPlatform')) {
-            $f=Get-WindowsOptionalFeature -Online -FeatureName $name -ErrorAction SilentlyContinue
+            $f=$availableFeatures | Where-Object FeatureName -eq $name | Select-Object -First 1
             if($f){[pscustomobject]@{Name=$name;State=[string]$f.State}}else{[pscustomobject]@{Name=$name;State='Unavailable'}}
         });
         $virtualRows=@(); $physicalRows=@(); $networkError='';
@@ -41,11 +42,11 @@ public static class HyperVService
             ? "@('Microsoft-Hyper-V-All','VirtualMachinePlatform','HypervisorPlatform')"
             : "@('Microsoft-Hyper-V-All')";
         var command = enable
-            ? "Enable-WindowsOptionalFeature -Online -FeatureName $f.FeatureName -All -NoRestart | Out-Null"
-            : "Disable-WindowsOptionalFeature -Online -FeatureName $f.FeatureName -NoRestart | Out-Null";
+            ? "if([string]$f.State -ne 'Enabled'){Enable-WindowsOptionalFeature -Online -FeatureName $f.FeatureName -All -NoRestart | Out-Null}"
+            : "if([string]$f.State -eq 'Enabled'){Disable-WindowsOptionalFeature -Online -FeatureName $f.FeatureName -NoRestart | Out-Null}";
         // Check all features first. A missing optional component is skipped only on complete disable (e.g. Home).
-        return Preamble + $"$names={names}; $features=@(); foreach($name in $names){{$f=Get-WindowsOptionalFeature -Online -FeatureName $name -ErrorAction SilentlyContinue; if($f){{$features+=,$f}}elseif(-not ${completeDisable.ToString().ToLowerInvariant()}){{throw 'Hyper-V is unavailable on this Windows edition or architecture.'}}}}; "
-            + $"foreach($f in $features){{if([string]$f.State -notin @('Disabled','Enabled')){{throw 'A feature is pending or unavailable. Restart Windows and refresh before retrying.'}}}}; "
+        return Preamble + $"$names={names}; $available=@(Get-WindowsOptionalFeature -Online -ErrorAction Stop); $features=@(); foreach($name in $names){{$f=$available | Where-Object FeatureName -eq $name | Select-Object -First 1; if($f){{$features+=,$f}}elseif(-not ${completeDisable.ToString().ToLowerInvariant()}){{throw 'Hyper-V is unavailable on this Windows edition or architecture.'}}}}; "
+            + "foreach($f in $features){if([string]$f.State -notin @('Disabled','Enabled','DisabledWithPayloadRemoved')){throw 'A feature is pending or unavailable. Restart Windows and refresh before retrying.'}}; "
             + $"foreach($f in $features){{{command}}}; "
             + (enable || completeDisable
                 ? $"& \"$env:SystemRoot\\System32\\bcdedit.exe\" /set '{{current}}' hypervisorlaunchtype {(enable ? "auto" : "off")} | Out-Null; if($LASTEXITCODE -ne 0){{throw 'Boot configuration update failed. Feature changes may already have been applied; refresh and restart Windows.'}}; "

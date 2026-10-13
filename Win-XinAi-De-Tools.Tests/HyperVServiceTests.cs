@@ -18,6 +18,9 @@ public sealed class HyperVServiceTests
         var script = HyperVService.BuildFeatureScript(false);
         Assert.Contains("Disable-WindowsOptionalFeature", script);
         Assert.Contains("-NoRestart", script);
+        Assert.Contains("Get-WindowsOptionalFeature -Online -ErrorAction Stop", script);
+        Assert.Contains("DisabledWithPayloadRemoved", script);
+        Assert.DoesNotContain("SilentlyContinue", script);
         Assert.DoesNotContain("VirtualMachinePlatform", script);
         Assert.DoesNotContain("HypervisorPlatform", script);
         Assert.DoesNotContain("bcdedit", script);
