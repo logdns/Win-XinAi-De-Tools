@@ -46,6 +46,8 @@ Coverage: 15 pages × 2 languages × 2 explicit themes × 3 window sizes (480 ×
 
 The `ui-verification` Actions artifact contains actual dashboard/WSL/Hyper-V/HTTP screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
 
+Hyper-V screenshots require completed status initialization, not an indefinitely spinning loader. A read-only Windows test verifies the status probe and unsupported-feature detection; mocked cmdlets cover mutation safety without changing the runner's Hyper-V setup. See [Hyper-V hardware acceptance and recovery](HYPER-V.md).
+
 ## Manual acceptance matrix
 
 The automated GUI run is on a Windows x64 hosted runner. These remain hardware/OS acceptance checks; CI success must not be described as testing them:

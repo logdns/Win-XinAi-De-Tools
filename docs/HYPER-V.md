@@ -6,6 +6,12 @@
 
 Run as administrator in a local session. Hyper-V host features generally require a supported Windows Pro, Enterprise or Education edition and firmware-enabled CPU virtualization. Home, 32-bit systems and other edition/architecture combinations may not expose the feature. The app shows available components; it does not bypass Windows requirements or configure firmware.
 
+![Hyper-V settings in the packaged Windows application](screenshots/hyper-v.png)
+
+![Virtual switch controls](screenshots/hyper-v-switches.png)
+
+Screenshots are from the read-only Windows x64 CI run, not a claim of tested feature or switch mutations.
+
 ## Three different controls / 三类控制
 
 | Operation | Effect / 行为 |
@@ -18,6 +24,10 @@ Run as administrator in a local session. Hyper-V host features generally require
 “当前运行”来自 Windows 的 `HypervisorPresent`；“下次启动”来自当前启动项的 BCD 设置。两者可能在重启前不同。`Default` 表示 BCD 没有显式值，不是对下一次实际运行状态的保证。`Unavailable` 是组件不可用；`EnablePending` / `DisablePending` 需要重启。状态查询失败不表示网络正常或已关闭。
 
 Runtime hypervisor state and requested next-boot launch state are distinct. `Default` means no explicit BCD launch setting, not a guarantee of the next runtime state. Unavailable components and pending changes are shown, and query failures do not imply a healthy or disabled network.
+
+`HypervisorPresent` 也可能来自虚拟机所在的宿主 Hypervisor，不单独证明当前 Windows 已启用本机 Hyper-V 功能。状态查询有 45 秒限制，失败可刷新；修改操作最多等待 15 分钟。检测到的存在状态不能替代重启后的功能及网络核实。
+
+Inside a VM, HypervisorPresent can reflect the outer host rather than a locally enabled Hyper-V role. Presence alone does not prove the local feature is enabled. Status queries are bounded to 45 seconds; mutations to 15 minutes. Verify feature and networking state after restarting.
 
 彻底关闭会影响 WSL2、Docker、Windows Sandbox 与虚拟化安全（VBS/Credential Guard 等）。不会删除虚拟磁盘或 WSL 发行版，但请先保存工作、关闭虚拟机并退出 Docker。此工具不停止 HNS/vmcompute、不清除 NAT，不修改 VBS/Device Guard/组策略，不强制停止虚拟机，不自动重启。
 
@@ -64,6 +74,6 @@ Recover locally by enabling the original adapter, verifying IP/DNS and re-enabli
 
 ## Validation / 验收边界
 
-CI covers generated PowerShell syntax, mocked GUID selection, preflight rejection and switch-removal guards without changing Hyper-V host configuration. UI smoke visits this page in both languages/themes at three sizes and checks draft retention. Hosted runners do **not** prove real Hyper-V networking or post-reboot behavior.
+CI covers generated PowerShell syntax, mocked GUID selection, preflight rejection and switch-removal guards without changing Hyper-V host configuration. A real read-only probe checks status and missing-feature detection. UI smoke visits this page in both languages/themes at three sizes, requires completed status initialization, checks draft retention and captures the switch form. Hosted runners do **not** prove real Hyper-V networking or post-reboot behavior.
 
 请在可恢复的 Windows 测试机执行硬件验收：开启/关闭/重启后状态、缺少功能的系统、WSL2/Docker 兼容、内部/专用/外部交换机、主机共享开关、改名网卡/禁用网卡、系统交换机保护、已连接虚拟机拒绝删除、断网后本地恢复、权限错误及部分失败。Physical x86/ARM64, firmware, policy, external networking and reboot behavior remain environment-specific checks; do not treat CI success as those checks passing.
