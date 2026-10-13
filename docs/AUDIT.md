@@ -32,7 +32,15 @@ This page summarizes the current implementation and completed validation.
 
 The hosted Windows runner reports three optional-component states and one existing non-tool switch; the switch remains protected. It does not provide physical-device acceptance or prove actual adapter/feature mutations, post-reboot behavior or recovery. Early candidates revealed incomplete status loading, GUID JSON formatting and warning contrast problems; the successful candidate includes the fixes and stronger assertions. The macOS local run uses .NET 9 roll-forward; Windows CI supplies the authoritative .NET 8 results.
 
-Release publication and downloaded checksum verification are recorded only after completion; a successful candidate build alone is not a published release.
+## Verified release 1.10.0 / 发布与下载校验
+
+[Successful tag workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38360187805) and [published v1.10.0 release](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.10.0), verified 2026-10-13:
+
+- Published tag resolves to `d4bed972ccd8725dd6c58c2e8379c94ff33fcfe2`. This adds only validation documentation/screenshots to the tested implementation; the published tag has not been retargeted.
+- Tag workflow repeated the 131 Windows tests, 2 firewall integration tests, 180 native UI combinations, dependency audits, helper checks and all six builds successfully.
+- Exactly seven release assets: three portable ZIPs, three installers and `SHA256SUMS.txt`; no UI verification artifact is exposed as a release asset. All have non-zero sizes and the release is neither a draft nor a prerelease.
+- Downloaded all six packages and matched every SHA-256 against the published checksum file. Checked all three portable ZIP CRCs, native executable PE architectures, compiled Hyper-V page/service presence, included .NET/WinUI/Skia runtimes, both localization dictionaries/version strings and license files.
+- This is package/integrity verification, not installer execution on every architecture. Physical Hyper-V feature/network mutations and reboot/recovery remain manual acceptance items. Checksums are not code signing.
 
 ## Implementation boundaries
 
