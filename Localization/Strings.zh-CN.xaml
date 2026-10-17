@@ -296,7 +296,7 @@
     <x:String x:Key="About_Description">Windows 原生网络、防火墙与 WSL 管理工具</x:String>
     <x:String x:Key="About_CopyrightPrefix">沨哥网络 -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">版本 1.10.1</x:String>
+    <x:String x:Key="About_Version">版本 1.11.0</x:String>
     <x:String x:Key="About_Features">功能</x:String>
     <x:String x:Key="About_FeatureText">在一个原生 WinUI 应用中管理网络配置、防火墙规则、SMB 共享和 WSL 发行版。</x:String>
     <x:String x:Key="About_Frameworks">技术框架</x:String>
@@ -393,4 +393,13 @@
     <x:String x:Key="HyperV_Error">Hyper-V 操作失败</x:String>
     <x:String x:Key="HyperV_PartialFailure">操作未完成，部分更改可能已生效。请核实当前状态，不要直接重复操作；功能更改可能需要重启。</x:String>
     <x:String x:Key="HyperV_RefreshFailed">操作已完成，但无法刷新状态。请手动刷新核实；功能和启动更改需要重启。</x:String>
+    <x:String x:Key="NetworkReset_Title">重置本地网络设置</x:String>
+    <x:String x:Key="NetworkReset_WarningTitle">请在本机操作，修改前自动备份配置</x:String>
+    <x:String x:Key="NetworkReset_Warning">任何修改前先备份。恢复所选网卡会移除其手动 IPv4 地址和默认路由，恢复 DHCP 与自动 DNS；静态网络可能因此断网。Winsock/TCP/IP 重置影响整机、VPN 与虚拟网络，需手动重启。请勿通过远程连接操作。不会自动重启、重置防火墙、移除网卡或删除 Hyper-V 交换机。请逐项查看命令结果，部分修改不会自动回滚。</x:String>
+    <x:String x:Key="NetworkReset_FlushDns">清理 DNS 缓存</x:String>
+    <x:String x:Key="NetworkReset_Adapter">恢复所选网卡 DHCP/DNS</x:String>
+    <x:String x:Key="NetworkReset_Stack">重置 Winsock / TCP/IP</x:String>
+    <x:String x:Key="NetworkReset_Result">配置备份：{0}</x:String>
+    <x:String x:Key="NetworkReset_Restart">请保存工作后手动重启 Windows，再检查连通性及静态 IP、VPN、虚拟网络设置。</x:String>
+    <x:String x:Key="NetworkReset_Partial">部分步骤失败，配置可能已发生变化；请检查所有结果与备份后再决定是否重试。</x:String>
 </ResourceDictionary>

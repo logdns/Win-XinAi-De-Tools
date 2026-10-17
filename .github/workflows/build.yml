@@ -326,10 +326,133 @@ jobs:
           name: Win-XinAi-De-Tools-Setup-${{ matrix.rid }}
           path: artifacts/installer/*.exe
 
+  mygo:
+    needs: test
+    runs-on: windows-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: win-x64
+            goarch: amd64
+            arch: x64
+          - rid: win-arm64
+            goarch: arm64
+            arch: arm64
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: 1.27.2
+          cache-dependency-path: mygo/go.sum
+      - name: Test native MyGo views and safety contracts
+        working-directory: mygo
+        run: go test ./...
+      - name: Audit pinned Go dependencies
+        working-directory: mygo
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
+      - name: Publish shared service engine
+        shell: pwsh
+        run: |
+          dotnet publish engine/Win-XinAi-De-Tools.Engine.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o artifacts/mygo-portable/${{ matrix.rid }}/engine
+          if ($LASTEXITCODE -ne 0) { throw 'Shared engine publish failed.' }
+      - name: Compile native MyGo frontend with administrator manifest and icon
+        working-directory: mygo
+        shell: pwsh
+        run: |
+          go run ./cmd/resources -arch ${{ matrix.goarch }}
+          if ($LASTEXITCODE -ne 0) { throw 'Resource generation failed.' }
+          $env:GOOS = 'windows'; $env:GOARCH = '${{ matrix.goarch }}'; $env:CGO_ENABLED = '0'
+          go build -trimpath -ldflags='-s -w -H=windowsgui' -o ../artifacts/mygo-portable/${{ matrix.rid }}/Win-XinAi-De-Tools-MyGo.exe .
+          if ($LASTEXITCODE -ne 0) { throw 'MyGo build failed.' }
+      - name: Include package instructions, app assets and upstream licenses
+        shell: pwsh
+        run: |
+          $target = 'artifacts/mygo-portable/${{ matrix.rid }}'
+          Copy-Item Assets "$target/Assets" -Recurse
+          Copy-Item LICENSE,THIRD-PARTY-NOTICES.md $target
+          Copy-Item licenses "$target/licenses" -Recurse
+          Copy-Item docs/MYGO.md "$target/README.md"
+          Push-Location mygo
+          python ../scripts/collect-go-licenses.py "../$target"
+          if ($LASTEXITCODE -ne 0) { throw 'License collection failed.' }
+          Pop-Location
+      - name: Exercise actual Windows MyGo native window and read-only engine
+        if: matrix.arch == 'x64'
+        shell: pwsh
+        run: ./scripts/mygo-ui-smoke.ps1 -Executable artifacts/mygo-portable/${{ matrix.rid }}/Win-XinAi-De-Tools-MyGo.exe
+      - name: Upload MyGo UI verification
+        if: always() && matrix.arch == 'x64'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: mygo-ui-verification
+          path: artifacts/mygo-ui
+      - name: Package portable MyGo edition
+        shell: pwsh
+        run: Compress-Archive -Path artifacts/mygo-portable/${{ matrix.rid }}/* -DestinationPath artifacts/Win-XinAi-De-Tools-MyGo-${{ matrix.rid }}.zip
+      - name: Download installer language
+        shell: pwsh
+        run: curl.exe --fail --silent --show-error --location https://raw.githubusercontent.com/jrsoftware/issrc/1ae7bf81dc0d2013235dfe4bb0b6f4e4a0b6b25c/Files/Languages/ChineseSimplified.isl --output installer/ChineseSimplified.isl
+      - name: Build side-by-side MyGo installer
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content Win-XinAi-De-Tools.csproj
+          $version = @($project.Project.PropertyGroup.Version)[0]
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DSourceDir=$pwd\artifacts\mygo-portable\${{ matrix.rid }}" "/DBuildArch=${{ matrix.arch }}" "/DAppVersion=$version" installer/Win-XinAi-De-Tools-MyGo.iss
+          if ($LASTEXITCODE -ne 0) { throw 'MyGo installer compilation failed.' }
+      - name: Verify MyGo shortcut choices and installed application
+        if: matrix.arch == 'x64'
+        timeout-minutes: 10
+        shell: pwsh
+        run: ./scripts/installer-smoke.ps1 -Installer artifacts/mygo-installer/Win-XinAi-De-Tools-MyGo-Setup-x64.exe -Edition MyGo
+      - name: Upload MyGo installer verification
+        if: always() && matrix.arch == 'x64'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: mygo-installer-verification
+          path: artifacts/installer-smoke-MyGo
+      - name: Upload MyGo portable artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: Win-XinAi-De-Tools-MyGo-${{ matrix.rid }}
+          path: artifacts/Win-XinAi-De-Tools-MyGo-${{ matrix.rid }}.zip
+      - name: Upload MyGo installer artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: Win-XinAi-De-Tools-MyGo-Setup-${{ matrix.rid }}
+          path: artifacts/mygo-installer/*.exe
+
+  side-by-side:
+    needs: [installer, mygo]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: Win-XinAi-De-Tools-Setup-win-x64
+          path: artifacts/parallel-winui
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: Win-XinAi-De-Tools-MyGo-Setup-win-x64
+          path: artifacts/parallel-mygo
+      - name: Verify actual side-by-side installation and independent uninstall
+        shell: pwsh
+        run: ./scripts/side-by-side-smoke.ps1 -WinUIInstaller artifacts/parallel-winui/Win-XinAi-De-Tools-Setup-x64.exe -MyGoInstaller artifacts/parallel-mygo/Win-XinAi-De-Tools-MyGo-Setup-x64.exe
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: side-by-side-verification
+          path: artifacts/side-by-side
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
-    needs: [build, installer]
+    needs: [build, installer, mygo, side-by-side]
     timeout-minutes: 15
     permissions:
       contents: write

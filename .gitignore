@@ -9,3 +9,8 @@ TestResults/
 *.suo
 *.csproj.user
 native/**/target/
+
+mygo/*.syso
+mygo/build/
+engine/bin/
+engine/obj/

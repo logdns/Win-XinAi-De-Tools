@@ -1,6 +1,8 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$Installer
+    [string]$Installer,
+    [ValidateSet("WinUI", "MyGo")]
+    [string]$Edition = "WinUI"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -13,8 +15,9 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     throw 'Installer smoke tests require an elevated disposable runner.'
 }
 
+$appName = if ($Edition -eq "MyGo") { "Win-XinAi-De-Tools-MyGo" } else { "Win-XinAi-De-Tools" }
 $Installer = (Resolve-Path $Installer).Path
-$output = Join-Path $pwd 'artifacts/installer-smoke'
+$output = Join-Path $pwd $(if ($Edition -eq 'MyGo') { 'artifacts/installer-smoke-MyGo' } else { 'artifacts/installer-smoke' })
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 # Runner TEMP can contain an 8.3 alias; Shell resolves .lnk targets to long paths.
 Add-Type @'
@@ -30,15 +33,15 @@ $tempPath = [Text.StringBuilder]::new(32768)
 $length = [InstallerSmokePath]::GetLongPathName($env:TEMP, $tempPath, 32768)
 if ($length -eq 0 -or $length -ge 32768) { throw 'Cannot resolve the runner temporary directory.' }
 $installDirectory = Join-Path $tempPath.ToString() ('WinXinAiInstaller-' + [guid]::NewGuid().ToString('N'))
-$executable = Join-Path $installDirectory 'Win-XinAi-De-Tools.exe'
+$executable = Join-Path $installDirectory "$appName.exe"
 $programs = [Environment]::GetFolderPath('CommonPrograms')
 $desktop = [Environment]::GetFolderPath('CommonDesktopDirectory')
-$menuDirectory = Join-Path $programs 'Win-XinAi-De-Tools'
-$menuLink = Join-Path $menuDirectory 'Win-XinAi-De-Tools.lnk'
-$uninstallLink = Join-Path $menuDirectory 'Uninstall Win-XinAi-De-Tools.lnk'
-$desktopLink = Join-Path $desktop 'Win-XinAi-De-Tools.lnk'
-$legacyLink = Join-Path $programs 'Win-XinAi-De-Tools.lnk'
-$uninstallKey = '{AD8E0A23-F4C1-4DA9-9F52-26E5A6D38DC7}_is1'
+$menuDirectory = Join-Path $programs $appName
+$menuLink = Join-Path $menuDirectory "$appName.lnk"
+$uninstallLink = Join-Path $menuDirectory "Uninstall $appName.lnk"
+$desktopLink = Join-Path $desktop "$appName.lnk"
+$legacyLink = Join-Path $programs "$appName.lnk"
+$uninstallKey = if ($Edition -eq 'MyGo') { '{ED82C612-79BA-4D1D-B2BD-5D6F9FA79E61}_is1' } else { '{AD8E0A23-F4C1-4DA9-9F52-26E5A6D38DC7}_is1' }
 
 # Refuse to interfere with an existing installation or another user's shortcuts.
 foreach ($key in @(
@@ -51,7 +54,7 @@ foreach ($key in @(
 foreach ($path in @($menuDirectory, $desktopLink, $legacyLink)) {
     if (Test-Path $path) { throw "Existing shortcut path: $path" }
 }
-if (Get-Process -Name 'Win-XinAi-De-Tools' -ErrorAction SilentlyContinue) {
+if (Get-Process -Name $appName -ErrorAction SilentlyContinue) {
     throw 'The application is already running.'
 }
 
@@ -89,7 +92,7 @@ function Install-Case([string]$Name, [string]$Tasks, [bool]$Desktop, [bool]$Menu
     if ($Tasks -ne 'default') { $arguments += "/TASKS=`"$Tasks`"" }
     Invoke-SetupProcess $Installer $arguments
     if (-not (Test-Path $executable)) { throw 'Installed executable is missing.' }
-    if (Get-Process -Name 'Win-XinAi-De-Tools' -ErrorAction SilentlyContinue) {
+    if (Get-Process -Name $appName -ErrorAction SilentlyContinue) {
         throw 'Installation launched the app despite skipifsilent.'
     }
     Assert-Shortcut $desktopLink $Desktop $executable $true
@@ -116,7 +119,7 @@ try {
     Install-Case 'default' 'default' $true $true 'chinesesimplified'
 
     # Start the installed application via the actual Start Menu shortcut, not the ZIP.
-    $logPath = Join-Path $env:LOCALAPPDATA 'Win-XinAi-De-Tools/startup.log'
+    $logPath = Join-Path $env:LOCALAPPDATA "$appName/startup.log"
     Remove-Item $logPath -Force -ErrorAction SilentlyContinue
     Start-Process -FilePath $menuLink
     $deadline = (Get-Date).AddSeconds(60)
@@ -128,16 +131,21 @@ try {
             if ($log -match 'Application initialization failed|Unable to open the main window|Unexpected application error') {
                 throw "Installed application startup failed:`n$log"
             }
-            if ($log -match 'Navigation completed: DashboardPage\.') { $loaded = $true; break }
+            if (($Edition -eq 'WinUI' -and $log -match 'Navigation completed: DashboardPage\.') -or ($Edition -eq 'MyGo' -and $log -match 'MyGo ready: dashboard')) { $loaded = $true; break }
         }
     }
     if (-not $loaded) { throw 'Installed application did not load from its Start Menu shortcut.' }
-    $app = Get-Process -Name 'Win-XinAi-De-Tools'
+    $app = Get-Process -Name $appName
     if (@($app).Count -ne 1 -or $app.Path -ne $executable) {
         throw 'Shortcut launched an unexpected application path or process count.'
     }
     if (-not $app.CloseMainWindow() -or -not $app.WaitForExit(15000)) {
         throw 'Installed application did not shut down normally.'
+    }
+    if ($Edition -eq 'MyGo') {
+        if (Get-Process -Name 'Win-XinAi-De-Tools.Engine' -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq (Join-Path $installDirectory 'engine/Win-XinAi-De-Tools.Engine.exe') }) {
+            throw 'Installed MyGo left its shared engine running.'
+        }
     }
     Copy-Item $logPath (Join-Path $output 'installed-startup.log')
     Write-Host 'PASS: actual Start Menu shortcut launched the installed app and closed normally'
@@ -159,7 +167,7 @@ try {
     Write-Host 'PASS: all installer shortcut selection, reinstallation, and uninstall checks'
 }
 finally {
-    Get-Process -Name 'Win-XinAi-De-Tools' -ErrorAction SilentlyContinue |
+    Get-Process -Name $appName -ErrorAction SilentlyContinue |
         Where-Object { $_.Path -eq $executable } |
         Stop-Process -Force -ErrorAction SilentlyContinue
     if (Test-Path (Join-Path $installDirectory 'unins000.exe')) {

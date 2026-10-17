@@ -6,7 +6,7 @@
 
 ## 下载
 
-**v1.10.1** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
+**v1.11.0** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
 
 需要 Windows 10 1809 或更高版本。解压便携 ZIP 或运行安装程序，以管理员身份启动应用。软件包自包含，无需另装 .NET 或 Windows App SDK。
 
@@ -14,20 +14,31 @@
 
 | 架构 | 便携版 | 安装版 |
 |---|---|---|
-| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-x64.exe) |
-| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-x86.exe) |
-| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-Setup-x64.exe) |
+| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-Setup-x86.exe) |
+| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
-[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/SHA256SUMS.txt) 用于校验下载文件。
+[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/SHA256SUMS.txt) 用于校验下载文件。
+
+## 两个版本并行发布
+
+| 版本 | 界面与架构 | x64 便携 / 安装 | ARM64 便携 / 安装 |
+|---|---|---|---|
+| 原版 WinUI | WinUI 3 + Skia；x86/x64/ARM64 | 见上表 | 见上表 |
+| **Win-XinAi-De-Tools-MyGo** | **Built with MyGo** 原生 Go GPU 界面；x64/ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-win-x64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-Setup-x64.exe) | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-win-arm64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-Setup-arm64.exe) |
+
+两版独立安装、快捷方式与界面设置，可同时保留。MyGo 借鉴 [Pulse](https://pulse.egoist.dev/) 的分区与状态卡片，不使用 WebView；包含自包含 .NET 系统服务引擎，不是单文件小体积版本。高级操作使用原生参数表单/结果，并非原版表格的逐项复制；不提供应用登录自启开关。**两版共用同一台电脑的系统配置，勿并发执行冲突操作。** 详见 [MyGo 版本、差异与构建](docs/MYGO.md)。
 
 ## 功能
+
+- **本地网络重置**：清理 DNS 缓存、所选网卡 DHCP/自动 DNS、整机 Winsock/TCP/IP；先备份、默认取消、不自动重启，见[重置与恢复](docs/NETWORK-RESET.md)。
 
 - **临时 HTTP**：默认端口 8980，可自定义端口、选择/打开目录、启动/停止/重启；逐条复制和打开地址，自动检测本机 HTTP 服务并显示端口和进程。支持外部访问，详见 [HTTP 使用指南](docs/TEMPORARY-HTTP.md)。
 - **防火墙与网络**：管理规则，查询端口，配置网卡、DNS 和路由，监控连接和进程，导入/导出规则与查看操作日志。
 - **SMB**：管理 SMB Direct、SMB 1.0/CIFS 和共享目录。
 - **WSL**：安装与管理发行版，打开终端，导入/导出和迁移，管理存储、代理、端口转发与 USB 设备。
 - **Hyper-V**：启用、仅关闭功能或彻底关闭虚拟化平台与启动加载；虚拟网卡单独/全部启停，创建内部/专用/外部交换机并设置主机共享。详见 [Hyper-V 与网络指南](docs/HYPER-V.md)。
-- **桌面体验**：保存主题和语言，按访问历史返回，支持托盘、登录自启与 `/silent`。
+- **桌面体验**：保存主题和语言，按访问历史返回，支持托盘、原版登录自启与 `/silent`。
 
 修改系统配置需要管理员权限。SMB 1.0 属于旧协议，请按需启用。一键安装 WSL 需要 Windows 10 2004 或更新版本。
 

@@ -1,7 +1,18 @@
 # Current audit and validation / 当前审计与验证
 
-当前版本：**1.10.1**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前候选版本：**1.11.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## Network reset / MyGo 1.11.0 focused source review
+
+- Scope: new reset service/models/controls, private engine dispatcher, MyGo native frontend, independent installer and release workflow. This is a focused change review, not a full codebase audit, penetration test or independent security certification. Functional builds/tests are separate from this read-only review.
+- Reset snapshots are written before mutation; failure aborts. Adapter resets revalidate a GUID and only mutate its interface index. Unknown modes, empty GUIDs and missing/disabled targets are rejected. Fixed System32/Sysnative tools, encoded PowerShell, no shell interpolation of aliases, closed stdin, concurrent output draining and two-minute command deadlines limit the new reset runner. No automatic restart, firewall reset, adapter uninstall, switch removal or HNS/NAT cleanup.
+- Winsock/TCP/IP commands have separate exit-code/results. Exit zero does not prove that localized netsh output contains no partial failures. Backups contain sensitive topology and are manual recovery references, not complete backups or rollback. See [network acceptance](NETWORK-RESET.md).
+- MyGo starts only the adjacent packaged engine, communicating over private inherited stdio with correlated IDs and a serial operation whitelist; no TCP listener or generic shell endpoint is added. UI and engine versions are checked. Mutation confirmations default to Cancel; the `confirmed` field is not a cross-principal authorization boundary. Both processes are the same administrator. Existing WSL schedule-command functionality intentionally runs user-specified Linux commands after confirmation, not a promise of a command-free application.
+- Protocol limits: frontend request 1 MiB, response 32 MiB; engine line length is checked after allocation, suitable for the trusted private parent only, not an untrusted network protocol. General requests time out after five minutes, WSL after one hour, shutdown after fifteen seconds. Forced termination can leave system changes or an executable/port-scoped HTTP rule; inspect locally before retrying.
+- Separate AppIds, directories, names, preferences and exact shortcut cleanup prevent intentional cross-edition uninstall/migration. Windows configuration/audit/backups are shared by design; no cross-process system-operation locking is provided. Avoid simultaneous conflicting operations.
+- MyGo is pinned to an immutable upstream version; original licenses and notices for all modules/Go are packaged. Initial Go 1.27.1 vulnerability scanning found standard-library advisories; build toolchain is raised to the fixed Go 1.27.2 rather than suppressing findings. MyGo has native controls, but accessibility/DPI and physical ARM64 acceptance are not inherited from WinUI.
+- Windows CI and release/download verification are still pending for this candidate. Historical results below do not validate 1.11.0. Real reset, reboot and recovery require a disposable, locally accessible Windows device and are not executed by CI.
 
 ## Installer 1.10.1 focused review / 安装入口专项审查
 

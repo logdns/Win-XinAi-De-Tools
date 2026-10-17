@@ -57,7 +57,7 @@ public sealed partial class MainWindow
                                 }
                                 tabs.SelectedIndex = 0;
                             }
-                            if (language == 1 && route is "Dashboard" or "WslDashboard" or "HyperVSettings" or "TemporaryHttp")
+                            if (language == 1 && route is "Dashboard" or "WslDashboard" or "HyperVSettings" or "TemporaryHttp" or "NetworkSettings")
                             {
                                 var deadline = DateTime.UtcNow.AddSeconds(route == "HyperVSettings" ? 60 : 15);
                                 while (page.FindName("LoadingRing") is ProgressRing { IsActive: true } && DateTime.UtcNow < deadline)
@@ -72,6 +72,14 @@ public sealed partial class MainWindow
                                 if (page.Content is ScrollViewer scroll) scroll.ChangeView(null, 0, null, true);
                                 await Task.Delay(100);
                                 await CaptureAsync($"{route}-{(theme == 1 ? "light" : "dark")}-{size.Width}.png");
+                                if (route == "NetworkSettings" && page.Content is ScrollViewer resetScroll)
+                                {
+                                    Require(page.FindName("ResetResultText") is TextBlock, "Network reset result control missing");
+                                    resetScroll.ChangeView(null, resetScroll.ScrollableHeight, null, true);
+                                    await Task.Delay(100);
+                                    await CaptureAsync($"NetworkReset-{(theme == 1 ? "light" : "dark")}-{size.Width}.png");
+                                    resetScroll.ChangeView(null, 0, null, true);
+                                }
                                 if (route == "HyperVSettings" && size.Width == 1400 && page.Content is ScrollViewer switchScroll)
                                 {
                                     switchScroll.ChangeView(null, switchScroll.ScrollableHeight, null, true);

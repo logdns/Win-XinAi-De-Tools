@@ -13,7 +13,7 @@ public static class NetworkConfigurationService
     public static Task<List<NetworkAdapterModel>> ListAdaptersAsync() => Task.Run(() =>
     {
         EnsureWindows();
-        const string script = "@(Get-NetAdapter -ErrorAction Stop | Where-Object Status -ne 'Disabled' | Select-Object Name,Status,MacAddress,ifIndex) | ConvertTo-Json -Compress";
+        const string script = "@(Get-NetAdapter -ErrorAction Stop | Where-Object Status -ne 'Disabled' | Select-Object Name,Status,MacAddress,ifIndex,@{n='AdapterId';e={([guid]$_.InterfaceGuid).ToString('D')}}) | ConvertTo-Json -Compress";
         var json = RunPowerShell<JsonElement>(script);
         var rows = json.ValueKind == JsonValueKind.Array
             ? JsonSerializer.Deserialize<List<AdapterDto>>(json.GetRawText(), JsonOptions) ?? new()
@@ -25,7 +25,8 @@ public static class NetworkConfigurationService
             Name = row.Name ?? string.Empty,
             Status = row.Status ?? string.Empty,
             MacAddress = row.MacAddress ?? string.Empty,
-            InterfaceIndex = row.InterfaceIndex
+            InterfaceIndex = row.InterfaceIndex,
+            InterfaceGuid = row.AdapterId
         }).OrderBy(adapter => adapter.Name, StringComparer.OrdinalIgnoreCase).ToList();
     });
 
@@ -143,6 +144,7 @@ public static class NetworkConfigurationService
         public string? Status { get; set; }
         public string? MacAddress { get; set; }
         [JsonPropertyName("ifIndex")] public int InterfaceIndex { get; set; }
+        public Guid AdapterId { get; set; }
     }
 
     private sealed class ConfigurationDto

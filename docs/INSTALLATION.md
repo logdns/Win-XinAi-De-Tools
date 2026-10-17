@@ -45,3 +45,15 @@ Source contracts check default task selection, task scoping, bilingual labels, i
 Interactive wizard checkbox presentation, Start Menu search indexing, Windows 10/11 desktop policies and physical x86/ARM64 installations still require manual acceptance. Silent-install tests do not prove those behaviors.
 
 安装向导的交互展示、开始菜单搜索索引、Windows 10/11 桌面策略，以及物理 x86/ARM64 安装仍需手工验收；静默安装测试不能代替这些验证。
+
+## MyGo side-by-side edition / MyGo 并行安装
+
+From v1.11.0, `Win-XinAi-De-Tools-MyGo` has its own AppId, Program Files directory, desktop icon and Start Menu folder. Both default-selected tasks and optional postinstall launch follow the same rules. It never migrates/deletes the WinUI shortcuts. UI preferences are independent; system configuration, network backups and audit logs are shared. Preserve the bundled `engine/` directory. See [MyGo differences](MYGO.md).
+
+从 v1.11.0 起，MyGo 版使用独立安装身份、目录与同名桌面/开始菜单入口；两个快捷方式选项默认勾选，立即启动仍为独立选项。重装/卸载不删除原版快捷方式。两版可同时安装，但系统配置共用，请勿并发执行冲突操作；勿删除 MyGo 包内 `engine/`。
+
+```powershell
+./scripts/installer-smoke.ps1 -Installer artifacts/mygo-installer/Win-XinAi-De-Tools-MyGo-Setup-x64.exe -Edition MyGo
+```
+
+The same real x64 lifecycle checks write `mygo-installer-verification`. Source contracts check both editions' exact paths and identities. Interactive wizard, indexing and physical ARM64 remain manual checks.

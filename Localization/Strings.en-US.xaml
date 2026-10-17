@@ -296,7 +296,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.10.1</x:String>
+    <x:String x:Key="About_Version">Version 1.11.0</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>
@@ -393,4 +393,13 @@
     <x:String x:Key="HyperV_Error">Hyper-V operation failed</x:String>
     <x:String x:Key="HyperV_PartialFailure">The operation did not complete; some changes may already be applied. Verify current state before retrying; feature changes may need a restart.</x:String>
     <x:String x:Key="HyperV_RefreshFailed">The operation completed, but status refresh failed. Refresh manually to verify; feature and boot changes require a restart.</x:String>
+    <x:String x:Key="NetworkReset_Title">Reset local network settings</x:String>
+    <x:String x:Key="NetworkReset_WarningTitle">Local access and configuration backup required</x:String>
+    <x:String x:Key="NetworkReset_Warning">Settings are backed up before any change. Restoring the selected adapter removes its manual IPv4 addresses/default route and restores DHCP and automatic DNS; static networks may lose access. Winsock/TCP/IP reset affects this computer, VPNs and virtual networks and requires a manual restart. Do not use over a remote connection. No automatic restart, firewall reset, adapter removal or Hyper-V switch deletion is performed. Review each command result; partial changes are not automatically rolled back.</x:String>
+    <x:String x:Key="NetworkReset_FlushDns">Clear DNS cache</x:String>
+    <x:String x:Key="NetworkReset_Adapter">Restore selected adapter DHCP/DNS</x:String>
+    <x:String x:Key="NetworkReset_Stack">Reset Winsock / TCP/IP</x:String>
+    <x:String x:Key="NetworkReset_Result">Configuration backup: {0}</x:String>
+    <x:String x:Key="NetworkReset_Restart">Restart Windows manually after saving your work, then verify connectivity and static/VPN/virtual network settings.</x:String>
+    <x:String x:Key="NetworkReset_Partial">Some steps failed; configuration may already have changed. Inspect all results and the backup before retrying.</x:String>
 </ResourceDictionary>

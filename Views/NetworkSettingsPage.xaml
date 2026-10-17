@@ -103,6 +103,18 @@
                     </controls:WrapPanel>
                 </Grid>
             </Border>
+            <Border Grid.Row="4" Style="{StaticResource CardPanel}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="{StaticResource NetworkReset_Title}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
+                    <InfoBar IsOpen="True" IsClosable="False" Severity="Warning" Title="{StaticResource NetworkReset_WarningTitle}" Message="{StaticResource NetworkReset_Warning}"/>
+                    <controls:WrapPanel Spacing="10">
+                        <Button x:Name="FlushDnsButton" Content="{StaticResource NetworkReset_FlushDns}" Click="FlushDnsButton_Click"/>
+                        <Button x:Name="ResetAdapterButton" Content="{StaticResource NetworkReset_Adapter}" Click="ResetAdapterButton_Click"/>
+                        <Button x:Name="ResetStackButton" Content="{StaticResource NetworkReset_Stack}" Click="ResetStackButton_Click"/>
+                    </controls:WrapPanel>
+                    <TextBlock x:Name="ResetResultText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                </StackPanel>
+            </Border>
         </Grid>
     </ScrollViewer>
 </Page>

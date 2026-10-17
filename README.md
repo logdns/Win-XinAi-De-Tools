@@ -6,7 +6,7 @@ A native Windows utility for firewall rules, network settings, SMB, WSL, Hyper-V
 
 ## Download
 
-**v1.10.1** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
+**v1.11.0** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
 
 Requires Windows 10 1809 or later. Extract the portable ZIP or run the installer, then launch the app as administrator. Packages include the .NET and Windows App SDK runtimes.
 
@@ -14,13 +14,24 @@ The installer offers **desktop** and **Start Menu** shortcuts as independent opt
 
 | Architecture | Portable | Installer |
 |---|---|---|
-| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-x64.exe) |
-| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-x86.exe) |
-| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-Setup-x64.exe) |
+| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-Setup-x86.exe) |
+| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
-[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.10.1/SHA256SUMS.txt) provides download checksums.
+[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/SHA256SUMS.txt) provides download checksums.
+
+## Parallel Editions
+
+| Edition | Interface / architectures | x64 portable / installer | ARM64 portable / installer |
+|---|---|---|---|
+| Original WinUI | WinUI 3 + Skia; x86/x64/ARM64 | See above | See above |
+| **Win-XinAi-De-Tools-MyGo** | **Built with MyGo**, native Go GPU UI; x64/ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-win-x64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-Setup-x64.exe) | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-win-arm64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.11.0/Win-XinAi-De-Tools-MyGo-Setup-arm64.exe) |
+
+Install identities, shortcuts and UI preferences are independent. Inspired by [Pulse](https://pulse.egoist.dev/), MyGo uses native Go controls, not a WebView. It includes a self-contained .NET system engine: no tiny standalone-binary claim. Advanced tools use native operation forms/results rather than identical WinUI tables; application login startup is not offered. **Both editions manage the same Windows configuration; avoid conflicting simultaneous changes.** See the [MyGo guide and differences](docs/MYGO.md).
 
 ## Features
+
+- **Local network reset**: DNS cache, selected-adapter DHCP/automatic DNS, or system Winsock/TCP/IP. Snapshot first, Cancel by default, no automatic reboot; see [reset and recovery](docs/NETWORK-RESET.md).
 
 - **Temporary HTTP**: configurable port (8980 by default), folder selection/opening, Start/Stop/Restart, individual URL copy/open actions, and local HTTP detection with port/process details. Supports external access; see the [HTTP guide](docs/TEMPORARY-HTTP.md).
 - **Firewall and networking**: manage rules, query ports, configure adapters/DNS/routes, inspect connections and processes, import/export rules, and review operation logs.

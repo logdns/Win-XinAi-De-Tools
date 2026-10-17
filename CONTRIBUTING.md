@@ -57,3 +57,7 @@ Include the application version, Windows build, architecture, exact reproduction
 ## License
 
 By contributing, you agree that your contributions are provided under the MIT License in this repository.
+
+## MyGo edition
+
+The native Go frontend and private shared .NET engine live in `mygo/` and `engine/`. Keep both edition versions synchronized. Use Go 1.27.2 or the pinned security-fixed version in the workflow; run `go test ./...`, `go vet ./...` and the pinned `govulncheck` command from `mygo/`. See [the complete build and capability boundaries](docs/MYGO.md). WinUI keeps x86/x64/ARM64; MyGo ships x64/ARM64. A release requires both matrices and both actual x64 installer/UI checks. Do not execute real network resets in CI; use parser and mocked-cmdlet contracts plus disposable local Windows acceptance.

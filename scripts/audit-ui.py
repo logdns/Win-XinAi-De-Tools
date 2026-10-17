@@ -28,12 +28,14 @@ for path in [ROOT / 'App.xaml', ROOT / 'MainWindow.xaml', *sorted((ROOT / 'Views
             assert handler in source, f'{path.name}: missing handler {handler}'
 project = ET.parse(ROOT / 'Win-XinAi-De-Tools.csproj').getroot()
 version = project.findtext('PropertyGroup/Version')
-for path in ['README.md', 'README.zh-CN.md', 'installer/Win-XinAi-De-Tools.iss', 'CHANGELOG.md']:
+for path in ['README.md', 'README.zh-CN.md', 'installer/Win-XinAi-De-Tools.iss', 'installer/Win-XinAi-De-Tools-MyGo.iss', 'CHANGELOG.md', 'mygo/app.go', 'mygo/cmd/resources/main.go', 'engine/Dispatcher.cs']:
     assert version in (ROOT / path).read_text(encoding="utf-8"), f'{path}: missing current version'
 assert version in chinese['About_Version'] and version in english['About_Version']
 manifest = ET.parse(ROOT / 'Package.appxmanifest').getroot()
 assert list(manifest)[0].get('Version') == version + '.0'
 assert project.findtext('PropertyGroup/AssemblyVersion') == version + '.0'
 assert project.findtext('PropertyGroup/FileVersion') == version + '.0'
+assert ET.parse(ROOT / 'engine/Win-XinAi-De-Tools.Engine.csproj').findtext('PropertyGroup/Version') == version
+assert ET.parse(ROOT / 'app.manifest').getroot()[0].get('version') == version + '.0'
 page_count = len(list((ROOT / 'Views').glob('*.xaml')))
 print(f'UI audit passed: {len(chinese)} bilingual resources, {page_count} pages, version {version}.')

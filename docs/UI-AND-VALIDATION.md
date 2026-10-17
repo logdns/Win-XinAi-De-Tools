@@ -44,7 +44,7 @@ Requested native window sizes can be constrained by the runner display; the log 
 
 Coverage: 15 pages × 2 languages × 2 explicit themes × 3 window sizes (480 × 640, 800 × 600, 1400 × 900), all four WSL tabs, layout bounds, selected navigation item, history after changing language, draft retention, unknown routes, empty history, modal-dialog theme/back protection, compact-pane visibility, and restoring System appearance. CI also validates startup, native window/tray icons, minimize/restore, clean shutdown, Windows Firewall integration, Rust/Go helper builds, NuGet vulnerability data for direct/transitive dependencies, and x86/x64/ARM64 portable and installer builds.
 
-The `ui-verification` Actions artifact contains actual dashboard/WSL/Hyper-V/HTTP screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
+The `ui-verification` Actions artifact contains actual dashboard/network-reset/WSL/Hyper-V/HTTP screenshots and a startup log. It is intentionally excluded from downloadable release assets. Skia rendering must appear in the log or the UI smoke test fails.
 
 The x64 installer job also executes the real installer with every shortcut selection, verifies the installed Start Menu launch, reinstallation and uninstall cleanup. See [installer validation and its manual limits](INSTALLATION.md#verification--验证). Its logs are in the separate `installer-verification` artifact.
 
@@ -69,9 +69,13 @@ The automated GUI run is on a Windows x64 hosted runner. These remain hardware/O
 ## Release procedure
 
 1. Update the project, package manifest, installer fallback, About resources, README links, and changelog to the same version.
-2. Run the Actions workflow on the candidate branch; review test logs, screenshots, actual installer shortcut/reinstall/uninstall checks, dependency audit, and all six package builds.
+2. Run the Actions workflow on the candidate branch; review test logs, screenshots, actual installer shortcut/reinstall/uninstall checks, dependency audit, and all ten package builds.
 3. Integrate the reviewed candidate into `main`, then push the matching `v<version>` tag. The workflow rejects tag/project mismatch.
-4. Wait for the tag workflow to pass and publish three portable ZIPs, three installers, and `SHA256SUMS.txt`. Refresh `docs/screenshots/` from that run's `ui-verification` artifact and update both README interface sections with the current screenshots and source run.
+4. Wait for the tag workflow to pass and publish five portable ZIPs, five installers, and `SHA256SUMS.txt`. Refresh `docs/screenshots/` from that run's `ui-verification` artifact and update both README interface sections with the current screenshots and source run.
 5. Verify release asset names, non-zero sizes, tag commit, and downloaded SHA-256 checksums. Never retarget an already published version tag.
 
 Rollback: install the preceding published version. UI preferences are separate from firewall/network/WSL configuration; reverting the application does not undo operating-system changes made through its tools.
+
+## MyGo parallel release
+
+See [MyGo architecture, capabilities and build](MYGO.md) and [network reset safety](NETWORK-RESET.md). MyGo adds native Go view tests, pinned Go vulnerability scanning, actual Windows x64 read-only engine/window captures (144 combinations) and installer lifecycle verification. Its `mygo-ui-verification` and `mygo-installer-verification` artifacts are separate from WinUI. Both publication matrices must pass before a tag release can publish; the release has **11 assets** (WinUI 3 ZIP + 3 EXE, MyGo 2 ZIP + 2 EXE, one checksum manifest). Actual reset/reboot is never part of CI. Native MyGo accessibility, tray, mixed-DPI and physical ARM64 need their own acceptance rather than inheriting WinUI results.

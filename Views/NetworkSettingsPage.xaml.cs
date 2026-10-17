@@ -202,6 +202,48 @@ public sealed partial class NetworkSettingsPage : Page
         ApplyButton.IsEnabled = !busy;
         RefreshButton.IsEnabled = !busy;
         AdapterSelector.IsEnabled = !busy;
+        FlushDnsButton.IsEnabled = !busy;
+        ResetAdapterButton.IsEnabled = !busy;
+        ResetStackButton.IsEnabled = !busy;
+    }
+
+    private async void FlushDnsButton_Click(object sender, RoutedEventArgs e) => await ResetNetworkAsync(NetworkResetMode.FlushDns);
+    private async void ResetAdapterButton_Click(object sender, RoutedEventArgs e) => await ResetNetworkAsync(NetworkResetMode.AdapterDhcp);
+    private async void ResetStackButton_Click(object sender, RoutedEventArgs e) => await ResetNetworkAsync(NetworkResetMode.SystemStack);
+
+    private async Task ResetNetworkAsync(NetworkResetMode mode)
+    {
+        var adapter = AdapterSelector.SelectedItem as NetworkAdapterModel;
+        if (mode == NetworkResetMode.AdapterDhcp && (adapter is null || adapter.InterfaceGuid == Guid.Empty))
+        {
+            ShowError(App.Text("Network_SelectAdapter"));
+            return;
+        }
+        var dialog = new ContentDialog
+        {
+            XamlRoot = XamlRoot, RequestedTheme = ((FrameworkElement)XamlRoot.Content).RequestedTheme,
+            Title = App.Text("NetworkReset_Title"),
+            Content = App.Text("NetworkReset_Warning") + "\n\n" + (mode switch
+            {
+                NetworkResetMode.FlushDns => App.Text("NetworkReset_FlushDns"),
+                NetworkResetMode.AdapterDhcp => App.Text("NetworkReset_Adapter") + ": " + adapter!.Name,
+                _ => App.Text("NetworkReset_Stack")
+            }),
+            PrimaryButtonText = App.Text("Common_Confirm"), CloseButtonText = App.Text("Common_Cancel"),
+            DefaultButton = ContentDialogButton.Close
+        };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+        SetBusy(true);
+        try
+        {
+            var result = await NetworkResetService.ResetAsync(new NetworkResetRequest(mode, adapter?.InterfaceGuid ?? Guid.Empty));
+            ResetResultText.Text = string.Format(App.Text("NetworkReset_Result"), result.BackupPath)
+                + "\n" + string.Join("\n", result.Steps.Select(step => $"{step.Name}: {(step.Success ? "OK" : "ERROR")} {step.Output}"))
+                + (result.RestartRequired ? "\n" + App.Text("NetworkReset_Restart") : "");
+            if (!result.Success) ShowError(App.Text("NetworkReset_Partial"));
+        }
+        catch (Exception ex) { ShowError(ex.Message); }
+        finally { SetBusy(false); }
     }
 
     private void ShowError(string message)

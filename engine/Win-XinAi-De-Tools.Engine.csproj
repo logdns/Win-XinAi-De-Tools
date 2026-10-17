@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>Win-XinAi-De-Tools.Engine</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>1.11.0</Version>
+    <ApplicationManifest Condition="$([MSBuild]::IsOSPlatform('Windows'))">../app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Compile Include="../Models/*.cs" Link="Models/%(Filename)%(Extension)" />
+    <Compile Include="../Services/*.cs" Exclude="../Services/NativeFileDialogService.cs;../Services/TrayIconService.cs" Link="Services/%(Filename)%(Extension)" />
+    <None Include="../LICENSE;../THIRD-PARTY-NOTICES.md;../licenses/**" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -11,6 +11,7 @@ public sealed class NetworkAdapterModel
     public string Status { get; init; } = string.Empty;
     public string MacAddress { get; init; } = string.Empty;
     public int InterfaceIndex { get; init; }
+    public Guid InterfaceGuid { get; init; }
 
     [JsonIgnore]
     public string DisplayName => string.IsNullOrWhiteSpace(MacAddress)

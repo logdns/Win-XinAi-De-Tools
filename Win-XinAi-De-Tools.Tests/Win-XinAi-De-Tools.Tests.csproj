@@ -8,6 +8,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../engine/Win-XinAi-De-Tools.Engine.csproj" Aliases="Engine" />
+    <Compile Include="..\Models\AuditLogEntry.cs" Link="Models\AuditLogEntry.cs" />
+    <Compile Include="..\Models\NetworkResetModels.cs" Link="Models\NetworkResetModels.cs" />
+    <Compile Include="..\Services\AuditLogService.cs" Link="Services\AuditLogService.cs" />
+    <Compile Include="..\Services\NetworkResetService.cs" Link="Services\NetworkResetService.cs" />
     <Compile Include="..\Models\HyperVModels.cs" Link="Models\HyperVModels.cs" />
     <Compile Include="..\Services\HyperVService.cs" Link="Services\HyperVService.cs" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

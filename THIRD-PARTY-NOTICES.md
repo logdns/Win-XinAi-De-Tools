@@ -19,3 +19,19 @@ The dashboard chart uses SkiaSharp 3.119.4 and SkiaSharp.NativeAssets.Win32 3.11
 ## ASP.NET Core
 
 The temporary HTTP server uses the Microsoft ASP.NET Core shared framework (Kestrel and HTTP primitives), distributed with self-contained builds under its upstream MIT license. Source and notices: https://github.com/dotnet/aspnetcore. No Python, Node.js, or PHP runtime is bundled.
+
+## MyGo edition and Go modules
+
+Win-XinAi-De-Tools-MyGo uses egoist/MyGo (MIT), pinned to
+`v0.5.6-0.20261016201914-e529e1a86f63`. MyGo uses purego, go-text/typesetting,
+`golang.org/x/image` and `golang.org/x/text`; the Windows resource build tool uses
+tc-hib/winres and nfnt/resize. Exact versions, unmodified upstream license,
+notice and patent texts, and the Go runtime license are collected in the MyGo
+package's `licenses/go/` and `licenses/go/modules.json`. Resource-tool dependencies
+are included in the notices even where not linked into the frontend. The bundled
+self-contained .NET engine retains its original upstream licenses.
+
+MyGo 版借鉴 Pulse (https://pulse.egoist.dev/) 的界面组织方式，未复制其源代码、图片、图标或性能宣传。
+Inspired by Pulse's organization; no Pulse source, images, icons or performance
+claims are copied. MyGo's native Go frontend does not imply that the shared .NET
+engine is absent or that the application has Pulse's download size/resource usage.
