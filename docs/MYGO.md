@@ -51,7 +51,7 @@ Copy-Item Assets artifacts/mygo-portable/win-x64/Assets -Recurse
 
 完整发行包还需复制项目/上游许可，运行 `scripts/collect-go-licenses.py`；以 Actions 工作流为打包依据。ARM64 使用 `win-arm64` / `arm64`。不得把仅完成交叉编译描述为物理 ARM64 验收。
 
-CI 的填充数据原生控件测试覆盖 12 页 × 2 语言 × 2 主题 × 3 尺寸，另验证实际内容、行按钮目标、确认默认取消、异步自动加载/回读/错误/草稿保留；Windows x64 `scripts/mygo-ui-smoke.ps1` 启动实际窗口、只读探测真实引擎并捕获同样 144 个组合，另运行实际安装/快捷方式/卸载检查。MyGo 无障碍、混合 DPI、高对比度与真实 ARM64 设备仍需人工验收；不能继承 WinUI 的辅助技术兼容性结论。
+CI 的填充数据原生控件测试覆盖 12 页 × 2 语言 × 2 主题 × 3 尺寸，另验证实际内容、行按钮目标、确认默认取消、异步自动加载/回读/错误/草稿保留；Windows x64 `scripts/mygo-ui-smoke.ps1` 启动实际窗口、只读探测真实引擎并捕获同样 144 个组合及 20 张滚动后的设置/功能区域截图，另运行实际安装/快捷方式/卸载检查。MyGo 无障碍、混合 DPI、高对比度与真实 ARM64 设备仍需人工验收；不能继承 WinUI 的辅助技术兼容性结论。
 
 引擎控制通道仅使用父子进程私有标准输入/输出管道、串行的固定操作白名单，不额外监听 TCP 或命名管道；主动启动的 HTTP 文件服务仍会监听所选端口。`confirmed` 是同权限 GUI 的交互约定，不是隔离其他管理员的安全边界。一般操作最多等待 5 分钟，WSL 长操作 1 小时；超时中止引擎可能留下已执行修改或临时 HTTP 防火墙规则，须在本机检查清理。
 
@@ -65,4 +65,9 @@ Version 1.12.0 replaces the old operation-selector/JSON-first console with dedic
 
 Network reset offers DNS cache, selected-adapter IPv4 DHCP/automatic DNS and Winsock/TCP/IP modes. Every reset snapshots configuration before changing it, confirms with Cancel as default and never reboots automatically. Read [network reset and recovery](NETWORK-RESET.md) before use. SMB Guest sharing and unauthenticated external HTTP retain their explicit risks.
 
-CI covers 144 populated native view combinations, every operation form, real-content assertions, row-target/default-cancel contracts, asynchronous page load/read-back/error/draft tests, Windows read-only engine/native captures and real x64 installer lifecycle. Actual network reset/reboot, physical ARM64, accessibility, mixed DPI and interactive installer presentation require manual acceptance. Five-minute general/one-hour WSL timeouts can interrupt already-applied changes; forced termination can require local HTTP firewall cleanup. Pinning, resource generation and complete packaging commands are in the workflow.
+CI covers 144 populated native view combinations, every operation form, real-content assertions, row-target/default-cancel contracts, asynchronous page load/read-back/error/draft tests, Windows read-only engine/native captures (144 view combinations plus 20 scrolled settings views) and real x64 installer lifecycle. Actual network reset/reboot, physical ARM64, accessibility, mixed DPI and interactive installer presentation require manual acceptance. Five-minute general/one-hour WSL timeouts can interrupt already-applied changes; forced termination can require local HTTP firewall cleanup. Pinning, resource generation and complete packaging commands are in the workflow.
+
+
+## v1.12.0 validation / 专用页面验收
+
+The Windows candidate workflow is linked in [the focused review and validation record](AUDIT.md). Tests now assert populated feature content and exact row targets, not just titles. Native screenshots cover all 12 pages in both languages and explicit themes, plus scrolled settings. Requested 1400 × 900 windows are constrained by the hosted runner; actual capture sizes are recorded (maximum observed content 1028 × 749), not represented as a 1400-DIP hardware acceptance. The Static network form in screenshots is an unsubmitted draft; no network reset or Hyper-V mutation is executed. Virtual-adapter/distribution rows are empty when the real host has none; populated fixtures cover their controls without presenting invented state as real Windows data.

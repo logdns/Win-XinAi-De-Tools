@@ -43,11 +43,11 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-Previous v1.11.1 screenshots (the v1.12.0 candidate refresh follows Windows validation), from the [v1.11.1 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000845077). System status and available controls depend on the host configuration.
+Actual Windows x64 screenshots from the [v1.12.0 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39005023882). System status and available controls depend on the host configuration. MyGo now shows dedicated feature pages, not an operation-selector/JSON console. The adapter settings screenshot is an unsubmitted Static draft populated from a DHCP adapter; no network configuration was changed.
 
 ### Dashboard
 
-![v1.11.1 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
+![v1.12.0 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
 
 ### Hyper-V features and boot configuration
 
@@ -59,19 +59,40 @@ Previous v1.11.1 screenshots (the v1.12.0 candidate refresh follows Windows vali
 
 ### Local HTTP discovery
 
-![v1.11.1 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
+![v1.12.0 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
 
 ### Local network reset (WinUI)
 
-![v1.11.1 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
+![v1.12.0 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
 
 ### Built with MyGo: native overview
 
-![v1.11.1 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
+![v1.12.0 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
+
+### Built with MyGo: rules and direct actions
+
+![v1.12.0 MyGo searchable rule list with edit and delete buttons](docs/screenshots/mygo-firewall.png)
+
+### Built with MyGo: populated IP/DNS settings
+
+![v1.12.0 MyGo selected-adapter settings, unsubmitted Static draft](docs/screenshots/mygo-network-settings.png)
+
+### Built with MyGo: Hyper-V platform and networking
+
+![v1.12.0 MyGo Hyper-V feature and boot state with dedicated controls](docs/screenshots/mygo-hyperv.png)
+
+<details>
+<summary>Virtual switch settings and connection monitor</summary>
+
+![v1.12.0 MyGo real switch inventory and unsubmitted creation form](docs/screenshots/mygo-hyperv-network.png)
+
+![v1.12.0 MyGo connection list with process-bound actions](docs/screenshots/mygo-connections.png)
+
+</details>
 
 ### Built with MyGo: network reset
 
-![v1.11.1 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
+![v1.12.0 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
 
 ## Documentation and development
 

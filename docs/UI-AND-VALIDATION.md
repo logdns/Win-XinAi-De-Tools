@@ -78,7 +78,7 @@ Rollback: install the preceding published version. UI preferences are separate f
 
 ## MyGo parallel release
 
-See [MyGo architecture, capabilities and build](MYGO.md) and [network reset safety](NETWORK-RESET.md). MyGo adds native Go view tests, pinned Go vulnerability scanning, actual Windows x64 read-only engine/window captures (144 combinations) and installer lifecycle verification. Its `mygo-ui-verification` and `mygo-installer-verification` artifacts are separate from WinUI. Both publication matrices and actual cross-edition installation must pass before a tag release can publish; the release has **11 assets** (WinUI 3 ZIP + 3 EXE, MyGo 2 ZIP + 2 EXE, one checksum manifest). Actual reset/reboot is never part of CI. Native MyGo accessibility, tray, mixed-DPI and physical ARM64 need their own acceptance rather than inheriting WinUI results.
+See [MyGo architecture, capabilities and build](MYGO.md) and [network reset safety](NETWORK-RESET.md). MyGo adds native Go view tests, pinned Go vulnerability scanning, actual Windows x64 read-only engine/window captures (144 combinations plus 20 scrolled feature/settings captures, with actual capture dimensions recorded) and installer lifecycle verification. Its `mygo-ui-verification` and `mygo-installer-verification` artifacts are separate from WinUI. Both publication matrices and actual cross-edition installation must pass before a tag release can publish; the release has **11 assets** (WinUI 3 ZIP + 3 EXE, MyGo 2 ZIP + 2 EXE, one checksum manifest). Actual reset/reboot is never part of CI. Native MyGo accessibility, tray, mixed-DPI and physical ARM64 need their own acceptance rather than inheriting WinUI results.
 
 After downloading a published dual release, check every package without executing it:
 
