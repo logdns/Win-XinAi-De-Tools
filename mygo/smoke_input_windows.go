@@ -13,6 +13,20 @@ import (
 
 // Drive the real HWND input path, not the fixture UI tester.
 func smokeKey(w *mygo.Window, key uintptr) error {
+	done := make(chan struct{})
+	var inputError error
+	// Queue both messages on the UI thread so Exit cannot destroy the surface
+	// between key-down and key-up, including during normal engine cleanup.
+	w.Update(func() {
+		inputError = postSmokeKey(w, key)
+		close(done)
+	})
+	<-done
+	time.Sleep(200 * time.Millisecond)
+	return inputError
+}
+
+func postSmokeKey(w *mygo.Window, key uintptr) error {
 	user := syscall.NewLazyDLL("user32.dll")
 	class, _ := syscall.UTF16PtrFromString("MyGoSurface")
 	// MyGo routes keyboard events to its native child surface, not the frame.
@@ -26,7 +40,6 @@ func smokeKey(w *mygo.Window, key uintptr) error {
 		if ok == 0 {
 			return fmt.Errorf("native key input: %w", err)
 		}
-		time.Sleep(100 * time.Millisecond)
 	}
 	return nil
 }
