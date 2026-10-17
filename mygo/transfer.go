@@ -14,13 +14,23 @@ func (a *application) pickRuleFile() {
 	}
 	a.busy = true
 	go func() {
-		paths, err := mygo.Dialog.Open(mygo.OpenDialogOptions{Parent: a.win})
+		paths, err := mygo.Dialog.Open(mygo.OpenDialogOptions{Parent: a.win, Filters: []mygo.FileFilter{{Name: "JSON", Extensions: []string{"json"}}}})
 		var data []byte
 		if err == nil && len(paths) > 0 {
 			var file *os.File
 			file, err = os.Open(paths[0])
 			if err == nil {
-				data, err = io.ReadAll(io.LimitReader(file, 900_001))
+				info, statErr := file.Stat()
+				if statErr != nil {
+					err = statErr
+				} else if !info.Mode().IsRegular() {
+					err = fmt.Errorf("Select a regular JSON file")
+				} else if info.Size() > 900_000 {
+					err = fmt.Errorf("Rule file is too large (maximum 900 KB)")
+				}
+				if err == nil {
+					data, err = io.ReadAll(io.LimitReader(file, 900_001))
+				}
 				_ = file.Close()
 				if len(data) > 900_000 {
 					err = fmt.Errorf("Rule file is too large (maximum 900 KB)")

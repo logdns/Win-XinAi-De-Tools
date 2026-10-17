@@ -539,3 +539,58 @@ func TestDhcpFormDoesNotPretendToApplyManualDns(t *testing.T) {
 		t.Fatal("DHCP confirmation contains ignored manual settings or wrong GUID")
 	}
 }
+
+func TestHttpAddressButtonsCopyAndOpenOnlyTheirAddress(t *testing.T) {
+	a := testApplication(t)
+	populateFeatures(t, a)
+	a.page = "http"
+	a.prefs.Language = "en-US"
+	tt := ui.NewTester(a.view, 1400, 2000)
+	if err := tt.Click("Copy address"); err != nil {
+		t.Fatal(err)
+	}
+	if tt.Clipboard() != "http://192.0.2.20:8980/" {
+		t.Fatal("HTTP row copied another address or JSON")
+	}
+	if err := tt.Click("Open address"); err != nil {
+		t.Fatal(err)
+	}
+	if urls := tt.OpenedURLs(); len(urls) != 1 || urls[0] != "http://192.0.2.20:8980/" {
+		t.Fatal("HTTP row opened wrong URL")
+	}
+}
+func TestFailedMutationCannotDisplayAnOldSuccessSummary(t *testing.T) {
+	a := testApplication(t)
+	a.page = "firewall"
+	a.data["firewall.add"] = []byte(`{"success":true,"message":"OLD SUCCESS","successCount":1}`)
+	updates := make(chan func(), 10)
+	a.postUpdate = func(fn func()) { updates <- fn }
+	a.engine = &stubEngine{respond: func(id string, _ map[string]string, _ bool) (json.RawMessage, error) {
+		if id == "firewall.add" {
+			return nil, fmt.Errorf("new operation failed")
+		}
+		return []byte(featureFixtures[id]), nil
+	}}
+	op, _ := actionByID("firewall.add")
+	a.perform(op, map[string]string{"port": "80"}, true)
+	pumpUpdate(t, updates)
+	pumpUpdate(t, updates)
+	tt := ui.NewTester(a.view, 1400, 2000)
+	if tt.HasText("OLD SUCCESS") || !tt.HasText("new operation failed") {
+		t.Fatal("old success survives a failed mutation")
+	}
+}
+func TestResetRejectsStaleAdapterSelectionBeforeConfirmation(t *testing.T) {
+	a := testApplication(t)
+	populateFeatures(t, a)
+	a.page = "reset"
+	a.prefs.Language = "en-US"
+	a.setField("network.reset", "adapterId", "removed-guid")
+	tt := ui.NewTester(a.view, 1400, 2000)
+	if err := tt.Click("Run: Restore adapter DHCP"); err != nil {
+		t.Fatal(err)
+	}
+	if a.confirming || a.busy {
+		t.Fatal("stale selection can reach reset confirmation")
+	}
+}

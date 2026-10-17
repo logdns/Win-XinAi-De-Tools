@@ -39,6 +39,8 @@ func (a *application) featurePage(c *ui.Context) {
 }
 func (a *application) refreshButton(c *ui.Context) {
 	if ui.Button(c.Key("refresh-"+a.page), a.tr("刷新状态", "Refresh status")).Disabled(a.busy).Clicked() {
+		a.status = ""
+		a.failed = false
 		a.refreshPage()
 	}
 }
@@ -292,7 +294,12 @@ func (a *application) resetPage(c *ui.Context) {
 				ready = a.readState(c, "network.list") && len(a.choices["adapterId"]) > 0
 				op, _ := actionByID("network.reset")
 				a.field(c, op, "adapterId")
-				ready = ready && *a.value(op.ID, "adapterId") != ""
+				valid := false
+				adapters, _ := readData[[]networkAdapter](a, "network.list")
+				for _, adapter := range adapters {
+					valid = valid || (adapter.InterfaceGuid == *a.value(op.ID, "adapterId") && adapter.Status != "Disabled")
+				}
+				ready = ready && valid
 			}
 			if ui.Button(c, a.tr("执行：", "Run: ")+a.tr(mode.zh, mode.en)).Disabled(a.busy || !ready).Clicked() {
 				id := ""

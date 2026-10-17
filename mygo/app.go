@@ -157,6 +157,7 @@ func (a *application) view(c *ui.Context) {
 				if ui.Button(c, a.tr("返回", "Back")).Disabled(len(a.history) == 0 || a.busy || a.confirming).Clicked() {
 					a.page = a.history[len(a.history)-1]
 					a.history = a.history[:len(a.history)-1]
+					a.status = ""
 					a.refreshPage()
 				}
 				ui.Text(c, "Win-XinAi-De-Tools-MyGo").Bold().Grow(1)
@@ -407,6 +408,10 @@ func (a *application) perform(op action, args map[string]string, confirmed bool)
 	}
 	a.busy = true
 	a.status = ""
+	if !op.Read {
+		delete(a.data, op.ID)
+		delete(a.results, a.page)
+	}
 	pageID := a.page
 	language := a.prefs.Language
 	go func() {
