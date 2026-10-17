@@ -63,6 +63,27 @@ public static class InstallerSmokePath
         }, IntPtr.Zero);
         return clicked;
     }
+
+    public static string DescribeWizard(string application)
+    {
+        var result = new StringBuilder();
+        EnumWindows((window, parameter) => {
+            var title = new StringBuilder(1024);
+            GetWindowText(window, title, title.Capacity);
+            if (!title.ToString().Contains(application)) return true;
+            result.AppendLine("WINDOW " + title + " visible=" + IsWindowVisible(window));
+            EnumChildWindows(window, (child, ignored) => {
+                var text = new StringBuilder(1024);
+                var type = new StringBuilder(256);
+                GetWindowText(child, text, text.Capacity);
+                GetClassName(child, type, type.Capacity);
+                result.AppendLine(type + " | " + text + " | visible=" + IsWindowVisible(child) + " enabled=" + IsWindowEnabled(child));
+                return true;
+            }, IntPtr.Zero);
+            return true;
+        }, IntPtr.Zero);
+        return result.ToString();
+    }
 }
 '@
 $tempPath = [Text.StringBuilder]::new(32768)
@@ -156,7 +177,11 @@ function Test-InteractivePostinstallLaunch {
     $null = $setup.Handle
     $deadline = (Get-Date).AddSeconds(150)
     $clicked = [Collections.Generic.List[string]]::new()
+    $ticks = 0
     while (-not $setup.HasExited -and (Get-Date) -lt $deadline) {
+        if ($ticks++ % 10 -eq 0) {
+            [InstallerSmokePath]::DescribeWizard($appName) | Add-Content (Join-Path $output 'wizard-state.txt')
+        }
         $button = [InstallerSmokePath]::AdvanceWizard($appName)
         if ($button) { $clicked.Add($button); Write-Host "Wizard: $button" }
         Start-Sleep -Seconds 1
