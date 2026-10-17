@@ -69,7 +69,7 @@ func main() {
 		}
 	})
 	mygo.App.WhenReady(func() {
-		a.win = mygo.NewWindow(mygo.WindowOptions{Title: "Win-XinAi-De-Tools-MyGo", Width: 1200, Height: 850, MinWidth: 480, MinHeight: 480, Hidden: silent, Content: ui.View(a.view)})
+		a.win = mygo.NewWindow(mygo.WindowOptions{Title: "Win-XinAi-De-Tools-MyGo", Width: 1200, Height: 850, MinWidth: 480, MinHeight: 480, Hidden: silent, Page: mygo.PageOptions{DevTools: mygo.DevToolsDisabled}, Content: ui.View(a.view)})
 		if executable, err := os.Executable(); err == nil {
 			if icon, err := os.ReadFile(filepath.Join(filepath.Dir(executable), "Assets", "Square150x150Logo.png")); err == nil {
 				_ = a.win.SetIcon(icon)
@@ -92,7 +92,7 @@ func main() {
 				a.win.Invalidate()
 			}
 		})
-		log.Printf("MyGo native window initialized; version=%s; no WebView", version)
+		log.Printf("MyGo native window initialized; version=%s; SDK=%s; production=%t; no WebView", version, mygo.App.Version(), !mygo.IsDev())
 		if smoke {
 			go runSmoke(a)
 		} else if a.engine != nil {

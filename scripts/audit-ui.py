@@ -42,3 +42,8 @@ assert reset_warning.get('Background') == '{ThemeResource SystemFillColorCaution
 assert reset_warning.get('Foreground') == '{ThemeResource TextFillColorPrimaryBrush}'
 page_count = len(list((ROOT / 'Views').glob('*.xaml')))
 print(f'UI audit passed: {len(chinese)} bilingual resources, {page_count} pages, version {version}.')
+
+workflow = (ROOT / '.github/workflows/build.yml').read_text(encoding='utf-8')
+for production_flag in ['-tags=mygo_noinspector', 'github.com/egoist/mygo.production=1', 'github.com/egoist/mygo.packageVersion=$version', 'github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo']:
+    assert production_flag in workflow, f'Missing MyGo production build flag: {production_flag}'
+assert 'DevTools: mygo.DevToolsDisabled' in (ROOT / 'mygo/main.go').read_text(encoding='utf-8')

@@ -3,8 +3,9 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
-## 1.11.0 · 2026-10-17
+## 1.11.1 · 2026-10-17
 
+- MyGo 使用正式生产构建模式，移除原生开发者检查器，内置 SDK 包标识与版本并在实际窗口验证；未发布的 v1.11.0 标签保留，不覆盖。
 - 新增本地网络重置：DNS 缓存、所选 GUID 网卡 DHCP/自动 DNS、整机 Winsock/TCP/IP；先备份、默认取消、逐项结果、仅提示手动重启，不重置防火墙或删除网卡/交换机。
 - 新增 **Win-XinAi-De-Tools-MyGo / Built with MyGo** 原生 Go 客户端，与 WinUI 版同步发布；共用系统服务，独立安装目录、AppId、快捷方式和界面设置。
 - MyGo 提供中英文/系统及深浅色主题、12 个原生页面、操作表单和结果、托盘、历史返回和会话草稿；支持 x64/ARM64，自包含 .NET 引擎随包分发，不是单 EXE 或 WebView 版本。

@@ -26,6 +26,11 @@ func runSmoke(a *application) {
 		fail(fmt.Errorf("shared engine not running"))
 		return
 	}
+	if mygo.IsDev() || !mygo.App.IsPackaged() || mygo.App.Version() != version {
+		fail(fmt.Errorf("MyGo production/package version mismatch: dev=%t packaged=%t SDK=%s expected=%s", mygo.IsDev(), mygo.App.IsPackaged(), mygo.App.Version(), version))
+		return
+	}
+	report = append(report, "PASS production build: SDK version matches; native inspector excluded; per-window DevTools disabled")
 	update := func(fn func()) { done := make(chan struct{}); a.win.Update(func() { fn(); close(done) }); <-done }
 	for _, id := range []string{"health", "dashboard", "network.list", "hyperv.status", "wsl.status", "http.discover"} {
 		data, err := a.engine.call(id, nil, false, "en-US")

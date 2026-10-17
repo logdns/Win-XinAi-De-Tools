@@ -5,7 +5,7 @@
     <AssemblyName>Win-XinAi-De-Tools.Engine</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.11.0</Version>
+    <Version>1.11.1</Version>
     <ApplicationManifest Condition="$([MSBuild]::IsOSPlatform('Windows'))">../app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>

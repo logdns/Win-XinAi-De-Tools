@@ -135,7 +135,7 @@ jobs:
           matches Settings > System > About > System type.
           "@
           Set-Content -Path "$publishDirectory\README.txt" -Value $instructions -Encoding UTF8
-          Copy-Item docs/NETWORK-RESET.md,docs/HYPER-V.md,docs/INSTALLATION.md $publishDirectory
+          Copy-Item docs/NETWORK-RESET.md,docs/HYPER-V.md,docs/INSTALLATION.md,docs/MYGO.md $publishDirectory
       - name: Smoke test packaged application startup
         if: matrix.rid == 'win-x64'
         shell: pwsh
@@ -352,10 +352,10 @@ jobs:
           cache-dependency-path: mygo/go.sum
       - name: Test native MyGo views and safety contracts
         working-directory: mygo
-        run: go test ./...
+        run: go test -tags=mygo_noinspector ./...
       - name: Audit pinned Go dependencies
         working-directory: mygo
-        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 -tags=mygo_noinspector ./...
       - name: Publish shared service engine
         shell: pwsh
         run: |
@@ -367,8 +367,11 @@ jobs:
         run: |
           go run ./cmd/resources -arch ${{ matrix.goarch }}
           if ($LASTEXITCODE -ne 0) { throw 'Resource generation failed.' }
+          [xml]$project = Get-Content ../Win-XinAi-De-Tools.csproj
+          $version = @($project.Project.PropertyGroup.Version)[0]
           $env:GOOS = 'windows'; $env:GOARCH = '${{ matrix.goarch }}'; $env:CGO_ENABLED = '0'
-          go build -trimpath -ldflags='-s -w -H=windowsgui' -o ../artifacts/mygo-portable/${{ matrix.rid }}/Win-XinAi-De-Tools-MyGo.exe .
+          $flags = "-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=$version"
+          go build -tags=mygo_noinspector -trimpath -ldflags=$flags -o ../artifacts/mygo-portable/${{ matrix.rid }}/Win-XinAi-De-Tools-MyGo.exe .
           if ($LASTEXITCODE -ne 0) { throw 'MyGo build failed.' }
       - name: Include package instructions, app assets and upstream licenses
         shell: pwsh
@@ -378,7 +381,7 @@ jobs:
           Copy-Item LICENSE,THIRD-PARTY-NOTICES.md $target
           Copy-Item licenses "$target/licenses" -Recurse
           Copy-Item docs/MYGO.md "$target/README.md"
-          Copy-Item docs/NETWORK-RESET.md,docs/HYPER-V.md,docs/INSTALLATION.md $target
+          Copy-Item docs/NETWORK-RESET.md,docs/HYPER-V.md,docs/INSTALLATION.md,docs/MYGO.md $target
           Push-Location mygo
           python ../scripts/collect-go-licenses.py "../$target"
           if ($LASTEXITCODE -ne 0) { throw 'License collection failed.' }

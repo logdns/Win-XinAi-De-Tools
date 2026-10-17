@@ -83,7 +83,7 @@ See [MyGo architecture, capabilities and build](MYGO.md) and [network reset safe
 After downloading a published dual release, check every package without executing it:
 
 ```powershell
-python scripts/verify-release.py artifacts/release-v1.11.0 1.11.0
+python scripts/verify-release.py artifacts/release-v1.11.1 1.11.1
 ```
 
 This verifies all ten hashes, five ZIP CRCs, native PE architectures/admin manifests, required runtimes, edition versions, reset/recovery documentation and collected Go licenses. It does not replace installer execution or physical-device tests. The separate `side-by-side-verification` artifact records actual simultaneous install and independent shortcut/uninstall checks.

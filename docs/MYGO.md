@@ -1,6 +1,6 @@
 # Win-XinAi-De-Tools-MyGo
 
-**Built with MyGo · v1.11.0**
+**Built with MyGo · v1.11.1**
 
 [简体中文](#中文) | [English](#english)
 
@@ -35,16 +35,16 @@
 
 ### 构建与验证
 
-MyGo 固定为 `v0.5.6-0.20261016201914-e529e1a86f63`，使用 Go 1.27.2 和 .NET 8 SDK。在 Windows 仓库根目录示例：
+MyGo 正式发布移除原生开发者检查器、关闭窗口 DevTools，并校验 MyGo SDK 与引擎/界面版本一致。MyGo 固定为 `v0.5.6-0.20261016201914-e529e1a86f63`，使用 Go 1.27.2 和 .NET 8 SDK。在 Windows 仓库根目录示例：
 
 ```powershell
 dotnet publish engine/Win-XinAi-De-Tools.Engine.csproj -c Release -r win-x64 --self-contained true -o artifacts/mygo-portable/win-x64/engine
 cd mygo
-go test ./...
-go vet ./...
+go test -tags=mygo_noinspector ./...
+go vet -tags=mygo_noinspector ./...
 go run ./cmd/resources -arch amd64
 $env:GOOS='windows'; $env:GOARCH='amd64'; $env:CGO_ENABLED='0'
-go build -trimpath -ldflags='-s -w -H=windowsgui' -o ../artifacts/mygo-portable/win-x64/Win-XinAi-De-Tools-MyGo.exe .
+go build -tags=mygo_noinspector -trimpath -ldflags='-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=1.11.1' -o ../artifacts/mygo-portable/win-x64/Win-XinAi-De-Tools-MyGo.exe .
 cd ..
 Copy-Item Assets artifacts/mygo-portable/win-x64/Assets -Recurse
 ```

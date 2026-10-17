@@ -1,7 +1,11 @@
 # Current audit and validation / 当前审计与验证
 
-当前候选版本：**1.11.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前候选版本：**1.11.1**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## Production packaging follow-up / 1.11.1 正式构建修订
+
+Package review found that direct `go build` leaves MyGo's development defaults on unless production link flags are supplied. The unpublished v1.11.0 workflow was cancelled before release creation; its tag is retained unchanged. Version 1.11.1 adds `mygo_noinspector`, `production=1`, a distinct SDK package identifier/name/version, explicit per-window DevTools disable and actual Windows smoke assertions for SDK version/production mode. These changes are not a claim of a reproduced cross-principal vulnerability. New candidate/tag validation is pending; do not treat the 1.11.0 results as final 1.11.1 evidence.
 
 ## Network reset / MyGo 1.11.0 focused source review
 
@@ -16,7 +20,7 @@ This page summarizes the current implementation and completed validation.
 
 ## Verified 1.11.0 candidate / 双版本候选验证
 
-[Successful Windows candidate workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060), code commit `554620a` (full commit recorded by the workflow), 2026-10-17. The tag preparation adds documentation and actual screenshots only.
+[Successful Windows candidate workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060), code commit `554620a` (full commit recorded by the workflow), 2026-10-17. The 1.11.0 tag preparation added documentation and actual screenshots only; its unpublished workflow was subsequently cancelled during package review (see 1.11.1 below).
 
 | Check | Result |
 |---|---|
@@ -29,7 +33,7 @@ This page summarizes the current implementation and completed validation.
 | Side-by-side installation | Both real installers coexist; WinUI reinstall/deselection/uninstall preserves MyGo executable/shortcuts; final cleanup removes both editions' links |
 | Packages and visuals | All 10 packages built; actual light/dark/compact screenshots reviewed, including corrected dark network warning contrast; source/runtime/physical-device limits remain explicit |
 
-Earlier candidates exposed a mocked PowerShell common-parameter conflict and the new warning's light-background/dark-text mismatch. The final candidate fixes those checks, serializes network refresh, uses GUID-scoped IP/DNS targeting, shows false/partial engine results as failures, and makes smoke/normal result rendering identical. No actual network reset, system reboot or Hyper-V mutation is executed in CI. MyGo's read-only GPU captures do not prove accessibility or physical ARM64 acceptance. This is focused review plus functional validation, not independent penetration testing.
+Earlier candidates exposed a mocked PowerShell common-parameter conflict and the new warning's white-text/light-background contrast issue in dark appearance. The final candidate fixes those checks, serializes network refresh, uses GUID-scoped IP/DNS targeting, shows false/partial engine results as failures, and makes smoke/normal result rendering identical. No actual network reset, system reboot or Hyper-V mutation is executed in CI. MyGo's read-only GPU captures do not prove accessibility or physical ARM64 acceptance. This is focused review plus functional validation, not independent penetration testing.
 
 ## Installer 1.10.1 focused review / 安装入口专项审查
 

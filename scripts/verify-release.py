@@ -1,6 +1,6 @@
 """Verify downloaded dual-edition release hashes and portable package contracts.
 
-Usage: python scripts/verify-release.py artifacts/release-v1.11.0 1.11.0
+Usage: python scripts/verify-release.py artifacts/release-v1.11.1 1.11.1
 Does not execute Windows binaries or installers. Actual lifecycle tests run in CI.
 """
 import hashlib
@@ -57,6 +57,8 @@ for product, arches in products.items():
                 frontend = archive.read(product + ".exe")
                 assert version.encode("utf-16le") in frontend, "Missing native version resource"
                 assert b"go1.27.2" in frontend, "Unexpected Go toolchain"
+                assert b"mygo_noinspector" in frontend, "Native inspector was not excluded"
+                assert "com.logdns.winxinai.mygo".encode("utf-16le") in frontend, "SDK package identifier resource missing"
                 assert b"e529e1a86f63" in frontend, "Unexpected MyGo version"
                 assert "Assets/Square150x150Logo.png" in names
                 modules = json.loads(archive.read("licenses/go/modules.json"))

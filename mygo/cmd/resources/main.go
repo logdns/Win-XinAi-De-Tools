@@ -31,9 +31,9 @@ func main() {
 	}
 	set.SetManifest(winres.AppManifest{ExecutionLevel: winres.RequireAdministrator, Compatibility: winres.Win10AndAbove, DPIAwareness: winres.DPIPerMonitorV2, LongPathAware: true, UseCommonControlsV6: true})
 	info := version.Info{}
-	info.SetFileVersion("1.11.0.0")
-	info.SetProductVersion("1.11.0.0")
-	for key, value := range map[string]string{"ProductName": "Win-XinAi-De-Tools-MyGo", "FileDescription": "Win-XinAi-De-Tools-MyGo · Built with MyGo", "FileVersion": "1.11.0", "ProductVersion": "1.11.0", "OriginalFilename": "Win-XinAi-De-Tools-MyGo.exe", "CompanyName": "Fengge Network"} {
+	info.SetFileVersion("1.11.1.0")
+	info.SetProductVersion("1.11.1.0")
+	for key, value := range map[string]string{"ProductName": "Win-XinAi-De-Tools-MyGo", "MyGoIdentifier": "com.logdns.winxinai.mygo", "FileDescription": "Win-XinAi-De-Tools-MyGo · Built with MyGo", "FileVersion": "1.11.1", "ProductVersion": "1.11.1", "OriginalFilename": "Win-XinAi-De-Tools-MyGo.exe", "CompanyName": "Fengge Network"} {
 		if err := info.Set(0x409, key, value); err != nil {
 			log.Fatal(err)
 		}
