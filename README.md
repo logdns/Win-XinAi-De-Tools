@@ -43,11 +43,11 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-Actual Windows x64 screenshots from the [v1.11.0 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060). System status and available controls depend on the host configuration.
+Actual Windows x64 screenshots from the [v1.11.1 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000195375). System status and available controls depend on the host configuration.
 
 ### Dashboard
 
-![v1.11.0 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
+![v1.11.1 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
 
 ### Hyper-V features and boot configuration
 
@@ -59,19 +59,19 @@ Actual Windows x64 screenshots from the [v1.11.0 candidate UI verification](http
 
 ### Local HTTP discovery
 
-![v1.11.0 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
+![v1.11.1 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
 
 ### Local network reset (WinUI)
 
-![v1.11.0 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
+![v1.11.1 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
 
 ### Built with MyGo: native overview
 
-![v1.11.0 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
+![v1.11.1 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
 
 ### Built with MyGo: network reset
 
-![v1.11.0 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
+![v1.11.1 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
 
 ## Documentation and development
 

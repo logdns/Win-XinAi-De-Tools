@@ -43,11 +43,11 @@
 
 ## 界面
 
-以下为 [v1.11.0 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
+以下为 [v1.11.1 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000195375)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
 
 ### 概览
 
-![v1.11.0 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
+![v1.11.1 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
 
 ### Hyper-V 功能与启动配置
 
@@ -59,19 +59,19 @@
 
 ### 本机 HTTP 服务检测
 
-![v1.11.0 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
+![v1.11.1 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
 
 ### 本地网络重置（原版 WinUI）
 
-![v1.11.0 DNS、网卡和 Winsock/TCP/IP 重置，深色风险提示](docs/screenshots/network-reset.png)
+![v1.11.1 DNS、网卡和 Winsock/TCP/IP 重置，深色风险提示](docs/screenshots/network-reset.png)
 
 ### Built with MyGo：原生概览
 
-![v1.11.0 MyGo 中文原生概览](docs/screenshots/mygo-dashboard.zh-CN.png)
+![v1.11.1 MyGo 中文原生概览](docs/screenshots/mygo-dashboard.zh-CN.png)
 
 ### Built with MyGo：网络重置
 
-![v1.11.0 MyGo 中文网络重置与风险提示](docs/screenshots/mygo-reset.zh-CN.png)
+![v1.11.1 MyGo 中文网络重置与风险提示](docs/screenshots/mygo-reset.zh-CN.png)
 
 ## 文档与开发
 

@@ -5,7 +5,18 @@ This page summarizes the current implementation and completed validation.
 
 ## Production packaging follow-up / 1.11.1 正式构建修订
 
-Package review found that direct `go build` leaves MyGo's development defaults on unless production link flags are supplied. The unpublished v1.11.0 workflow was cancelled before release creation; its tag is retained unchanged. Version 1.11.1 adds `mygo_noinspector`, `production=1`, a distinct SDK package identifier/name/version, explicit per-window DevTools disable and actual Windows smoke assertions for SDK version/production mode. These changes are not a claim of a reproduced cross-principal vulnerability. New candidate/tag validation is pending; do not treat the 1.11.0 results as final 1.11.1 evidence.
+Package review found that direct `go build` leaves MyGo's development defaults on unless production link flags are supplied. The unpublished v1.11.0 workflow was cancelled before release creation; its tag is retained unchanged. Version 1.11.1 adds `mygo_noinspector`, `production=1`, a distinct SDK package identifier/name/version, explicit per-window DevTools disable and actual Windows smoke assertions for SDK version/production mode. These changes are not a claim of a reproduced cross-principal vulnerability. The production-mode candidate validation is recorded next; the tag/download checks remain pending.
+
+## Verified 1.11.1 production candidate / 正式模式候选验证
+
+[Successful workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000195375), implementation `8b3ecb8`, 2026-10-17:
+
+- Repeated all 151 Windows .NET 8 tests, 2 opted-in firewall integration tests, 13 installer source contracts, 420-resource bilingual/metadata audit and all 10 package builds successfully.
+- Go production-tag tests pass (13 test functions, all operation forms and 144 headless page combinations); both pinned-Go vulnerability scans and all three direct/transitive NuGet audits pass.
+- Actual MyGo x64 smoke records `version=1.11.1; SDK=1.11.1.0; production=true`, requires packaged/production mode and exact release version (only optional `.0` Windows revision), and completes 144 GPU captures plus all 6 read-only engine operations. Inspector exclusion and explicit window DevTools disable are also checked in source/build metadata.
+- Actual WinUI x64 smoke repeats 180 combinations and HTTP lifecycle checks. Both editions pass real installation, all shortcut selections, installed-shortcut launch, reinstallation and uninstall; actual simultaneous installation and WinUI uninstall preserving MyGo pass again.
+- Production follow-up candidates caught PowerShell native-argument interpolation and Windows VERSIONINFO's four-part version convention. Correct quoting and strict three-/four-part equality tests fix these harness/packaging issues; no version guard is skipped. Actual current screenshots replace the pre-production captures in both READMEs.
+- Validation remains Windows x64 execution plus x86/ARM64 build/package checks, not physical-device execution, network reset/reboot or accessibility certification. Release tag/download verification follows separately; no published tag is retargeted.
 
 ## Network reset / MyGo 1.11.0 focused source review
 
