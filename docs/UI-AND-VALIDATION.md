@@ -78,12 +78,14 @@ Rollback: install the preceding published version. UI preferences are separate f
 
 ## MyGo parallel release
 
-See [MyGo architecture, capabilities and build](MYGO.md) and [network reset safety](NETWORK-RESET.md). MyGo adds native Go view tests, pinned Go vulnerability scanning, actual Windows x64 read-only engine/window captures (144 combinations plus 20 scrolled feature/settings captures, with actual capture dimensions recorded) and installer lifecycle verification. Its `mygo-ui-verification` and `mygo-installer-verification` artifacts are separate from WinUI. Both publication matrices and actual cross-edition installation must pass before a tag release can publish; the release has **11 assets** (WinUI 3 ZIP + 3 EXE, MyGo 2 ZIP + 2 EXE, one checksum manifest). Actual reset/reboot is never part of CI. Native MyGo accessibility, tray, mixed-DPI and physical ARM64 need their own acceptance rather than inheriting WinUI results.
+See [MyGo architecture, capabilities and build](MYGO.md) and [network reset safety](NETWORK-RESET.md). MyGo adds native Go view tests, pinned Go vulnerability scanning, actual Windows x64 read-only engine/window captures (144 combinations plus 20 scrolled feature/settings captures, with actual capture dimensions recorded) and installer lifecycle verification. Its `mygo-ui-verification` and `mygo-installer-verification` artifacts are separate from WinUI. Both publication matrices, native Windows ARM64 MyGo validation and actual cross-edition installation must pass before a tag release can publish; the release has **11 assets** (WinUI 3 ZIP + 3 EXE, MyGo 2 ZIP + 2 EXE, one checksum manifest). Actual reset/reboot is never part of CI. Native MyGo accessibility, tray, mixed-DPI and physical ARM64 need their own acceptance rather than inheriting WinUI results.
+
+From v1.12.1, native smoke records the initial window bounds and primary monitor work area in DIPs, rejects startup overflow, and checks actual minimize/maximize/restore and busy-close veto. The later screenshot matrix deliberately resizes the window for stress coverage; its requested oversized dimensions are not the initial startup dimensions. Unit tests assert every localized window-control button is inside compact content bounds. Installer smoke drives the real non-silent English wizard to Finish and verifies the installed administrator application starts and closes normally; silent/no-launch remains a separate case. `mygo-arm64-verification` contains equivalent native ARM64 UI/installer evidence and shared-service/Chinese-output tests. Secure-desktop UAC and organizational policies still require real-user validation.
 
 After downloading a published dual release, check every package without executing it:
 
 ```powershell
-python scripts/verify-release.py artifacts/release-v1.12.0 1.12.0
+python scripts/verify-release.py artifacts/release-v1.12.1 1.12.1
 ```
 
 This verifies all ten hashes, five ZIP CRCs, native PE architectures/admin manifests, required runtimes, edition versions, reset/recovery documentation and collected Go licenses. It does not replace installer execution or physical-device tests. The separate `side-by-side-verification` artifact records actual simultaneous install and independent shortcut/uninstall checks.

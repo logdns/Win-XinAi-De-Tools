@@ -43,7 +43,8 @@ public static class InstallerSmokePath
         EnumWindows((window, parameter) => {
             var title = new StringBuilder(1024);
             GetWindowText(window, title, title.Capacity);
-            if (!IsWindowVisible(window) || title.ToString() != "Setup - " + application) return true;
+            // With the default disabled Welcome page, Inno appends AppVerName to the title.
+            if (!IsWindowVisible(window) || !title.ToString().StartsWith("Setup - " + application, StringComparison.Ordinal)) return true;
             EnumChildWindows(window, (child, ignored) => {
                 var text = new StringBuilder(256);
                 var type = new StringBuilder(256);

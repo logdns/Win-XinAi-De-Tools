@@ -20,7 +20,7 @@ python scripts/test-installer.py
 ```
 
 For another architecture, use `win-x86` / `x86` or `win-arm64` / `ARM64`.
-Installer changes also require the elevated, disposable Windows x64 checks in [installation validation](docs/INSTALLATION.md#verification--验证); do not run them on a machine with an existing installation.
+Installer changes also require the elevated, disposable Windows checks in [installation validation](docs/INSTALLATION.md#verification--验证), including the real non-silent Finish-page launch (not only silent installation). MyGo also runs on native Windows ARM64. Do not run installer smoke on a machine with an existing installation.
 To enable actual firewall integration tests in an elevated Windows session:
 
 ```powershell
@@ -60,4 +60,4 @@ By contributing, you agree that your contributions are provided under the MIT Li
 
 ## MyGo edition
 
-The native Go frontend and private shared .NET engine live in `mygo/` and `engine/`. Keep both edition versions synchronized. Use Go 1.27.2 or the pinned security-fixed version in the workflow; run `go test ./...`, `go vet ./...` and the pinned `govulncheck` command from `mygo/`. See [the complete build and capability boundaries](docs/MYGO.md). WinUI keeps x86/x64/ARM64; MyGo ships x64/ARM64. A release requires both matrices and both actual x64 installer/UI checks. Do not execute real network resets in CI; use parser and mocked-cmdlet contracts plus disposable local Windows acceptance.
+The native Go frontend and private shared .NET engine live in `mygo/` and `engine/`. Keep both edition versions synchronized. Use Go 1.27.2 or the pinned security-fixed version in the workflow; run `go test ./...`, `go vet ./...` and the pinned `govulncheck` command from `mygo/`. See [the complete build and capability boundaries](docs/MYGO.md). WinUI keeps x86/x64/ARM64; MyGo ships x64/ARM64. A release requires both matrices, both actual x64 installer/UI checks and native ARM64 MyGo execution/installation. Preserve the busy-close guard and verify initial window work-area fit and visible controls. New system-command output must have an explicit encoding contract; do not change global code pages to fix per-process text. Do not execute real network resets in CI; use parser and mocked-cmdlet contracts plus disposable local Windows acceptance.
