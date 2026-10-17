@@ -43,7 +43,7 @@
 
 ## 界面
 
-以下为 [v1.11.1 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000195375)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
+以下为 [v1.11.1 正式发布构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000845077)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
 
 ### 概览
 

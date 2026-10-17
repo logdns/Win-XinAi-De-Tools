@@ -43,7 +43,7 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-Actual Windows x64 screenshots from the [v1.11.1 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000195375). System status and available controls depend on the host configuration.
+Actual Windows x64 screenshots from the [v1.11.1 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39000845077). System status and available controls depend on the host configuration.
 
 ### Dashboard
 
