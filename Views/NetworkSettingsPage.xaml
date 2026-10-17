@@ -106,7 +106,7 @@
             <Border Grid.Row="4" Style="{StaticResource CardPanel}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="{StaticResource NetworkReset_Title}" Style="{StaticResource SectionTitle}" TextWrapping="Wrap"/>
-                    <InfoBar IsOpen="True" IsClosable="False" Severity="Warning" Title="{StaticResource NetworkReset_WarningTitle}" Message="{StaticResource NetworkReset_Warning}"/>
+                    <InfoBar x:Name="ResetRiskBar" IsOpen="True" IsClosable="False" Severity="Warning" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Title="{StaticResource NetworkReset_WarningTitle}" Message="{StaticResource NetworkReset_Warning}"/>
                     <controls:WrapPanel Spacing="10">
                         <Button x:Name="FlushDnsButton" Click="FlushDnsButton_Click"><TextBlock Text="{StaticResource NetworkReset_FlushDns}" TextWrapping="Wrap"/></Button>
                         <Button x:Name="ResetAdapterButton" Click="ResetAdapterButton_Click"><TextBlock Text="{StaticResource NetworkReset_Adapter}" TextWrapping="Wrap"/></Button>

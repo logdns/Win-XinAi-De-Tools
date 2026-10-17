@@ -37,5 +37,8 @@ assert project.findtext('PropertyGroup/AssemblyVersion') == version + '.0'
 assert project.findtext('PropertyGroup/FileVersion') == version + '.0'
 assert ET.parse(ROOT / 'engine/Win-XinAi-De-Tools.Engine.csproj').findtext('PropertyGroup/Version') == version
 assert ET.parse(ROOT / 'app.manifest').getroot()[0].get('version') == version + '.0'
+reset_warning = next(e for e in ET.parse(ROOT / 'Views/NetworkSettingsPage.xaml').iter() if e.get(X + 'Name') == 'ResetRiskBar')
+assert reset_warning.get('Background') == '{ThemeResource SystemFillColorCautionBackgroundBrush}'
+assert reset_warning.get('Foreground') == '{ThemeResource TextFillColorPrimaryBrush}'
 page_count = len(list((ROOT / 'Views').glob('*.xaml')))
 print(f'UI audit passed: {len(chinese)} bilingual resources, {page_count} pages, version {version}.')
