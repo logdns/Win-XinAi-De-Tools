@@ -32,7 +32,8 @@ public sealed class LocalHttpDiscoveryTests
         var targetPort = ((IPEndPoint)redirectTarget.LocalEndpoint).Port;
         await using var fixture = new Fixture($"HTTP/1.1 {status} Test\r\nLocation: http://127.0.0.1:{targetPort}/\r\nContent-Length: 1000000\r\n\r\n");
         var listener = fixture.Listener with { ProcessId = int.MaxValue };
-        var discovery = new LocalHttpDiscovery(() => new[] { listener, listener });
+        // This checks HTTP semantics, not a cold shared runner's one-second scheduling budget.
+        var discovery = new LocalHttpDiscovery(() => new[] { listener, listener }, TimeSpan.FromSeconds(5));
         var result = await discovery.ScanAsync();
         var server = Assert.Single(result.Servers);
         Assert.Equal(status, server.StatusCode);
@@ -71,7 +72,7 @@ public sealed class LocalHttpDiscoveryTests
         var listeners = LocalHttpDiscovery.ReadListeners();
         var actual = Assert.Single(listeners, x => x.Port == fixture.Listener.Port && x.Address.Equals(IPAddress.Loopback));
         if (OperatingSystem.IsWindows()) Assert.Equal(Environment.ProcessId, actual.ProcessId);
-        var result = await new LocalHttpDiscovery(() => new[] { actual }).ScanAsync();
+        var result = await new LocalHttpDiscovery(() => new[] { actual }, TimeSpan.FromSeconds(5)).ScanAsync();
         Assert.Equal(204, Assert.Single(result.Servers).StatusCode);
     }
 
@@ -82,7 +83,7 @@ public sealed class LocalHttpDiscoveryTests
         await using var fixture = new Fixture("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n", IPAddress.IPv6Loopback);
         var actual = Assert.Single(LocalHttpDiscovery.ReadListeners(), x => x.Port == fixture.Listener.Port && x.Address.Equals(IPAddress.IPv6Loopback));
         if (OperatingSystem.IsWindows()) Assert.Equal(Environment.ProcessId, actual.ProcessId);
-        var result = await new LocalHttpDiscovery(() => new[] { actual }).ScanAsync();
+        var result = await new LocalHttpDiscovery(() => new[] { actual }, TimeSpan.FromSeconds(5)).ScanAsync();
         Assert.Contains("[::1]", Assert.Single(result.Servers).Url);
     }
 

@@ -141,19 +141,35 @@ func (a *application) pager(c *ui.Context, page *int, count int) (int, int) {
 
 func (a *application) firewallPage(c *ui.Context) {
 	a.refreshButton(c)
-	ui.TextInput(c.Key("rule-search"), &a.uiState.ruleFilter).Label(a.tr("搜索规则、端口或协议", "Search rules, ports or protocol"))
-	ui.Select(c.Key("direction-filter"), &a.uiState.direction, []string{"All", "Inbound", "Outbound"}).Label(a.tr("方向筛选", "Direction filter"))
-	a.disclosureForm(c, "firewall.add")
-	a.card(c, func() {
-		op, _ := actionByID("firewall.query")
-		a.field(c, op, "port")
-		a.actionButton(c, op.ID, nil)
-		if rows, ok := readData[[]firewallRule](a, "firewall.query"); ok {
-			ui.Text(c, fmt.Sprintf(a.tr("查询匹配：%d 条", "Query matches: %d"), len(rows)))
-			for _, r := range rows {
-				ui.Text(c, r.Name+" · "+r.Direction+" · "+r.protocol()+" · "+r.port())
+	ui.TextInput(c.Key("rule-search"), &a.uiState.ruleFilter).Placeholder(a.tr("搜索规则、端口或协议", "Search rules, ports or protocol")).Label(a.tr("搜索规则、端口或协议", "Search rules, ports or protocol"))
+	directionKeys := []string{"All", "Inbound", "Outbound"}
+	directionLabels := []string{a.tr("全部方向", "All directions"), a.tr("入站", "Inbound"), a.tr("出站", "Outbound")}
+	selectedDirection := directionLabels[0]
+	for i, key := range directionKeys {
+		if a.uiState.direction == key {
+			selectedDirection = directionLabels[i]
+		}
+	}
+	if ui.Select(c.Key("direction-filter"), &selectedDirection, directionLabels).Label(a.tr("方向筛选", "Direction filter")).Changed() {
+		for i, label := range directionLabels {
+			if selectedDirection == label {
+				a.uiState.direction = directionKeys[i]
 			}
 		}
+	}
+	a.disclosureForm(c, "firewall.add")
+	ui.Collapsible(c.Key("port-query"), a.tr("按端口查询规则", "Query rules by port"), a.expanded("port-query"), func() {
+		a.card(c, func() {
+			op, _ := actionByID("firewall.query")
+			a.field(c, op, "port")
+			a.actionButton(c, op.ID, nil)
+			if rows, ok := readData[[]firewallRule](a, "firewall.query"); ok {
+				ui.Text(c, fmt.Sprintf(a.tr("查询匹配：%d 条", "Query matches: %d"), len(rows)))
+				for _, r := range rows {
+					ui.Text(c, r.Name+" · "+r.Direction+" · "+r.protocol()+" · "+r.port())
+				}
+			}
+		})
 	})
 	if a.readState(c, "firewall.list") {
 		rules, _ := readData[[]firewallRule](a, "firewall.list")
@@ -465,7 +481,7 @@ func (a *application) wslPage(c *ui.Context) {
 			})
 		}
 		if len(status.Distributions) == 0 {
-			a.empty(c)
+			ui.Text(c, a.tr("尚未安装 Linux 发行版。可在安装与更新中选择发行版安装。", "No Linux distributions installed. Choose a distribution in Setup to install one."))
 		}
 	}
 	if disk, ok := readData[string](a, "wsl.disk"); ok {
@@ -568,7 +584,7 @@ func (a *application) httpPage(c *ui.Context) {
 
 func (a *application) connectionsPage(c *ui.Context) {
 	a.refreshButton(c)
-	ui.TextInput(c.Key("connection-search"), &a.uiState.connectionFilter).Label(a.tr("搜索进程、PID、地址或端口", "Search process, PID, address or port"))
+	ui.TextInput(c.Key("connection-search"), &a.uiState.connectionFilter).Placeholder(a.tr("搜索进程、PID、地址或端口", "Search process, PID, address or port")).Label(a.tr("搜索进程、PID、地址或端口", "Search process, PID, address or port"))
 	if !a.readState(c, "connections.list") {
 		return
 	}

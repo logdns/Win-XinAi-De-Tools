@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"image/png"
 	"os"
 	"path/filepath"
 	"time"
@@ -103,6 +105,7 @@ func runSmoke(a *application) {
 	})
 	report = append(report, "PASS dedicated native feature controls with real Windows read-only engine data")
 	combinations := 0
+	details := 0
 	for _, language := range []string{"zh-CN", "en-US"} {
 		for _, theme := range []string{"Light", "Dark"} {
 			for _, size := range [][2]int{{480, 640}, {800, 600}, {1400, 900}} {
@@ -114,12 +117,21 @@ func runSmoke(a *application) {
 						a.prefs.Theme = theme
 						a.status = ""
 						a.busy = false
+						a.pageScroll(page.ID).Y = 0
 					})
 					time.Sleep(100 * time.Millisecond)
 					image, err := a.win.CapturePage()
 					if err != nil || len(image) < 1000 {
 						fail(fmt.Errorf("native capture %s: %v", page.ID, err))
 						return
+					}
+					if page.ID == "dashboard" {
+						config, err := png.DecodeConfig(bytes.NewReader(image))
+						if err != nil {
+							fail(err)
+							return
+						}
+						report = append(report, fmt.Sprintf("CAPTURE %s/%s requested=%dx%d actual=%dx%d", language, theme, size[0], size[1], config.Width, config.Height))
 					}
 					{
 						name := fmt.Sprintf("%s-%s-%d.png", page.ID, theme, size[0])
@@ -132,11 +144,41 @@ func runSmoke(a *application) {
 						}
 					}
 					combinations++
+					if size[0] == 1400 && (page.ID == "network" || page.ID == "hyperv" || page.ID == "reset" || page.ID == "http" || page.ID == "firewall") {
+						mode := *a.value("network.apply", "mode")
+						update(func() {
+							if page.ID == "network" {
+								a.setField("network.apply", "mode", "Static")
+							}
+							if page.ID == "hyperv" {
+								*a.expanded("hyperv.switch.create") = true
+							}
+							a.pageScroll(page.ID).Y = 450
+						})
+						time.Sleep(100 * time.Millisecond)
+						capture, err := a.win.CapturePage()
+						if err != nil || len(capture) < 1000 {
+							fail(fmt.Errorf("detail capture %s: %v", page.ID, err))
+							return
+						}
+						name := fmt.Sprintf("%s-details-%s-%s.png", page.ID, language, theme)
+						if err := os.WriteFile(filepath.Join(directory, name), capture, 0600); err != nil {
+							fail(err)
+							return
+						}
+						details++
+						update(func() {
+							a.setField("network.apply", "mode", mode)
+							*a.expanded("hyperv.switch.create") = false
+							a.pageScroll(page.ID).Y = 0
+						})
+					}
 				}
 			}
 		}
 	}
 	report = append(report, fmt.Sprintf("PASS: %d actual MyGo native page/language/theme/size captures; no system mutations", combinations))
+	report = append(report, fmt.Sprintf("PASS: %d additional scrolled feature/settings captures; static network form is an unsubmitted draft, no system changes", details))
 	data, _ := json.MarshalIndent(report, "", "  ")
 	_ = os.WriteFile(filepath.Join(directory, "verification.json"), data, 0600)
 	update(func() { a.busy = false })

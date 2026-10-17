@@ -17,8 +17,13 @@ public sealed record LocalHttpScan(IReadOnlyList<LocalHttpServer> Servers, bool 
 public sealed class LocalHttpDiscovery
 {
     private readonly Func<IReadOnlyList<LocalTcpListener>> _listeners;
+    private readonly TimeSpan _probeTimeout;
     public LocalHttpDiscovery() : this(ReadListeners) { }
-    internal LocalHttpDiscovery(Func<IReadOnlyList<LocalTcpListener>> listeners) => _listeners = listeners;
+    internal LocalHttpDiscovery(Func<IReadOnlyList<LocalTcpListener>> listeners, TimeSpan? probeTimeout = null)
+    {
+        _listeners = listeners;
+        _probeTimeout = probeTimeout ?? TimeSpan.FromSeconds(1);
+    }
 
     public async Task<LocalHttpScan> ScanAsync(CancellationToken cancellationToken = default)
     {
@@ -28,9 +33,9 @@ public sealed class LocalHttpDiscovery
         using var handler = new SocketsHttpHandler
         {
             UseProxy = false, AllowAutoRedirect = false, UseCookies = false,
-            Credentials = null, ConnectTimeout = TimeSpan.FromSeconds(1), MaxResponseHeadersLength = 16
+            Credentials = null, ConnectTimeout = _probeTimeout, MaxResponseHeadersLength = 16
         };
-        using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(1) };
+        using var client = new HttpClient(handler) { Timeout = _probeTimeout };
         var found = new ConcurrentBag<LocalHttpServer>();
         var candidates = listeners.Select(listener => (Listener: listener, Url: GetProbeUrl(listener)))
             .DistinctBy(candidate => candidate.Url).ToArray();

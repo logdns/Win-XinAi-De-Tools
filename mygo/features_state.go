@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"github.com/egoist/mygo/ui"
 	"strconv"
 	"strings"
 )
@@ -393,4 +394,14 @@ func (a *application) expanded(id string) *bool {
 		a.uiState.expanded[id] = &v
 	}
 	return a.uiState.expanded[id]
+}
+
+func (a *application) pageScroll(page string) *ui.ScrollState {
+	if a.scrolls == nil {
+		a.scrolls = map[string]*ui.ScrollState{}
+	}
+	if a.scrolls[page] == nil {
+		a.scrolls[page] = &ui.ScrollState{}
+	}
+	return a.scrolls[page]
 }

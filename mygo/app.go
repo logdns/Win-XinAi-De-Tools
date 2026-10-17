@@ -43,6 +43,7 @@ type application struct {
 	readErrors               map[string]string
 	uiState                  featureUI
 	postUpdate               func(func())
+	scrolls                  map[string]*ui.ScrollState
 	stats                    struct {
 		Rules    int `json:"rules"`
 		Inbound  int `json:"inbound"`
@@ -181,7 +182,7 @@ func (a *application) view(c *ui.Context) {
 					}
 				}
 			}
-			ui.Scroll(c.Key(a.page)).Grow(1).Padding(24).Gap(18).Children(func() {
+			ui.Scroll(c.Key(a.page)).TrackScroll(a.pageScroll(a.page)).Grow(1).Padding(24).Gap(18).Children(func() {
 				for _, p := range pages {
 					if p.ID == a.page {
 						ui.Text(c, a.tr(p.ZH, p.EN)).FontSize(30).Bold()
@@ -577,7 +578,7 @@ func (a *application) warning(page string) string {
 	case "network":
 		return a.tr("修改 IP/DNS 或路由可能立即断网。应用前检查网卡与配置，在本机操作。", "IP/DNS/route changes can immediately disconnect the computer. Verify the adapter and settings in a local session.")
 	case "hyperv":
-		return a.tr("关闭外部交换机的虚拟网卡可能使主机断网。彻底关闭影响 WSL2、Docker 和虚拟化安全；功能与启动配置需手动重启。仅可删除无虚拟机连接的 WinXinAi- 交换机。先刷新状态，再选择 GUID。", "Disabling an external switch's virtual adapter can disconnect the host. Complete disable affects WSL2, Docker and virtualization-based security; restart manually after feature/boot changes. Only unused WinXinAi- switches can be removed. Refresh status before choosing GUIDs.")
+		return a.tr("关闭外部交换机的虚拟网卡可能使主机断网。彻底关闭影响 WSL2、Docker 和虚拟化安全；功能与启动配置需手动重启。仅可删除无虚拟机连接的 WinXinAi- 交换机。操作按 GUID 定位，执行前核对网卡名称。", "Disabling an external switch's virtual adapter can disconnect the host. Complete disable affects WSL2, Docker and virtualization-based security; restart manually after feature/boot changes. Only unused WinXinAi- switches can be removed. Operations target GUIDs; verify the adapter name before confirming.")
 	case "smb":
 		return a.tr("高风险：本项目的 share 共享启用无密码 Guest，授予 Everyone 修改权限并修改主机 SMB 身份验证策略。只在可信隔离网络使用专用目录，勿共享私人文件。SMB 1.0 是旧协议。", "HIGH RISK: the share feature enables passwordless Guest, grants Everyone modify access and changes host SMB authentication policy. Use a dedicated folder on a trusted isolated network only. SMB 1.0 is obsolete.")
 	case "wsl":
