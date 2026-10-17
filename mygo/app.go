@@ -13,7 +13,7 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-const version = "1.12.0"
+const version = "1.12.1"
 
 type preferences struct {
 	Language string `json:"language"`
@@ -149,83 +149,101 @@ func (a *application) view(c *ui.Context) {
 	theme.Radius = 8
 	c.SetTheme(&theme)
 	width, _ := c.Size()
-	ui.Row(c).Fill().Background(theme.Background).Children(func() {
-		if width >= 760 {
-			a.sidebar(c)
-		}
-		ui.Column(c).Grow(1).MinWidth(0).FillHeight().Children(func() {
-			ui.Row(c).Padding(14, 22).Gap(10).Background(theme.Surface).BorderWidth(0, 0, 1, 0).BorderColor(theme.Border).Children(func() {
-				if ui.Button(c, a.tr("返回", "Back")).Disabled(len(a.history) == 0 || a.busy || a.confirming).Clicked() {
-					a.page = a.history[len(a.history)-1]
-					a.history = a.history[:len(a.history)-1]
-					a.status = ""
-					a.refreshPage()
-				}
-				ui.Text(c, "Win-XinAi-De-Tools-MyGo").Bold().Grow(1)
-				ui.Text(c, "v"+version).TextColor(theme.TextMuted)
-			})
-			if width < 760 {
-				labels := []string{}
-				selected := ""
-				for _, p := range pages {
-					label := a.tr(p.ZH, p.EN)
-					labels = append(labels, label)
-					if p.ID == a.page {
-						selected = label
-					}
-				}
-				if ui.Select(c.Key("compact-navigation"), &selected, labels).Label(a.tr("页面", "Page")).Disabled(a.busy).Margin(12).Changed() {
-					for _, p := range pages {
-						if selected == a.tr(p.ZH, p.EN) {
-							a.navigate(p.ID)
-						}
-					}
+	ui.Column(c).Fill().Background(theme.Background).Children(func() {
+		ui.Row(c).Padding(6, 10).Gap(6).Background(theme.Surface).Children(func() {
+			ui.Text(c, "XINAI / MYGO").Bold().Grow(1).MinWidth(0)
+			for _, control := range []struct{ command, zh, en string }{
+				{"minimize", "最小化", "Minimize"},
+				{"maximize", "最大化/还原", "Maximize/restore"},
+				{"close", "关闭/退出", "Close/exit"},
+			} {
+				if ui.Button(c, a.tr(control.zh, control.en)).Disabled(control.command == "close" && a.busy).Clicked() && a.win != nil {
+					a.controlWindow(a.win, control.command)
 				}
 			}
-			ui.Scroll(c.Key(a.page)).TrackScroll(a.pageScroll(a.page)).Grow(1).Padding(24).Gap(18).Children(func() {
-				for _, p := range pages {
-					if p.ID == a.page {
-						ui.Text(c, a.tr(p.ZH, p.EN)).FontSize(30).Bold()
-						ui.Text(c, a.tr(p.DescriptionZH, p.DescriptionEN)).TextColor(theme.TextMuted)
+		})
+		ui.Row(c).Grow(1).FillWidth().MinHeight(0).Children(func() {
+			if width >= 760 {
+				a.sidebar(c)
+			}
+			ui.Column(c).Grow(1).MinWidth(0).FillHeight().Children(func() {
+				ui.Row(c).Padding(14, 22).Gap(10).Background(theme.Surface).BorderWidth(0, 0, 1, 0).BorderColor(theme.Border).Children(func() {
+					if ui.Button(c, a.tr("返回", "Back")).Disabled(len(a.history) == 0 || a.busy || a.confirming).Clicked() {
+						a.page = a.history[len(a.history)-1]
+						a.history = a.history[:len(a.history)-1]
+						a.status = ""
+						a.refreshPage()
+					}
+					title := "Win-XinAi-De-Tools-MyGo"
+					if width < 760 {
+						title = "Win-XinAi / MyGo"
+					}
+					ui.Text(c, title).Bold().Grow(1).MinWidth(0)
+					ui.Text(c, "v"+version).TextColor(theme.TextMuted)
+				})
+				if width < 760 {
+					labels := []string{}
+					selected := ""
+					for _, p := range pages {
+						label := a.tr(p.ZH, p.EN)
+						labels = append(labels, label)
+						if p.ID == a.page {
+							selected = label
+						}
+					}
+					if ui.Select(c.Key("compact-navigation"), &selected, labels).Label(a.tr("页面", "Page")).Disabled(a.busy).Margin(12).Changed() {
+						for _, p := range pages {
+							if selected == a.tr(p.ZH, p.EN) {
+								a.navigate(p.ID)
+							}
+						}
 					}
 				}
-				if a.page == "settings" {
-					a.settings(c)
-					return
-				}
-				if warning := a.warning(a.page); warning != "" {
-					a.card(c, func() {
-						ui.Text(c, a.tr("操作边界与风险", "Safety and scope")).Bold().TextColor(theme.Warning)
-						ui.Text(c, warning)
-					})
-				}
-				if a.status != "" {
-					a.card(c, func() {
-						color := theme.Success
-						if a.failed {
-							color = theme.Danger
+				ui.Scroll(c.Key(a.page)).TrackScroll(a.pageScroll(a.page)).Grow(1).Padding(24).Gap(18).Children(func() {
+					for _, p := range pages {
+						if p.ID == a.page {
+							ui.Text(c, a.tr(p.ZH, p.EN)).FontSize(30).Bold()
+							ui.Text(c, a.tr(p.DescriptionZH, p.DescriptionEN)).TextColor(theme.TextMuted)
 						}
-						ui.Text(c, a.status).TextColor(color)
-					})
-				}
-				if a.busy {
-					ui.Text(c, a.tr("正在执行，请勿关闭程序……", "Working. Keep the application open…")).TextColor(theme.TextMuted)
-				}
-				a.featurePage(c)
-				if output := a.results[a.page]; output != "" {
-					ui.Collapsible(c.Key("diagnostics"), a.tr("诊断详情（原始响应）", "Diagnostic details (raw response)"), &a.uiState.diagnostics, func() {
-						ui.Row(c).Gap(8).Children(func() {
-							ui.Text(c, a.tr("仅供诊断", "For diagnostics only")).Bold().Grow(1)
-							if ui.Button(c, a.tr("复制结果", "Copy results")).Clicked() {
-								c.WriteClipboard(output)
-							}
-							if ui.Button(c, a.tr("保存结果", "Save results")).Disabled(a.busy).Clicked() {
-								a.saveResult(output)
-							}
+					}
+					if a.page == "settings" {
+						a.settings(c)
+						return
+					}
+					if warning := a.warning(a.page); warning != "" {
+						a.card(c, func() {
+							ui.Text(c, a.tr("操作边界与风险", "Safety and scope")).Bold().TextColor(theme.Warning)
+							ui.Text(c, warning)
 						})
-						ui.TextArea(c.Key("result"), &output).ReadOnly(true).Height(300).Label(a.tr("操作结果", "Operation results"))
-					})
-				}
+					}
+					if a.status != "" {
+						a.card(c, func() {
+							color := theme.Success
+							if a.failed {
+								color = theme.Danger
+							}
+							ui.Text(c, a.status).TextColor(color)
+						})
+					}
+					if a.busy {
+						ui.Text(c, a.tr("正在执行，请勿关闭程序……", "Working. Keep the application open…")).TextColor(theme.TextMuted)
+					}
+					a.featurePage(c)
+					if output := a.results[a.page]; output != "" {
+						ui.Collapsible(c.Key("diagnostics"), a.tr("诊断详情（原始响应）", "Diagnostic details (raw response)"), &a.uiState.diagnostics, func() {
+							ui.Row(c).Gap(8).Children(func() {
+								ui.Text(c, a.tr("仅供诊断", "For diagnostics only")).Bold().Grow(1)
+								if ui.Button(c, a.tr("复制结果", "Copy results")).Clicked() {
+									c.WriteClipboard(output)
+								}
+								if ui.Button(c, a.tr("保存结果", "Save results")).Disabled(a.busy).Clicked() {
+									a.saveResult(output)
+								}
+							})
+							ui.TextArea(c.Key("result"), &output).ReadOnly(true).Height(300).Label(a.tr("操作结果", "Operation results"))
+						})
+					}
+				})
 			})
 		})
 	})

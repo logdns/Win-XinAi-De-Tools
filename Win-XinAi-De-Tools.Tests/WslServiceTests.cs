@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using PortManager.Models;
 using PortManager.Services;
 using Xunit;
@@ -7,6 +8,21 @@ namespace PortManager.Tests;
 
 public sealed class WslServiceTests
 {
+    [Fact]
+    public void DecodeLinuxOutputAndWindowsLauncherErrorsWithoutMojibake()
+    {
+        const string message = "适用于 Linux 的 Windows 子系统没有已安装的分发。\r\nWsl/Service/WSL_E_DISTRO_NOT_FOUND\r\n";
+        foreach (var encoding in new[] { Encoding.UTF8, Encoding.Unicode, Encoding.BigEndianUnicode })
+        {
+            var bytes = encoding.GetPreamble().Concat(encoding.GetBytes(message)).ToArray();
+            Assert.Equal(message, WslService.DecodeWslOutput(bytes, Encoding.UTF8));
+        }
+        Assert.Equal(message, WslService.DecodeWslOutput(Encoding.Unicode.GetBytes(message), Encoding.UTF8));
+        const string linux = "文件系统 Size Used Avail Use% Mounted on\n/dev/sda 100G 10G 90G 10% /\n";
+        Assert.Equal(linux, WslService.DecodeWslOutput(Encoding.UTF8.GetBytes(linux), Encoding.UTF8));
+        Assert.Equal("", WslService.DecodeWslOutput(Array.Empty<byte>(), Encoding.UTF8));
+    }
+
     [Fact]
     public void ParseDistributions_HandlesDefaultAndStates()
     {

@@ -13,6 +13,7 @@
     <Compile Include="..\Models\NetworkResetModels.cs" Link="Models\NetworkResetModels.cs" />
     <Compile Include="..\Services\AuditLogService.cs" Link="Services\AuditLogService.cs" />
     <Compile Include="..\Services\NetworkConfigurationService.cs" Link="Services\NetworkConfigurationService.cs" />
+    <Compile Include="..\Services\PowerShellProcess.cs" Link="Services\PowerShellProcess.cs" />
     <Compile Include="..\Services\NetworkResetService.cs" Link="Services\NetworkResetService.cs" />
     <Compile Include="..\Models\HyperVModels.cs" Link="Models\HyperVModels.cs" />
     <Compile Include="..\Services\HyperVService.cs" Link="Services\HyperVService.cs" />

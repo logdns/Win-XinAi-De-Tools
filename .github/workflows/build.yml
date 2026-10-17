@@ -431,6 +431,41 @@ jobs:
           name: Win-XinAi-De-Tools-MyGo-Setup-${{ matrix.rid }}
           path: artifacts/mygo-installer/*.exe
 
+  mygo-arm64-smoke:
+    needs: mygo
+    runs-on: windows-11-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: 8.0.x
+      - name: Verify encoding and shared service contracts on native ARM64
+        run: dotnet test Win-XinAi-De-Tools.Tests/Win-XinAi-De-Tools.Tests.csproj --configuration Release
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: Win-XinAi-De-Tools-MyGo-win-arm64
+          path: artifacts/arm64-portable
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: Win-XinAi-De-Tools-MyGo-Setup-win-arm64
+          path: artifacts/arm64-installer
+      - name: Exercise native ARM64 window and read-only engine
+        shell: pwsh
+        run: |
+          Expand-Archive artifacts/arm64-portable/Win-XinAi-De-Tools-MyGo-win-arm64.zip artifacts/arm64-app
+          ./scripts/mygo-ui-smoke.ps1 -Executable artifacts/arm64-app/Win-XinAi-De-Tools-MyGo.exe
+      - name: Verify ARM64 installer and interactive Finish launch
+        shell: pwsh
+        run: ./scripts/installer-smoke.ps1 -Installer artifacts/arm64-installer/Win-XinAi-De-Tools-MyGo-Setup-arm64.exe -Edition MyGo
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: mygo-arm64-verification
+          path: |
+            artifacts/mygo-ui
+            artifacts/installer-smoke-MyGo
+
   side-by-side:
     needs: [installer, mygo]
     runs-on: windows-latest
@@ -457,7 +492,7 @@ jobs:
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
-    needs: [build, installer, mygo, side-by-side]
+    needs: [build, installer, mygo, mygo-arm64-smoke, side-by-side]
     timeout-minutes: 15
     permissions:
       contents: write

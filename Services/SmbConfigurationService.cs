@@ -87,18 +87,14 @@ public static class SmbConfigurationService
 
     private static T RunPowerShell<T>(string script, bool parseOutput = true)
     {
-        using var process = Process.Start(new ProcessStartInfo
-        {
-            FileName = "powershell.exe",
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            ArgumentList = { "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script }
-        }) ?? throw new SmbOperationException(Message("无法启动 PowerShell。", "Could not start PowerShell."));
-        var output = process.StandardOutput.ReadToEnd();
-        var error = process.StandardError.ReadToEnd();
+        using var process = Process.Start(PowerShellProcess.CreateStartInfo(script))
+            ?? throw new SmbOperationException(Message("无法启动 PowerShell。", "Could not start PowerShell."));
+        process.StandardInput.Close();
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
         process.WaitForExit();
+        var output = outputTask.GetAwaiter().GetResult();
+        var error = errorTask.GetAwaiter().GetResult();
         if (process.ExitCode != 0)
             throw new SmbOperationException(string.IsNullOrWhiteSpace(error) ? Message("SMB 操作失败。", "SMB operation failed.") : error.Trim());
         if (!parseOutput) return default!;

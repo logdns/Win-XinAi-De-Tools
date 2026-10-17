@@ -90,25 +90,14 @@ public static class NetworkConfigurationService
 
     private static T RunPowerShell<T>(string script, bool parseOutput = true)
     {
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = "powershell.exe",
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
-        };
-        startInfo.ArgumentList.Add("-NoLogo");
-        startInfo.ArgumentList.Add("-NoProfile");
-        startInfo.ArgumentList.Add("-NonInteractive");
-        startInfo.ArgumentList.Add("-ExecutionPolicy");
-        startInfo.ArgumentList.Add("Bypass");
-        startInfo.ArgumentList.Add("-Command");
-        startInfo.ArgumentList.Add(script);
+        var startInfo = PowerShellProcess.CreateStartInfo(script);
         using var process = Process.Start(startInfo) ?? throw new NetworkConfigurationException("Could not start Windows PowerShell.");
-        var output = process.StandardOutput.ReadToEnd();
-        var error = process.StandardError.ReadToEnd();
+        process.StandardInput.Close();
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
         process.WaitForExit();
+        var output = outputTask.GetAwaiter().GetResult();
+        var error = errorTask.GetAwaiter().GetResult();
         if (process.ExitCode != 0)
             throw new NetworkConfigurationException(string.IsNullOrWhiteSpace(error) ? $"Windows network command failed with exit code {process.ExitCode}." : error.Trim());
         if (!parseOutput) return default!;

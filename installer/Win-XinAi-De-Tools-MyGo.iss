@@ -5,7 +5,7 @@
   #error BuildArch is required
 #endif
 #ifndef AppVersion
-  #define AppVersion "1.12.0"
+  #define AppVersion "1.12.1"
 #endif
 
 [Setup]
@@ -70,4 +70,5 @@ chinesesimplified.StartMenuShortcut=创建开始菜单快捷方式
 chinesesimplified.LaunchApp=启动 Win-XinAi-De-Tools-MyGo
 
 [Run]
-Filename: "{app}\Win-XinAi-De-Tools-MyGo.exe"; WorkingDir: "{app}"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+; The application requires elevation; retain Setup's elevated token (avoids CreateProcess error 740).
+Filename: "{app}\Win-XinAi-De-Tools-MyGo.exe"; WorkingDir: "{app}"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent runascurrentuser

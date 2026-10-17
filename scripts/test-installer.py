@@ -73,7 +73,7 @@ class InstallerContractTests(unittest.TestCase):
     def test_launch_is_optional_and_independent_of_shortcut_creation(self):
         runs = self.entries("Run")
         self.assertEqual(len(runs), 1)
-        self.assertEqual(set(runs[0]["Flags"].split()), {"nowait", "postinstall", "skipifsilent"})
+        self.assertEqual(set(runs[0]["Flags"].split()), {"nowait", "postinstall", "skipifsilent", "runascurrentuser"})
         self.assertNotIn("Tasks", runs[0])
         self.assertEqual(runs[0]["Description"], '"{cm:LaunchApp}"')
 

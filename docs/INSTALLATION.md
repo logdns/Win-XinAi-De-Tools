@@ -57,3 +57,12 @@ From v1.11.1, `Win-XinAi-De-Tools-MyGo` has its own AppId, Program Files directo
 ```
 
 The same real x64 lifecycle checks write `mygo-installer-verification`. Source contracts check both editions' exact paths and identities. Interactive wizard, indexing and physical ARM64 remain manual checks.
+
+
+## v1.12.1: Finish-page launch / 安装完成启动修复
+
+Both editions now specify `runascurrentuser` for their optional `[Run]` entry. Inno Setup's default `postinstall` launch returns to the original, normally non-elevated user; `CreateProcess` then rejects a `requireAdministrator` executable with error 740. The explicit flag retains Setup's already-elevated token. This does not disable UAC or remove the application's administrator manifest. With alternate administrator credentials, immediate launch uses that administrator's profile; close and relaunch the shortcut from your normal desktop to use your own profile after approving UAC.
+
+两版均修复完成页立即启动时的错误 740，保留管理员清单、UAC、可选立即启动，以及两个独立、默认勾选的快捷方式选项。取消立即启动仍可从桌面或开始菜单打开。若在 UAC 中输入了另一个管理员账户，立即启动将使用该管理员的配置目录；可关闭后从日常桌面快捷方式重新启动。
+
+The installer smoke now drives the real non-silent English wizard through Next/Install/Finish and waits for the installed app's ready log and normal shutdown. Silent installation is still tested separately to verify it does not launch. This elevated runner check verifies the actual Finish path but does not simulate a real user's secure-desktop UAC prompt or organizational policy. Native Windows ARM64 MyGo validation is a separate release gate; physical-device checks remain distinct.

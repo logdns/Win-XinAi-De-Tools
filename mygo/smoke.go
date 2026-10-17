@@ -35,6 +35,43 @@ func runSmoke(a *application) {
 	}
 	report = append(report, "PASS production build: SDK version matches; native inspector excluded; per-window DevTools disabled")
 	update := func(fn func()) { done := make(chan struct{}); a.win.Update(func() { fn(); close(done) }); <-done }
+	var windowError error
+	update(func() {
+		work := mygo.Screen.PrimaryDisplay().WorkArea
+		bounds := a.win.Bounds()
+		if bounds.X < work.X || bounds.Y < work.Y || bounds.X+bounds.Width > work.X+work.Width || bounds.Y+bounds.Height > work.Y+work.Height {
+			windowError = fmt.Errorf("initial window exceeds work area: window=%+v work=%+v", bounds, work)
+		}
+		report = append(report, fmt.Sprintf("Initial window=%+v; work area=%+v (DIPs)", bounds, work))
+	})
+	if windowError != nil {
+		fail(windowError)
+		return
+	}
+	a.win.Minimize()
+	time.Sleep(150 * time.Millisecond)
+	if !a.win.IsMinimized() {
+		fail(fmt.Errorf("window minimize failed"))
+		return
+	}
+	a.win.Restore()
+	a.win.Maximize()
+	time.Sleep(150 * time.Millisecond)
+	if !a.win.IsMaximized() {
+		fail(fmt.Errorf("window maximize failed"))
+		return
+	}
+	a.win.Unmaximize()
+	a.win.Restore()
+	a.win.Focus()
+	update(func() { a.busy = true })
+	a.win.Close()
+	if a.win.IsDestroyed() {
+		fail(fmt.Errorf("busy close guard failed"))
+		return
+	}
+	update(func() { a.busy = false; a.status = "" })
+	report = append(report, "PASS initial work-area fit; actual minimize/maximize/restore; busy close veto (normal close and engine shutdown checked by installer smoke)")
 	for _, id := range []string{"health", "dashboard", "firewall.list", "network.list", "hyperv.status", "wsl.status", "smb.status", "smb.addresses", "http.status", "connections.list", "audit.list", "http.discover"} {
 		data, err := a.engine.call(id, nil, false, "en-US")
 		if err != nil {

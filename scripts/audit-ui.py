@@ -46,4 +46,4 @@ print(f'UI audit passed: {len(chinese)} bilingual resources, {page_count} pages,
 workflow = (ROOT / '.github/workflows/build.yml').read_text(encoding='utf-8')
 for production_flag in ['-tags=mygo_noinspector', 'github.com/egoist/mygo.production=1', 'github.com/egoist/mygo.packageVersion=$version', 'github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo']:
     assert production_flag in workflow, f'Missing MyGo production build flag: {production_flag}'
-assert 'DevTools: mygo.DevToolsDisabled' in (ROOT / 'mygo/main.go').read_text(encoding='utf-8')
+assert 'DevTools: mygo.DevToolsDisabled' in (ROOT / 'mygo/window.go').read_text(encoding='utf-8')

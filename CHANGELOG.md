@@ -3,6 +3,15 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## v1.12.1 - 2026-10-17
+
+- Fix installer Finish-page launch error 740: both editions explicitly retain the elevated installer token when launching the administrator application. Shortcut selection and optional launch remain independent.
+- Fit the MyGo initial window to the primary display work area in DIPs, including taskbar and high-DPI constraints. Keep the native title bar and add always-visible Minimize, Maximize/restore and Close/exit controls; closing still waits for active operations and shuts down the shared engine.
+- Fix Chinese adapter names, interface aliases and SMB paths/results by using UTF-8 on both sides of the Windows PowerShell boundary. Use the inbox PowerShell executable and drain stdout/stderr concurrently; no global code-page or locale changes.
+- Decode WSL's UTF-16 launcher diagnostics separately from Linux UTF-8 output; show real disk-query errors without hiding nonzero exits or an uninstalled distribution.
+- Add Chinese JSON/error subprocess tests, compact-window/control-bounds checks, real window lifecycle probes and interactive installer Finish-launch automation. Add native Windows ARM64 MyGo execution/installer verification to the release gate.
+- 修复安装完成启动时的 740 提权错误、小屏/高缩放窗口超出工作区及缺少明显窗口控制入口，以及网卡名称、接口别名和 SMB 中文输出乱码。保留危险操作确认和正常退出清理。
+
 ## v1.12.0 - 2026-10-17
 
 ### MyGo functional interface / MyGo 功能界面修复

@@ -71,3 +71,13 @@ CI covers 144 populated native view combinations, every operation form, real-con
 ## v1.12.0 validation / 专用页面验收
 
 The passed Windows candidate and published v1.12.0 tag workflows, downloaded package checks and manual limits are linked in [the focused review and validation record](AUDIT.md). Tests now assert populated feature content and exact row targets, not just titles. Native screenshots cover all 12 pages in both languages and explicit themes, plus scrolled settings. Requested 1400 × 900 windows are constrained by the hosted runner; actual capture sizes are recorded (maximum observed content 1028 × 749), not represented as a 1400-DIP hardware acceptance. The Static network form in screenshots is an unsubmitted draft; no network reset or Hyper-V mutation is executed. Virtual-adapter/distribution rows are empty when the real host has none; populated fixtures cover their controls without presenting invented state as real Windows data.
+
+
+## v1.12.1 window and text fixes / 窗口与中文修复
+
+- The first window is sized and centered inside the primary monitor's work area, in DIPs; taskbar space is excluded and the minimum size is capped for small displays. The normal Windows title bar, resize borders and system controls stay enabled.
+- An always-visible native toolbar adds Minimize, Maximize/restore and Close/exit in both languages. Close means exit, not hide; the separate tray Hide command remains available. Active operations veto closing, including tray exit; normal shutdown closes the shared engine and its temporary HTTP service.
+- Network adapter names/aliases and SMB paths/results use UTF-8 on both sides of the Windows PowerShell boundary. No Windows locale, global code page or adapter name is changed. WSL Linux output remains UTF-8, with BOM/UTF-16 launcher-error detection; disk-query failures show the actual diagnostic when available, never a fabricated success.
+- 两版安装完成页保留可选立即启动，明确沿用安装器已提升的权限，避免 requireAdministrator 程序触发错误 740。网卡中文乱码不通过改名或替换字符掩盖；窗口工具栏始终提供最小化、最大化/还原、关闭/退出。
+
+Release gates now include actual non-silent installer Finish-page launch on x64 and native MyGo Windows ARM64 execution/installation. The exact completed workflow and remaining device/DPI/manual limits are recorded in [AUDIT.md](AUDIT.md); source changes alone do not establish physical-device acceptance.

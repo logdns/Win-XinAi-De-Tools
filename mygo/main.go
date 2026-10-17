@@ -70,14 +70,16 @@ func main() {
 		}
 	})
 	mygo.App.WhenReady(func() {
-		a.win = mygo.NewWindow(mygo.WindowOptions{Title: "Win-XinAi-De-Tools-MyGo", Width: 1200, Height: 850, MinWidth: 480, MinHeight: 480, Hidden: silent, Page: mygo.PageOptions{DevTools: mygo.DevToolsDisabled}, Content: ui.View(a.view)})
+		opts := initialWindowOptions(mygo.Screen.PrimaryDisplay().WorkArea, silent)
+		opts.Content = ui.View(a.view)
+		a.win = mygo.NewWindow(opts)
 		if executable, err := os.Executable(); err == nil {
 			if icon, err := os.ReadFile(filepath.Join(filepath.Dir(executable), "Assets", "Square150x150Logo.png")); err == nil {
 				_ = a.win.SetIcon(icon)
 				if _, err := mygo.NewTray(mygo.TrayOptions{Icon: icon, ToolTip: "Win-XinAi-De-Tools-MyGo", Menu: mygo.NewMenu([]*mygo.MenuItem{
 					{Label: a.tr("显示窗口", "Show window"), Click: func(*mygo.MenuItem, *mygo.Window) { a.win.Show(); a.win.Restore(); a.win.Focus() }},
 					{Label: a.tr("隐藏到托盘", "Hide to tray"), Click: func(*mygo.MenuItem, *mygo.Window) { a.win.Hide() }},
-					{Role: mygo.RoleQuit},
+					{Label: a.tr("退出程序", "Exit application"), Click: func(*mygo.MenuItem, *mygo.Window) { mygo.App.Quit() }},
 				})}); err != nil {
 					log.Print(err)
 					a.win.Show()

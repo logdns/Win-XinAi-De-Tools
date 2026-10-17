@@ -1,7 +1,19 @@
 # Current audit and validation / 当前审计与验证
 
-当前发布版本：**1.12.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前修复候选版本：**1.12.1**（正式发布验证待补）；上一发布为 **1.12.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## 1.12.1 focused fixes / 安装、窗口与编码复核
+
+Source review scope: both installer `[Run]` entries; MyGo work-area sizing, visible controls and guarded shutdown; PowerShell output transport in shared network/SMB services; WSL output decoding and error reporting. No real networking mutation, network reset, Hyper-V change or reboot is executed for this fix.
+
+- Error 740: keep `requireAdministrator`, `PrivilegesRequired=admin`, independent shortcut tasks and optional launch. Use Inno's explicit `runascurrentuser` token inheritance rather than stripping elevation or silently skipping launch. Reference: [Inno Run flags](https://jrsoftware.org/ishelp/topic_runsection.htm).
+- Window bounds: work area and options both use DIPs; no second DPI scaling. Keep the OS frame and resizing enabled; initial minimums cannot force a small screen to overflow. Visible native toolbar and localized tray Exit use the normal close/quit lifecycle and busy guard, not process kill.
+- Encoding: parent and PowerShell child agree on BOM-free UTF-8; use the inbox absolute PowerShell path and concurrent pipe draining. Preserve adapter GUID targeting, confirmation and failure semantics. No string replacement of corrupt names and no system-wide locale/code-page change.
+- WSL: keep Linux UTF-8 distinct from native launcher UTF-16; preserve nonzero exits and show available stdout diagnostics instead of a generic disk-usage failure. Empty/non-installed distributions are not reported as healthy.
+- Validation added: exact Chinese JSON/path/stderr subprocess round-trip, WSL encoding fixtures, compact control bounds, work-area fit, actual minimize/maximize/restore and busy-close veto, real non-silent installer Finish launch, and a native Windows ARM64 MyGo release gate.
+
+Candidate Windows results, refreshed real screenshots and final package checksum verification will be recorded after execution. A hosted runner does not establish physical ARM64 hardware, mixed-monitor DPI, secure-desktop UAC, accessibility or destructive-feature acceptance.
 
 ## Verified release 1.12.0 / 专用功能界面双版本发布
 

@@ -132,7 +132,8 @@ public static class WslService
         EnsureWindows();
         var result = await RunLinuxCommandAsync(name, "df", "-h", "/");
         if (result.ExitCode != 0)
-            throw new WslOperationException(string.IsNullOrWhiteSpace(result.Error) ? "Could not read disk usage." : result.Error.Trim());
+            throw new WslOperationException(!string.IsNullOrWhiteSpace(result.Error) ? result.Error.Trim()
+                : !string.IsNullOrWhiteSpace(result.Output) ? result.Output.Trim() : "Could not read disk usage.");
         return result.Output.Trim();
     }
 
@@ -330,6 +331,24 @@ public static class WslService
         }
     }
 
+    internal static string DecodeWslOutput(byte[] bytes, Encoding fallback)
+    {
+        if (bytes.AsSpan().StartsWith(new byte[] { 0xFF, 0xFE })) return Encoding.Unicode.GetString(bytes, 2, bytes.Length - 2);
+        if (bytes.AsSpan().StartsWith(new byte[] { 0xFE, 0xFF })) return Encoding.BigEndianUnicode.GetString(bytes, 2, bytes.Length - 2);
+        if (bytes.AsSpan().StartsWith(new byte[] { 0xEF, 0xBB, 0xBF })) return Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+        if (fallback.CodePage == Encoding.UTF8.CodePage && bytes.Length >= 4 && bytes.Length % 2 == 0)
+        {
+            var oddNulls = 0;
+            var evenNulls = 0;
+            var length = Math.Min(bytes.Length, 512);
+            for (var index = 0; index < length; index++)
+                if (bytes[index] == 0) { if (index % 2 == 0) evenNulls++; else oddNulls++; }
+            if (oddNulls >= 2 && oddNulls > length / 10 && evenNulls < oddNulls / 2)
+                return Encoding.Unicode.GetString(bytes);
+        }
+        return fallback.GetString(bytes);
+    }
+
     internal static string QuoteWindowsArgument(string value)
     {
         if (value.Length > 0 && !value.Any(character => char.IsWhiteSpace(character) || character == '"'))
@@ -387,10 +406,14 @@ public static class WslService
 
         using (process)
         {
-            var outputTask = process.StandardOutput.ReadToEndAsync();
-            var errorTask = process.StandardError.ReadToEndAsync();
+            using var output = new MemoryStream();
+            using var error = new MemoryStream();
+            // Linux tools emit UTF-8, but wsl.exe itself can report UTF-16 errors before launching Linux.
+            var outputTask = process.StandardOutput.BaseStream.CopyToAsync(output);
+            var errorTask = process.StandardError.BaseStream.CopyToAsync(error);
             await process.WaitForExitAsync();
-            return (process.ExitCode, await outputTask, await errorTask);
+            await Task.WhenAll(outputTask, errorTask);
+            return (process.ExitCode, DecodeWslOutput(output.ToArray(), encoding), DecodeWslOutput(error.ToArray(), encoding));
         }
     }
 

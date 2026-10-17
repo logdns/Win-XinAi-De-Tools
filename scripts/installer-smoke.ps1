@@ -27,6 +27,40 @@ public static class InstallerSmokePath
 {
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     public static extern uint GetLongPathName(string path, StringBuilder result, uint capacity);
+    private delegate bool EnumProc(IntPtr window, IntPtr parameter);
+    [DllImport("user32.dll")] private static extern bool EnumWindows(EnumProc callback, IntPtr parameter);
+    [DllImport("user32.dll")] private static extern bool EnumChildWindows(IntPtr parent, EnumProc callback, IntPtr parameter);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetWindowText(IntPtr window, StringBuilder text, int size);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetClassName(IntPtr window, StringBuilder text, int size);
+    [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr window);
+    [DllImport("user32.dll")] private static extern bool IsWindowEnabled(IntPtr window);
+    [DllImport("user32.dll")] private static extern bool PostMessage(IntPtr window, uint message, IntPtr wParam, IntPtr lParam);
+
+    public static string AdvanceWizard(string application)
+    {
+        string clicked = null;
+        EnumWindows((window, parameter) => {
+            var title = new StringBuilder(1024);
+            GetWindowText(window, title, title.Capacity);
+            if (!IsWindowVisible(window) || title.ToString() != "Setup - " + application) return true;
+            EnumChildWindows(window, (child, ignored) => {
+                var text = new StringBuilder(256);
+                var type = new StringBuilder(256);
+                GetWindowText(child, text, text.Capacity);
+                GetClassName(child, type, type.Capacity);
+                string name = text.ToString().Replace("&", "").Trim();
+                if (type.ToString() == "TNewButton" && IsWindowVisible(child) && IsWindowEnabled(child)
+                    && (name == "Next >" || name == "Install" || name == "Finish")) {
+                    PostMessage(child, 0x00F5, IntPtr.Zero, IntPtr.Zero);
+                    clicked = name;
+                    return false;
+                }
+                return true;
+            }, IntPtr.Zero);
+            return clicked == null;
+        }, IntPtr.Zero);
+        return clicked;
+    }
 }
 '@
 $tempPath = [Text.StringBuilder]::new(32768)
@@ -111,6 +145,40 @@ function Uninstall-Case([string]$Name) {
     Write-Host "PASS: $Name uninstall removed the executable and shortcuts"
 }
 
+function Test-InteractivePostinstallLaunch {
+    # Do not use /SILENT: skipifsilent bypasses precisely the [Run] path under test.
+    $logPath = Join-Path $env:LOCALAPPDATA "$appName/startup.log"
+    Remove-Item $logPath -Force -ErrorAction SilentlyContinue
+    $setup = Start-Process -FilePath $Installer -ArgumentList @('/SP-', '/NORESTART', '/LANG=english',
+        "/DIR=`"$installDirectory`"", "/LOG=`"$output/postinstall-launch.log`"") -PassThru
+    $deadline = (Get-Date).AddSeconds(150)
+    $clicked = [Collections.Generic.List[string]]::new()
+    while (-not $setup.HasExited -and (Get-Date) -lt $deadline) {
+        $button = [InstallerSmokePath]::AdvanceWizard($appName)
+        if ($button) { $clicked.Add($button); Write-Host "Wizard: $button" }
+        Start-Sleep -Seconds 1
+    }
+    if (-not $setup.HasExited) { throw 'Interactive installer did not finish (possible postinstall launch error).' }
+    if ($setup.ExitCode -ne 0 -or -not $clicked.Contains('Finish')) { throw 'Installer did not reach the real Finish/launch path.' }
+    $deadline = (Get-Date).AddSeconds(60)
+    $loaded = $false
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Seconds 1
+        if (Test-Path $logPath) {
+            $log = Get-Content $logPath -Raw
+            if (($Edition -eq 'WinUI' -and $log -match 'Navigation completed: DashboardPage\.') -or
+                ($Edition -eq 'MyGo' -and $log -match 'MyGo ready: dashboard')) { $loaded = $true; break }
+        }
+    }
+    if (-not $loaded) { throw 'Finish did not launch the installed administrator application.' }
+    $app = @(Get-Process -Name $appName -ErrorAction Stop)
+    if ($app.Count -ne 1 -or $app[0].Path -ne $executable) { throw 'Finish launched an unexpected application.' }
+    if (-not $app[0].CloseMainWindow() -or -not $app[0].WaitForExit(15000)) { throw 'Postinstall application did not close normally.' }
+    Copy-Item $logPath (Join-Path $output 'postinstall-startup.log')
+    $clicked | Set-Content (Join-Path $output 'wizard-buttons.txt')
+    Write-Host 'PASS: real non-silent installer Finish launched requireAdministrator application; no error 740'
+}
+
 try {
     # A legacy v1.10.0 shortcut must migrate without leaving duplicates.
     $legacy = $shell.CreateShortcut($legacyLink)
@@ -149,6 +217,8 @@ try {
     }
     Copy-Item $logPath (Join-Path $output 'installed-startup.log')
     Write-Host 'PASS: actual Start Menu shortcut launched the installed app and closed normally'
+
+    Test-InteractivePostinstallLaunch
 
     # Reinstallation must honor deselection and not inherit previously checked tasks.
     Install-Case 'reinstall-none' '' $false $false 'english'

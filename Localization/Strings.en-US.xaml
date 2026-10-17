@@ -296,7 +296,7 @@
     <x:String x:Key="About_Description">Native Windows network, firewall, and WSL management utility</x:String>
     <x:String x:Key="About_CopyrightPrefix">Fengge Network -</x:String>
     <x:String x:Key="About_Website">xinai.de</x:String>
-    <x:String x:Key="About_Version">Version 1.12.0</x:String>
+    <x:String x:Key="About_Version">Version 1.12.1</x:String>
     <x:String x:Key="About_Features">Features</x:String>
     <x:String x:Key="About_FeatureText">Manage Windows network settings, firewall rules, SMB sharing, and WSL distributions from one native WinUI application.</x:String>
     <x:String x:Key="About_Frameworks">Frameworks</x:String>
