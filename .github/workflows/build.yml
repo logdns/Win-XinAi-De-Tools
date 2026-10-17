@@ -371,7 +371,7 @@ jobs:
           $version = @($project.Project.PropertyGroup.Version)[0]
           $env:GOOS = 'windows'; $env:GOARCH = '${{ matrix.goarch }}'; $env:CGO_ENABLED = '0'
           $flags = "-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=$version"
-          go build -tags=mygo_noinspector -trimpath -ldflags=$flags -o ../artifacts/mygo-portable/${{ matrix.rid }}/Win-XinAi-De-Tools-MyGo.exe .
+          go build -tags=mygo_noinspector -trimpath "-ldflags=$flags" -o ../artifacts/mygo-portable/${{ matrix.rid }}/Win-XinAi-De-Tools-MyGo.exe .
           if ($LASTEXITCODE -ne 0) { throw 'MyGo build failed.' }
       - name: Include package instructions, app assets and upstream licenses
         shell: pwsh

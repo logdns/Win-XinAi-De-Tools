@@ -48,9 +48,9 @@ Interactive wizard checkbox presentation, Start Menu search indexing, Windows 10
 
 ## MyGo side-by-side edition / MyGo 并行安装
 
-From v1.11.0, `Win-XinAi-De-Tools-MyGo` has its own AppId, Program Files directory, desktop icon and Start Menu folder. Both default-selected tasks and optional postinstall launch follow the same rules. It never migrates/deletes the WinUI shortcuts. UI preferences are independent; system configuration, network backups and audit logs are shared. Preserve the bundled `engine/` directory. See [MyGo differences](MYGO.md).
+From v1.11.1, `Win-XinAi-De-Tools-MyGo` has its own AppId, Program Files directory, desktop icon and Start Menu folder. Both default-selected tasks and optional postinstall launch follow the same rules. It never migrates/deletes the WinUI shortcuts. UI preferences are independent; system configuration, network backups and audit logs are shared. Preserve the bundled `engine/` directory. See [MyGo differences](MYGO.md).
 
-从 v1.11.0 起，MyGo 版使用独立安装身份、目录与同名桌面/开始菜单入口；两个快捷方式选项默认勾选，立即启动仍为独立选项。重装/卸载不删除原版快捷方式。两版可同时安装，但系统配置共用，请勿并发执行冲突操作；勿删除 MyGo 包内 `engine/`。
+从 v1.11.1 起，MyGo 版使用独立安装身份、目录与同名桌面/开始菜单入口；两个快捷方式选项默认勾选，立即启动仍为独立选项。重装/卸载不删除原版快捷方式。两版可同时安装，但系统配置共用，请勿并发执行冲突操作；勿删除 MyGo 包内 `engine/`。
 
 ```powershell
 ./scripts/installer-smoke.ps1 -Installer artifacts/mygo-installer/Win-XinAi-De-Tools-MyGo-Setup-x64.exe -Edition MyGo
