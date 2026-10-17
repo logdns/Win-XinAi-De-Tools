@@ -64,7 +64,37 @@ func (a *application) closeDialog(c *ui.Context) {
 		buttons = append(buttons, a.tr("最小化到托盘", "Hide to tray"))
 	}
 	buttons = append(buttons, a.tr("退出程序", "Exit application"), a.tr("取消", "Cancel"))
-	chosen := ui.AlertDialog(c, &a.closePrompt, a.tr("关闭窗口", "Close window"), a.tr("请选择关闭方式。退出将停止临时 HTTP 服务。", "Choose what to do. Exiting stops the temporary HTTP service."), buttons...)
+	chosen := -1
+	width, height := c.Size()
+	title := a.tr("关闭窗口", "Close window")
+	message := a.tr("请选择关闭方式。退出将停止临时 HTTP 服务。", "Choose what to do. Exiting stops the temporary HTTP service.")
+	// The SDK alert has a fixed 300-DIP panel; localized three-button rows
+	// overflow it. Use native dialog primitives with bounded, wrapping content.
+	dialog := ui.DialogBase(c.Key("close-choice"), &a.closePrompt, func(back, panel ui.Element) {
+		back.Background(ui.RGBA(0, 0, 0, 0.4))
+		panel.Column().Width(420).MaxWidth(width-32).MaxHeight(height-32).Padding(20).Gap(16).
+			Radius(12).Background(c.Theme().Background).Border(1, c.Theme().Border).
+			Shadow(0, 10, 30, 0, ui.RGBA(0, 0, 0, 0.3)).Role(ui.RoleAlertDialog).Label(title).Description(message)
+		ui.Text(c, title).Bold().FontSize(18)
+		ui.Text(c, message).TextColor(c.Theme().TextMuted)
+		ui.Row(c).FillWidth().Gap(8).Wrap().Justify(ui.End).Children(func() {
+			for i, label := range buttons {
+				button := ui.Element{}
+				if i == len(buttons)-1 {
+					button = ui.PrimaryButton(c, label).AutoFocus()
+				} else {
+					button = ui.Button(c, label)
+				}
+				if button.Clicked() {
+					chosen = i
+					a.closePrompt = false
+				}
+			}
+		})
+	})
+	if dialog.Dismissed() {
+		chosen = ui.AlertDismissed
+	}
 	if chosen == ui.AlertDismissed || chosen == len(buttons)-1 {
 		log.Print("MyGo close choice canceled")
 	}

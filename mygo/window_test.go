@@ -115,6 +115,33 @@ func TestRedundantChromeRemovedAtAllSizes(t *testing.T) {
 	}
 }
 
+func TestCloseChoiceButtonsStayInsideDialog(t *testing.T) {
+	for _, language := range []string{"zh-CN", "en-US"} {
+		for _, theme := range []string{"Light", "Dark"} {
+			for _, width := range []int{320, 360, 416, 464, 640, 1024} {
+				a := testApplication(t)
+				a.prefs.Language, a.prefs.Theme, a.trayAvailable = language, theme, true
+				a.requestClose()
+				tt := ui.NewTester(a.view, width, 360)
+				panel, ok := tt.Find(a.tr("关闭窗口", "Close window"))
+				if !ok || panel.W < 250 || panel.X < 0 || panel.Y < 0 || panel.X+panel.W > float32(width) || panel.Y+panel.H > 360 {
+					t.Fatalf("invalid dialog bounds: %+v", panel)
+				}
+				for _, label := range []string{a.tr("最小化到托盘", "Hide to tray"), a.tr("退出程序", "Exit application"), a.tr("取消", "Cancel")} {
+					r, ok := tt.Find(label)
+					if !ok || r.X < panel.X+12 || r.Y < panel.Y+12 || r.X+r.W > panel.X+panel.W-12 || r.Y+r.H > panel.Y+panel.H-12 {
+						t.Fatalf("%s/%s at %d: %s %+v exceeds padded dialog %+v", language, theme, width, label, r, panel)
+					}
+				}
+				tt.ClickAt(1, 1)
+				if a.closePrompt || a.exitApproved {
+					t.Fatal("backdrop must cancel, never approve Exit")
+				}
+			}
+		}
+	}
+}
+
 func TestBackShortcutRetainsHistoryWithoutHeader(t *testing.T) {
 	a := testApplication(t)
 	a.navigate("hyperv")

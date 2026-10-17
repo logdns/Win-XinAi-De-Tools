@@ -258,35 +258,37 @@ func runSmoke(a *application) {
 	report = append(report, fmt.Sprintf("PASS: %d additional scrolled feature/settings captures; static network form is an unsubmitted draft, no system changes", details))
 	data, _ := json.MarshalIndent(report, "", "  ")
 	_ = os.WriteFile(filepath.Join(directory, "verification.json"), data, 0600)
-	a.win.SetSize(800, 600)
-	for _, language := range []string{"en-US", "zh-CN"} {
-		update(func() {
-			a.busy = false
-			a.page = "dashboard"
-			a.pageScroll("dashboard").Y = 0
-			a.prefs.Language = language
-			a.prefs.Theme = "Light"
-		})
-		a.win.Close()
-		time.Sleep(200 * time.Millisecond)
-		image, err := a.win.CapturePage()
-		if err != nil {
-			fail(err)
-			return
-		}
-		if err := os.WriteFile(filepath.Join(directory, "close-choice-"+language+".png"), image, 0600); err != nil {
-			fail(err)
-			return
-		}
-		key(0x1B) // Escape is also a safe cancellation on the actual HWND.
-		update(func() {
-			if a.closePrompt || a.exitApproved {
-				windowError = fmt.Errorf("native Escape did not cancel closing")
+	for _, size := range []int{800, 480} {
+		a.win.SetSize(size, 600)
+		for _, language := range []string{"en-US", "zh-CN"} {
+			update(func() {
+				a.busy = false
+				a.page = "dashboard"
+				a.pageScroll("dashboard").Y = 0
+				a.prefs.Language = language
+				a.prefs.Theme = "Light"
+			})
+			a.win.Close()
+			time.Sleep(200 * time.Millisecond)
+			image, err := a.win.CapturePage()
+			if err != nil {
+				fail(err)
+				return
 			}
-		})
-		if windowError != nil {
-			fail(windowError)
-			return
+			if err := os.WriteFile(filepath.Join(directory, fmt.Sprintf("close-choice-%s-%d.png", language, size)), image, 0600); err != nil {
+				fail(err)
+				return
+			}
+			key(0x1B) // Escape is also a safe cancellation on the actual HWND.
+			update(func() {
+				if a.closePrompt || a.exitApproved {
+					windowError = fmt.Errorf("native Escape did not cancel closing")
+				}
+			})
+			if windowError != nil {
+				fail(windowError)
+				return
+			}
 		}
 	}
 	a.win.Close()
