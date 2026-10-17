@@ -1,7 +1,18 @@
 # Current audit and validation / 当前审计与验证
 
-当前修复候选版本：**1.12.1**（Windows 候选验证通过，正式标签发布待核验）；上一发布为 **1.12.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前发布版本：**1.12.1**。Windows 候选和正式发布验证均通过；历史版本记录保留。。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## Verified release 1.12.1 / 安装、窗口与中文修复发布
+
+[Successful tag workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39013102283) and [published v1.12.1 release](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.12.1), verified 2026-10-17:
+
+- Tag commit is `ffa41d9092dfeb648dd5796ff123035acd5b6fb5`, containing the validated implementation and candidate documentation/screenshots. Earlier tags including v1.12.0 remain unchanged; post-release screenshot/verification updates do not retarget v1.12.1.
+- The complete tag workflow repeats the candidate checks: 154 .NET tests on both Windows x64 and native ARM64, 2 opted-in x64 firewall integration tests, 36 Go test functions, 13 installer contracts, localization/version checks and NuGet/Go vulnerability audits. All ten packages build successfully.
+- Actual x64 installer lifecycles for both editions, native ARM64 MyGo installation/Start Menu startup/non-silent Finish launch/reinstallation/uninstall, native window fit/minimize/maximize/restore/busy-close checks and cross-edition coexistence/uninstall all pass. WinUI verifies 180 combinations; each MyGo native architecture captures 144 combinations plus 20 scrolled views. Real Chinese JSON, adapter-name/alias/path and stderr output round-trips pass on x64 and ARM64.
+- Published as latest, neither draft nor prerelease, with exactly **11 non-empty assets**: five ZIPs, five installers and `SHA256SUMS.txt`. Actual release-run screenshots replace the candidate images in both READMEs, including a compact layout with visible controls. These are native content captures, not full-desktop or hardware DPI certificates.
+- Downloaded all ten published packages and matched every SHA-256 to the published manifest. `scripts/verify-release.py artifacts/release-v1.12.1 1.12.1` passes all five ZIP CRCs, frontend/engine PE architecture and administrator manifests, production/version/SDK identifiers, complete self-contained runtimes, recovery documentation and original module/Go licenses. This local check does not execute installers; the actual x64/native ARM64 lifecycle evidence is the workflow above. Hashes are not signing certificates.
+- No real network reset, Hyper-V change or reboot is executed. Physical devices, mixed-monitor DPI, accessibility, secure-desktop UAC/alternate administrator profiles and enterprise policy remain manual acceptance. The source review is focused on these fixes, not an independent full penetration test.
 
 ## 1.12.1 focused fixes / 安装、窗口与编码复核
 
@@ -20,7 +31,7 @@ Source review scope: both installer `[Run]` entries; MyGo work-area sizing, visi
 - Both native MyGo x64 and ARM64 runs verify initial bounds `{X:24 Y:24 Width:976 Height:672}` within the actual `{X:0 Y:0 Width:1024 Height:720}` DIP work area, actual minimize/maximize/restore, busy-close veto, 12 read-only engine probes and selected-adapter read-back. Each captures 144 page/language/theme/size combinations plus 20 scrolled settings views. WinUI's 180-combination native check also passes. README screenshots are refreshed from this candidate; the compact screenshot demonstrates visible controls, not a full desktop or physical DPI certification.
 - A focused reusable installer workflow also passes [WinUI x86-on-x64 and MyGo native ARM64](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39012004300) against candidate packages. Earlier candidate failures were in new automation (missing C# import, versioned wizard caption and modern `Next` label); those runs are not presented as passed or released.
 
-Final tag publication and downloaded-package verification remain pending. A hosted runner does not establish physical ARM64 hardware, mixed-monitor DPI, secure-desktop UAC, accessibility or destructive-feature acceptance.
+Final tag publication and downloaded-package verification are recorded in the release section above. A hosted runner does not establish physical ARM64 hardware, mixed-monitor DPI, secure-desktop UAC, accessibility or destructive-feature acceptance.
 
 ## Verified release 1.12.0 / 专用功能界面双版本发布
 

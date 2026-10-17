@@ -49,7 +49,7 @@
 
 ## 界面
 
-以下为 [v1.12.1 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39012141927)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。MyGo 现为专用功能界面，不再是操作下拉框与 JSON 控制台。网卡设置截图是从实际 DHCP 网卡回填后、尚未提交的 Static 草稿，未修改主机网络。
+以下为 [v1.12.1 正式发布构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39013102283)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。MyGo 现为专用功能界面，不再是操作下拉框与 JSON 控制台。网卡设置截图是从实际 DHCP 网卡回填后、尚未提交的 Static 草稿，未修改主机网络。
 
 ### 概览
 

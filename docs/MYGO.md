@@ -81,3 +81,6 @@ The passed Windows candidate and published v1.12.0 tag workflows, downloaded pac
 - 两版安装完成页保留可选立即启动，明确沿用安装器已提升的权限，避免 requireAdministrator 程序触发错误 740。网卡中文乱码不通过改名或替换字符掩盖；窗口工具栏始终提供最小化、最大化/还原、关闭/退出。
 
 Release gates now include actual non-silent installer Finish-page launch on x64 and native MyGo Windows ARM64 execution/installation. The exact completed workflow and remaining device/DPI/manual limits are recorded in [AUDIT.md](AUDIT.md); source changes alone do not establish physical-device acceptance.
+
+
+v1.12.1 is published with both editions. Its [successful release workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39013102283) includes native Windows ARM64 installation and non-silent Finish-page launch, shared-service Chinese-output tests and the same native window checks as x64. Both READMEs use that release's real screenshots. Initial bounds on both hosted architectures are 976 × 672 inside a 1024 × 720 DIP work area. Later stress captures deliberately request other sizes; they do not describe the initial window. Physical-device and mixed-monitor DPI acceptance remain separate.
