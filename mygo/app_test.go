@@ -119,3 +119,22 @@ func TestAllDestructiveOperationsAreConfirmationScoped(t *testing.T) {
 		}
 	}
 }
+
+func TestResetConfirmationRemainsReachableAtMinimumSize(t *testing.T) {
+	for _, language := range []string{"zh-CN", "en-US"} {
+		a := testApplication(t)
+		a.page = "reset"
+		a.prefs.Language = language
+		op, _ := actionByID("network.reset")
+		a.request(op)
+		tt := ui.NewTester(a.view, 480, 480)
+		box, ok := tt.Find(a.tr("取消", "Cancel"))
+		if !ok || box.X < 0 || box.Y < 0 || box.X+box.W > 481 || box.Y+box.H > 481 {
+			t.Fatalf("confirmation cancel is clipped: %s %+v", language, box)
+		}
+		tt.Key(0, ui.KeyEnter)
+		if a.confirming || a.busy {
+			t.Fatal("minimum-size default did not cancel")
+		}
+	}
+}

@@ -81,9 +81,9 @@ public sealed class NetworkResetTests
             $script:calls=@();
             function Get-NetAdapter { param([switch]$IncludeHidden) if('{{status}}' -ne 'Missing'){[pscustomobject]@{InterfaceGuid='{{id:D}}';ifIndex=47;Status='{{status}}'} }; [pscustomobject]@{InterfaceGuid='22222222-2222-2222-2222-222222222222';ifIndex=99;Status='Up'} }
             function Get-NetRoute { param($InterfaceIndex,$AddressFamily,$ErrorAction) if($InterfaceIndex -ne 47){throw 'Wrong route interface'}; [pscustomobject]@{Protocol='NetMgmt';DestinationPrefix='0.0.0.0/0'};[pscustomobject]@{Protocol='Dhcp';DestinationPrefix='0.0.0.0/0'};[pscustomobject]@{Protocol='NetMgmt';DestinationPrefix='10.0.0.0/8'} }
-            function Remove-NetRoute { param([Parameter(ValueFromPipeline=$true)]$InputObject,[switch]$Confirm,$ErrorAction) process { if($InputObject.Protocol -ne 'NetMgmt' -or $InputObject.DestinationPrefix -ne '0.0.0.0/0'){throw 'Wrong route removed'}; $script:calls+='route' } }
+            function Remove-NetRoute { param([Parameter(ValueFromPipeline=$true)]$InputObject,[switch]$Confirm) process { if($InputObject.Protocol -ne 'NetMgmt' -or $InputObject.DestinationPrefix -ne '0.0.0.0/0'){throw 'Wrong route removed'}; $script:calls+='route' } }
             function Get-NetIPAddress { param($InterfaceIndex,$AddressFamily,$ErrorAction) if($InterfaceIndex -ne 47){throw 'Wrong IP interface'}; [pscustomobject]@{PrefixOrigin='Manual'};[pscustomobject]@{PrefixOrigin='Dhcp'} }
-            function Remove-NetIPAddress { param([Parameter(ValueFromPipeline=$true)]$InputObject,[switch]$Confirm,$ErrorAction) process { if($InputObject.PrefixOrigin -ne 'Manual'){throw 'Wrong IP removed'}; $script:calls+='ip' } }
+            function Remove-NetIPAddress { param([Parameter(ValueFromPipeline=$true)]$InputObject,[switch]$Confirm) process { if($InputObject.PrefixOrigin -ne 'Manual'){throw 'Wrong IP removed'}; $script:calls+='ip' } }
             function Set-NetIPInterface { param($InterfaceIndex,$AddressFamily,$Dhcp,$ErrorAction) if($InterfaceIndex -ne 47 -or $Dhcp -ne 'Enabled'){throw 'Wrong DHCP target'}; $script:calls+='dhcp' }
             function Set-DnsClientServerAddress { param($InterfaceIndex,[switch]$ResetServerAddresses,$ErrorAction) if($InterfaceIndex -ne 47 -or !$ResetServerAddresses){throw 'Wrong DNS target'}; $script:calls+='dns' }
             """;
