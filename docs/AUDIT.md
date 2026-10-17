@@ -1,7 +1,18 @@
 # Current audit and validation / 当前审计与验证
 
-当前发布版本：**1.12.1**。Windows 候选和正式发布验证均通过；历史版本记录保留。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前发布版本：**1.12.2**。Windows 候选和正式发布验证均通过；历史版本记录保留。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## Verified release 1.12.2 / 简化界面与关闭选择发布
+
+[Successful tag workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39018090724) and [published v1.12.2 release](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.12.2), verified 2026-10-17:
+
+- Immutable tag commit: `bd7fbe21ff4f92f84a07e5135c2c1d8a8628332c`. This adds only candidate validation documentation and real screenshots to the tested source. Earlier tags remain unchanged; post-release screenshots/records do not retarget this tag.
+- All release gates pass again: 154 .NET tests on Windows x64 and native ARM64, 2 opted-in x64 firewall integration tests, 38 Go test functions, 13 installer contracts, 420 bilingual resources, native helpers and pinned-Go/NuGet dependency checks. All ten packages build.
+- Both actual x64 installer lifecycles, native ARM64 MyGo Start Menu and real Finish-page launch, default-Cancel and explicit-Exit/engine cleanup, independent shortcut/reinstall/uninstall cases, and side-by-side preservation pass. Both MyGo native architectures verify work-area fit, native controls, busy veto, maximized-state preservation, Cancel/hide/show/Exit HWND interaction, 144 view combinations, 20 scrolled captures and four bilingual compact/standard close-choice captures. WinUI repeats 180 native view combinations.
+- Release is latest, neither draft nor prerelease, with exactly 11 non-empty assets: five portable ZIPs, five EXE installers and SHA256SUMS.txt. Downloaded every asset and ran `python3 scripts/verify-release.py artifacts/release-v1.12.2 1.12.2`: all ten SHA-256 hashes, five ZIP CRCs, frontend/engine PE architectures and administrator manifests, version/production identifiers, complete runtimes, documentation and original licenses pass. Checksums do not replace code signing.
+- Both READMEs now use the tag run's actual Windows captures, including the uncluttered overview, compact layout and on-demand close dialog. Native content captures exclude the OS title bar. No invented host state or mockup is presented as a real screenshot.
+- This is focused source review plus functional/package validation, not a full penetration test. No real network reset, Hyper-V mutation or reboot is performed. Physical devices, mixed-monitor DPI, accessibility, secure-desktop UAC and recovery remain manual acceptance.
 
 ## 1.12.2 focused chrome and close-flow review / 窗口简化专项复核
 

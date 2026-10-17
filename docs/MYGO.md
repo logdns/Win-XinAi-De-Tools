@@ -98,3 +98,6 @@ Regression coverage adds close-choice transitions, native default-Cancel/hide/ex
 
 
 The v1.12.2 [completed Windows candidate](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39017169207) verifies the new close flow on both x64 and native ARM64, including installed Start Menu/Finish launches and engine cleanup. Actual bilingual screenshots cover standard and compact dialogs. Canceling X preserves a maximized window. Localized buttons wrap within a bounded native dialog; backdrop clicks, Enter and Escape cancel safely. See AUDIT.md for the complete validation and remaining physical-device limits.
+
+
+v1.12.2 is published for both editions. Its [successful tag workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39018090724) repeats the native x64/ARM64 close, installer and cleanup gates. Both READMEs now use that tag run's actual screenshots; all ten published packages were downloaded and verified against SHA256SUMS.txt. Earlier release tags are unchanged.
