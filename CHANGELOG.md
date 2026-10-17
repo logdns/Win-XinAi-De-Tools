@@ -3,6 +3,18 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## v1.12.0 - 2026-10-17
+
+### MyGo functional interface / MyGo 功能界面修复
+
+- Replace the generic operation selector and JSON-first console with dedicated native feature pages. Page entry automatically reads current system state; successful or partially failed mutations trigger read-back.
+- Show searchable firewall/connection lists with object-bound row actions, adapter IPv4/DNS/route facts and populated settings, Hyper-V platform/features/virtual adapters/switches, SMB status/addresses and WSL distribution controls with grouped advanced forms.
+- Present three distinct network reset cards and structured backup/step/restart results; retain Cancel-default confirmation, GUID scope and no automatic reboot.
+- Add HTTP status/request counters and per-address copy/open controls, native JSON file import with bounded preview, rule file export and readable activity entries. Raw responses are collapsed diagnostic details only.
+- Add populated-content UI assertions, exact row-target/default-cancel tests, real asynchronous automatic-load/read-back/error/draft tests, and Windows read-only probes plus screenshots for every MyGo page.
+- Keep WinUI x86/x64/ARM64 and MyGo x64/ARM64 releases parallel, with independent installers and default-selected desktop/Start Menu shortcuts. No network reset or Hyper-V mutation is executed by CI.
+
+
 ## 1.11.1 · 2026-10-17
 
 - MyGo 使用正式生产构建模式，移除原生开发者检查器，内置 SDK 包标识与版本并在实际窗口验证；未发布的 v1.11.0 标签保留，不覆盖。

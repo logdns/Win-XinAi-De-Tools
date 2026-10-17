@@ -30,8 +30,9 @@ func main() {
 		log.SetOutput(file)
 	}
 	var err error
-	a.engine, err = startEngine()
+	client, err := startEngine()
 	if err == nil {
+		a.engine = client
 		var health struct{ Version string }
 		var data json.RawMessage
 		data, err = a.engine.call("health", nil, false, "en-US")

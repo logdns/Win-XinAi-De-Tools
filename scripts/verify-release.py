@@ -1,6 +1,6 @@
 """Verify downloaded dual-edition release hashes and portable package contracts.
 
-Usage: python scripts/verify-release.py artifacts/release-v1.11.1 1.11.1
+Usage: python scripts/verify-release.py artifacts/release-v1.12.0 1.12.0
 Does not execute Windows binaries or installers. Actual lifecycle tests run in CI.
 """
 import hashlib

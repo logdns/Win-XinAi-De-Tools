@@ -29,7 +29,7 @@ public sealed class MyGoEngineTests
     {
         await using var engine = new Dispatcher();
         var health = await engine.ExecuteAsync(new Request(1, "health", default));
-        Assert.Contains("1.11.1", JsonSerializer.Serialize(health));
+        Assert.Contains("1.12.0", JsonSerializer.Serialize(health));
         await engine.ExecuteAsync(new Request(2, "shutdown", default));
     }
 

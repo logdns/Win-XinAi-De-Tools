@@ -13,7 +13,7 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-const version = "1.11.1"
+const version = "1.12.0"
 
 type preferences struct {
 	Language string `json:"language"`
@@ -28,18 +28,21 @@ type pendingOperation struct {
 type choice struct{ Label, Value string }
 type application struct {
 	win                      *mygo.Window
-	engine                   *engineClient
+	engine                   engineService
 	prefs                    preferences
 	page                     string
 	history                  []string
 	fields                   map[string]*string
 	choices                  map[string][]choice
-	selected                 map[string]*string
 	results                  map[string]string
 	status                   string
 	busy, failed, confirming bool
 	pending                  pendingOperation
 	fixture                  bool
+	data                     map[string]json.RawMessage
+	readErrors               map[string]string
+	uiState                  featureUI
+	postUpdate               func(func())
 	stats                    struct {
 		Rules    int `json:"rules"`
 		Inbound  int `json:"inbound"`
@@ -48,7 +51,7 @@ type application struct {
 }
 
 func newApplication() *application {
-	a := &application{page: "dashboard", fields: map[string]*string{}, choices: map[string][]choice{}, selected: map[string]*string{}, results: map[string]string{}, prefs: preferences{Language: "zh-CN", Theme: "System"}}
+	a := &application{page: "dashboard", fields: map[string]*string{}, choices: map[string][]choice{}, results: map[string]string{}, data: map[string]json.RawMessage{}, readErrors: map[string]string{}, prefs: preferences{Language: "zh-CN", Theme: "System"}}
 	if data, err := os.ReadFile(preferencePath()); err == nil {
 		_ = json.Unmarshal(data, &a.prefs)
 	}
@@ -114,11 +117,20 @@ func (a *application) value(op, key string) *string {
 	return a.fields[id]
 }
 func (a *application) navigate(id string) {
-	if id == a.page || a.confirming {
+	if id == a.page || a.confirming || a.busy {
+		return
+	}
+	valid := false
+	for _, p := range pages {
+		valid = valid || p.ID == id
+	}
+	if !valid {
 		return
 	}
 	a.history = append(a.history, a.page)
 	a.page = id
+	a.status = ""
+	a.refreshPage()
 }
 
 func (a *application) view(c *ui.Context) {
@@ -142,9 +154,10 @@ func (a *application) view(c *ui.Context) {
 		}
 		ui.Column(c).Grow(1).MinWidth(0).FillHeight().Children(func() {
 			ui.Row(c).Padding(14, 22).Gap(10).Background(theme.Surface).BorderWidth(0, 0, 1, 0).BorderColor(theme.Border).Children(func() {
-				if ui.Button(c, a.tr("返回", "Back")).Disabled(len(a.history) == 0 || a.busy).Clicked() {
+				if ui.Button(c, a.tr("返回", "Back")).Disabled(len(a.history) == 0 || a.busy || a.confirming).Clicked() {
 					a.page = a.history[len(a.history)-1]
 					a.history = a.history[:len(a.history)-1]
+					a.refreshPage()
 				}
 				ui.Text(c, "Win-XinAi-De-Tools-MyGo").Bold().Grow(1)
 				ui.Text(c, "v"+version).TextColor(theme.TextMuted)
@@ -159,7 +172,7 @@ func (a *application) view(c *ui.Context) {
 						selected = label
 					}
 				}
-				if ui.Select(c.Key("compact-navigation"), &selected, labels).Label(a.tr("页面", "Page")).Margin(12).Changed() {
+				if ui.Select(c.Key("compact-navigation"), &selected, labels).Label(a.tr("页面", "Page")).Disabled(a.busy).Margin(12).Changed() {
 					for _, p := range pages {
 						if selected == a.tr(p.ZH, p.EN) {
 							a.navigate(p.ID)
@@ -178,16 +191,12 @@ func (a *application) view(c *ui.Context) {
 					a.settings(c)
 					return
 				}
-				if a.page == "dashboard" {
-					a.overview(c)
-				}
 				if warning := a.warning(a.page); warning != "" {
 					a.card(c, func() {
 						ui.Text(c, a.tr("操作边界与风险", "Safety and scope")).Bold().TextColor(theme.Warning)
 						ui.Text(c, warning)
 					})
 				}
-				a.operationPanel(c)
 				if a.status != "" {
 					a.card(c, func() {
 						color := theme.Success
@@ -200,10 +209,11 @@ func (a *application) view(c *ui.Context) {
 				if a.busy {
 					ui.Text(c, a.tr("正在执行，请勿关闭程序……", "Working. Keep the application open…")).TextColor(theme.TextMuted)
 				}
+				a.featurePage(c)
 				if output := a.results[a.page]; output != "" {
-					a.card(c, func() {
+					ui.Collapsible(c.Key("diagnostics"), a.tr("诊断详情（原始响应）", "Diagnostic details (raw response)"), &a.uiState.diagnostics, func() {
 						ui.Row(c).Gap(8).Children(func() {
-							ui.Text(c, a.tr("结果 / 配置详情", "Results / configuration details")).Bold().Grow(1)
+							ui.Text(c, a.tr("仅供诊断", "For diagnostics only")).Bold().Grow(1)
 							if ui.Button(c, a.tr("复制结果", "Copy results")).Clicked() {
 								c.WriteClipboard(output)
 							}
@@ -257,7 +267,7 @@ func (a *application) overview(c *ui.Context) {
 			ui.Column(c).Grow(1).MinWidth(150).Padding(20).Gap(8).Radius(12).Gradient(c.Theme().Surface, c.Theme().Accent.Alpha(0.09), 35).Border(1, c.Theme().Border).Children(func() {
 				ui.Text(c, a.tr(metric.zh, metric.en)).TextColor(c.Theme().TextMuted)
 				value := "—"
-				if a.results["dashboard"] != "" {
+				if _, ok := a.data["dashboard"]; ok && a.readErrors["dashboard"] == "" {
 					value = fmt.Sprint(metric.n)
 				}
 				ui.Text(c, value).FontSize(38).Bold()
@@ -268,6 +278,14 @@ func (a *application) overview(c *ui.Context) {
 		ui.Text(c, a.tr("原生界面，共享可靠的系统服务", "Native interface. Shared system services.")).FontSize(18).Bold()
 		ui.Text(c, a.tr("MyGo 版和 WinUI 版可同时安装；系统网络、规则与发行版是同一份，修改会影响两个版本。MyGo 界面不使用 WebView，但此版本包含自包含 .NET 服务引擎，不承诺小体积或特定 CPU 占用。", "Install alongside WinUI. Both editions manage the same Windows configuration. No WebView is used; this edition includes a self-contained .NET service engine, with no small-download or CPU-use claim."))
 		ui.Row(c).Gap(8).Wrap().Children(func() {
+			for _, p := range pages {
+				if p.ID == "dashboard" || p.ID == "settings" || p.ID == "reset" || p.ID == "hyperv" {
+					continue
+				}
+				if ui.Button(c, a.tr(p.ZH, p.EN)).Clicked() {
+					a.navigate(p.ID)
+				}
+			}
 			if ui.Button(c, a.tr("打开网络重置", "Open network reset")).Clicked() {
 				a.navigate("reset")
 			}
@@ -291,57 +309,6 @@ func (a *application) settings(c *ui.Context) {
 		if ui.Button(c, "MyGo").Clicked() {
 			c.OpenURL("https://github.com/egoist/mygo")
 		}
-	})
-}
-
-func (a *application) operationPanel(c *ui.Context) {
-	group := actions[a.page]
-	if len(group) == 0 {
-		return
-	}
-	if a.selected[a.page] == nil {
-		value := group[0].ID
-		a.selected[a.page] = &value
-	}
-	selected := a.selected[a.page]
-	a.card(c, func() {
-		labels := []string{}
-		current := ""
-		chosen := group[0]
-		for _, op := range group {
-			label := a.label(op)
-			labels = append(labels, label)
-			if op.ID == *selected {
-				current = label
-				chosen = op
-			}
-		}
-		if ui.Select(c.Key("operation"), &current, labels).Label(a.tr("操作", "Operation")).Disabled(a.busy).Changed() {
-			for _, op := range group {
-				if current == a.label(op) {
-					*selected = op.ID
-					chosen = op
-				}
-			}
-		}
-		for _, key := range actionFields(chosen) {
-			a.field(c, chosen, key)
-		}
-		ui.Row(c).Gap(10).Wrap().Children(func() {
-			if ui.PrimaryButton(c, a.tr("执行所选操作", "Run selected operation")).Disabled(a.busy).Clicked() {
-				a.request(chosen)
-			}
-			if a.page == "reset" && ui.Button(c, a.tr("加载网卡列表", "Load adapters")).Disabled(a.busy).Clicked() {
-				op, _ := actionByID("network.list")
-				a.perform(op, nil, false)
-			}
-			if a.page == "http" && ui.Button(c, a.tr("选择服务目录", "Choose server folder")).Disabled(a.busy).Clicked() {
-				a.pickDirectory(chosen.ID, "path")
-			}
-			if a.page == "smb" && chosen.ID == "smb.share" && ui.Button(c, a.tr("选择共享目录", "Choose shared folder")).Disabled(a.busy).Clicked() {
-				a.pickDirectory(chosen.ID, "path")
-			}
-		})
 	})
 }
 
@@ -412,12 +379,13 @@ func (a *application) request(op action) {
 	if op.ID == "network.reset" && args["mode"] != "AdapterDhcp" {
 		args["adapterId"] = ""
 	}
-	if op.Read {
-		a.perform(op, args, false)
-		return
+	if op.ID == "network.apply" && args["mode"] == "DHCP" {
+		for _, key := range []string{"ip", "gateway", "dns", "dns2"} {
+			args[key] = ""
+		}
+		args["prefix"], args["metric"] = "24", "25"
 	}
-	a.pending = pendingOperation{op, args, a.label(op) + "\n\n" + a.warning(a.page) + "\n\n" + formatArgs(args)}
-	a.confirming = true
+	a.requestArgs(op.ID, args)
 }
 
 func formatArgs(args map[string]string) string {
@@ -443,20 +411,35 @@ func (a *application) perform(op action, args map[string]string, confirmed bool)
 	language := a.prefs.Language
 	go func() {
 		data, err := a.engine.call(op.ID, args, confirmed, language)
-		a.win.Update(func() {
+		a.update(func() {
 			a.busy = false
 			a.failed = err != nil
 			if err != nil {
 				a.status = err.Error()
+				if op.Read {
+					a.readErrors[op.ID] = err.Error()
+				} else {
+					a.refreshPage()
+				}
 				return
 			}
 			a.results[pageID] = formatResult(data)
 			a.failed = resultFailed(data)
-			a.status = a.tr("操作已完成，请检查结果。", "Operation completed. Review the results.")
+			a.status = a.tr("操作已完成。", "Operation completed.")
 			if a.failed {
 				a.status = a.tr("部分操作失败或未完成，请检查逐项结果。", "Some operations failed or were incomplete. Review every result.")
 			}
-			a.loadChoices(op.ID, data)
+			if err := a.acceptData(op.ID, data, args); err != nil {
+				a.readErrors[op.ID] = err.Error()
+				a.failed = true
+				a.status = err.Error()
+			}
+			if !op.Read {
+				if op.ID == "network.apply" {
+					a.uiState.networkConfigID = ""
+				}
+				a.refreshPage()
+			}
 			if op.ID == "dashboard" {
 				log.Print("MyGo ready: dashboard")
 			}

@@ -1,6 +1,6 @@
 # Win-XinAi-De-Tools-MyGo
 
-**Built with MyGo · v1.11.1**
+**Built with MyGo · v1.12.0**
 
 [简体中文](#中文) | [English](#english)
 
@@ -22,14 +22,14 @@
 |---|---|
 | 网络重置 | DNS 缓存、所选 GUID 网卡 DHCP/自动 DNS、Winsock/TCP/IP；操作前备份，取消为默认，不自动重启 |
 | Hyper-V | 共用原版状态探测、功能/启动加载、虚拟网卡启停与受保护交换机操作 |
-| 防火墙/网络/SMB/WSL | 原生操作选择器、参数表单与只读结果；复用原版系统服务与校验，不是完全相同的表格/标签页展示 |
-| 规则导入导出 | 相同 JSON 格式；导入时粘贴 JSON，导出结果可复制/通过原生文件对话框保存 |
-| 连接监控 | 手动查询；关闭连接需从查询结果复制单个连接 JSON，结束进程需填写 PID 并确认 |
-| 临时 HTTP | 目录选择、启动/重启/停止、发现与结果地址；在原生结果区复制地址，不具备原版逐行地址按钮 |
+| 防火墙/网络/SMB/WSL | 专用原生功能页；直接展示规则、网卡配置、共享状态、发行版列表与对应按钮，进入页面自动只读加载；修改后回读 |
+| 规则导入导出 | 相同 JSON 格式；原生文件选择、限 900 KB 的导入预览（最多展示 10 条）、可选粘贴 JSON；导出通过原生文件对话框保存 |
+| 连接监控 | 进入自动查询，支持搜索与手动刷新；每条连接提供关闭 TCP / 结束进程按钮，确认锁定当时的连接对象或 PID，无需复制 JSON |
+| 临时 HTTP | 目录选择、启动/重启/停止、运行状态与请求数、逐条地址复制/打开，以及本机服务发现 |
 | 外观与导航 | 中英文、系统/浅色/深色、历史返回、会话草稿、托盘、`/silent`；界面语言切换保留草稿 |
 | 登录启动 | 本版不提供应用登录自启开关；WSL 发行版自启属于单独的系统功能 |
 
-高级操作需先执行“刷新/查看”加载真实网卡、交换机或发行版列表。网络重置页另有“加载网卡列表”。所有修改均需确认；SMB Guest 共享可能降低整机安全，HTTP 无认证且允许外部访问。阅读结果中的错误、备份路径与重启提示，不要把请求完成当成已验证系统恢复。
+v1.12.0 修复了旧版主要以“选择操作＋执行＋JSON”呈现的问题：现在各页直接展示实际状态与功能控件。进入页面会自动读取状态，仍可手动刷新；网络/SMB 未提交草稿保留，点击另一网卡会按该网卡重新填表。WSL 高级功能按安装、存储、任务、网络/USB 分组，独立展开表单。防火墙、连接与日志每页显示最多 50 项。原始响应默认折叠，仅供诊断。所有修改均需确认；SMB Guest 共享可能降低整机安全，HTTP 无认证且允许外部访问。阅读结果中的错误、备份路径与重启提示，不要把请求完成当成已验证系统恢复。
 
 此版同时包含 Go 原生前端及自包含 .NET 引擎；**不承诺单 EXE、小体积、特定内存/CPU 占用或与 Pulse 相同的性能**。
 
@@ -44,14 +44,14 @@ go test -tags=mygo_noinspector ./...
 go vet -tags=mygo_noinspector ./...
 go run ./cmd/resources -arch amd64
 $env:GOOS='windows'; $env:GOARCH='amd64'; $env:CGO_ENABLED='0'
-go build -tags=mygo_noinspector -trimpath -ldflags='-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=1.11.1' -o ../artifacts/mygo-portable/win-x64/Win-XinAi-De-Tools-MyGo.exe .
+go build -tags=mygo_noinspector -trimpath -ldflags='-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=1.12.0' -o ../artifacts/mygo-portable/win-x64/Win-XinAi-De-Tools-MyGo.exe .
 cd ..
 Copy-Item Assets artifacts/mygo-portable/win-x64/Assets -Recurse
 ```
 
 完整发行包还需复制项目/上游许可，运行 `scripts/collect-go-licenses.py`；以 Actions 工作流为打包依据。ARM64 使用 `win-arm64` / `arm64`。不得把仅完成交叉编译描述为物理 ARM64 验收。
 
-CI 的原生控件测试覆盖 12 页 × 2 语言 × 2 主题 × 3 尺寸；Windows x64 `scripts/mygo-ui-smoke.ps1` 启动实际窗口、只读探测真实引擎并捕获同样 144 个组合，另运行实际安装/快捷方式/卸载检查。MyGo 无障碍、混合 DPI、高对比度与真实 ARM64 设备仍需人工验收；不能继承 WinUI 的辅助技术兼容性结论。
+CI 的填充数据原生控件测试覆盖 12 页 × 2 语言 × 2 主题 × 3 尺寸，另验证实际内容、行按钮目标、确认默认取消、异步自动加载/回读/错误/草稿保留；Windows x64 `scripts/mygo-ui-smoke.ps1` 启动实际窗口、只读探测真实引擎并捕获同样 144 个组合，另运行实际安装/快捷方式/卸载检查。MyGo 无障碍、混合 DPI、高对比度与真实 ARM64 设备仍需人工验收；不能继承 WinUI 的辅助技术兼容性结论。
 
 引擎控制通道仅使用父子进程私有标准输入/输出管道、串行的固定操作白名单，不额外监听 TCP 或命名管道；主动启动的 HTTP 文件服务仍会监听所选端口。`confirmed` 是同权限 GUI 的交互约定，不是隔离其他管理员的安全边界。一般操作最多等待 5 分钟，WSL 长操作 1 小时；超时中止引擎可能留下已执行修改或临时 HTTP 防火墙规则，须在本机检查清理。
 
@@ -61,8 +61,8 @@ A separately installed, native Go/MyGo Windows edition, not a WebView wrapper. I
 
 Downloads support x64 and ARM64 only. Keep the entire package, including the self-contained .NET engine and licenses. Both installers provide independent default-selected desktop/Start Menu tasks and optional postinstall launch. App identities, installation paths and UI preferences are separate; Windows configuration, audit logs and network backups are shared. Avoid concurrent conflicting changes.
 
-The interface uses typed native operation forms and readable results rather than recreating every WinUI table/tab. Rule import accepts pasted JSON; export can be saved through a native file dialog. Connection closing accepts one queried connection object; HTTP URLs are copied from the result area. Application login startup is not offered in this edition. Themes/languages, draft retention, Back, tray and `/silent` are supported. No claim is made about a tiny standalone binary, low CPU/memory, or performance matching Pulse.
+Version 1.12.0 replaces the old operation-selector/JSON-first console with dedicated native feature pages: searchable firewall and connection lists with object-bound buttons, adapter settings populated from real IP/DNS/route data, Hyper-V features/adapters/switches, SMB status/addresses, WSL distribution actions and grouped advanced forms, and readable activity entries. Pages load read-only state on entry and read back after mutations, including partial failures. Network/SMB drafts are preserved; selecting a different adapter repopulates its form. Lists page at 50 items. Rule import uses native file selection (900 KB limit) and a 10-row preview, with optional pasted JSON; export saves through a native file dialog. HTTP URLs have individual copy/open controls. Raw responses remain collapsed diagnostics, never the primary feature view. Application login startup is not offered in this edition. Themes/languages, draft retention, Back, tray and `/silent` are supported. No claim is made about a tiny standalone binary, low CPU/memory, or performance matching Pulse.
 
 Network reset offers DNS cache, selected-adapter IPv4 DHCP/automatic DNS and Winsock/TCP/IP modes. Every reset snapshots configuration before changing it, confirms with Cancel as default and never reboots automatically. Read [network reset and recovery](NETWORK-RESET.md) before use. SMB Guest sharing and unauthenticated external HTTP retain their explicit risks.
 
-CI covers 144 native view combinations, all operation forms, confirmation contracts, Windows read-only engine/native captures and real x64 installer lifecycle. Actual network reset/reboot, physical ARM64, accessibility, mixed DPI and interactive installer presentation require manual acceptance. Five-minute general/one-hour WSL timeouts can interrupt already-applied changes; forced termination can require local HTTP firewall cleanup. Pinning, resource generation and complete packaging commands are in the workflow.
+CI covers 144 populated native view combinations, every operation form, real-content assertions, row-target/default-cancel contracts, asynchronous page load/read-back/error/draft tests, Windows read-only engine/native captures and real x64 installer lifecycle. Actual network reset/reboot, physical ARM64, accessibility, mixed DPI and interactive installer presentation require manual acceptance. Five-minute general/one-hour WSL timeouts can interrupt already-applied changes; forced termination can require local HTTP firewall cleanup. Pinning, resource generation and complete packaging commands are in the workflow.

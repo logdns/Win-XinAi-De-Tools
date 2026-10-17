@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
 )
 
 // This hook visits the actual native Windows window, never a WebView or mock backend.
@@ -32,7 +33,7 @@ func runSmoke(a *application) {
 	}
 	report = append(report, "PASS production build: SDK version matches; native inspector excluded; per-window DevTools disabled")
 	update := func(fn func()) { done := make(chan struct{}); a.win.Update(func() { fn(); close(done) }); <-done }
-	for _, id := range []string{"health", "dashboard", "network.list", "hyperv.status", "wsl.status", "http.discover"} {
+	for _, id := range []string{"health", "dashboard", "firewall.list", "network.list", "hyperv.status", "wsl.status", "smb.status", "smb.addresses", "http.status", "connections.list", "audit.list", "http.discover"} {
 		data, err := a.engine.call(id, nil, false, "en-US")
 		if err != nil {
 			fail(fmt.Errorf("%s: %w", id, err))
@@ -52,7 +53,10 @@ func runSmoke(a *application) {
 			}
 		}
 		update(func() {
-			a.loadChoices(id, data)
+			if err := a.acceptData(id, data, nil); err != nil {
+				fail(err)
+				return
+			}
 			for pageID, group := range actions {
 				for _, op := range group {
 					if op.ID == id {
@@ -63,6 +67,41 @@ func runSmoke(a *application) {
 		})
 		report = append(report, "PASS read-only engine operation: "+id)
 	}
+	// Read the actual selected adapter too, without changing host configuration.
+	if a.uiState.networkID != "" {
+		args := map[string]string{"adapterId": a.uiState.networkID}
+		data, err := a.engine.call("network.read", args, false, "en-US")
+		if err != nil {
+			fail(err)
+			return
+		}
+		update(func() {
+			if err := a.acceptData("network.read", data, args); err != nil {
+				fail(err)
+			}
+		})
+		report = append(report, "PASS selected-adapter IPv4/DNS/route read and editable form population")
+	}
+	// Verify structured content exists in native controls, not only page titles or raw JSON.
+	update(func() {
+		for page, needle := range map[string]string{
+			"firewall":    a.tr("搜索规则、端口或协议", "Search rules, ports or protocol"),
+			"hyperv":      a.tr("平台与启动状态", "Platform and boot status"),
+			"network":     a.tr("IP 与 DNS 设置", "IP and DNS settings"),
+			"smb":         a.tr("当前 SMB 配置", "Current SMB configuration"),
+			"wsl":         a.tr("已安装 WSL", "WSL installed"),
+			"http":        a.tr("文件服务状态", "File server status"),
+			"connections": a.tr("搜索进程、PID、地址或端口", "Search process, PID, address or port"),
+		} {
+			a.page = page
+			tester := ui.NewTester(a.view, 1400, 900)
+			if !tester.HasText(needle) || tester.HasText(a.tr("执行所选操作", "Run selected operation")) {
+				fail(fmt.Errorf("%s has no dedicated feature controls", page))
+				return
+			}
+		}
+	})
+	report = append(report, "PASS dedicated native feature controls with real Windows read-only engine data")
 	combinations := 0
 	for _, language := range []string{"zh-CN", "en-US"} {
 		for _, theme := range []string{"Light", "Dark"} {
@@ -82,7 +121,7 @@ func runSmoke(a *application) {
 						fail(fmt.Errorf("native capture %s: %v", page.ID, err))
 						return
 					}
-					if page.ID == "dashboard" || page.ID == "reset" || page.ID == "hyperv" {
+					{
 						name := fmt.Sprintf("%s-%s-%d.png", page.ID, theme, size[0])
 						if language == "zh-CN" {
 							name = "zh-CN-" + name

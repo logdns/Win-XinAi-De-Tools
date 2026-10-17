@@ -1,7 +1,16 @@
 # Current audit and validation / 当前审计与验证
 
-当前发布版本：**1.11.1**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前候选版本：**1.12.0**；已发布版本：**1.11.1**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## MyGo 1.12.0 functional UI review / 专用功能页修复
+
+The earlier 144-page render checks did not establish that functions were directly visible: the MyGo frontend remained a generic action selector and JSON response panel. This is a product/validation gap, not expected feature parity. Version 1.12.0 replaces it with dedicated native feature views and adds populated-content and real asynchronous read-back checks.
+
+Focused source review covers `mygo/app.go`, `features.go`, `features_state.go`, `transfer.go`, `smoke.go` and the existing dispatcher/model contracts. It is not an independent/full penetration test. Modification calls still require a Cancel-default confirmation; row targets and arguments are frozen; Hyper-V adapter buttons use only the virtual-adapter inventory; protected switch deletion is still enforced by the shared service. Page initialization uses a read-only operation plan and never resets networking, changes Hyper-V or reboots. Failed probes hide cached healthy state. Network drafts are not overwritten by same-adapter refresh; responses for old adapter GUIDs are discarded. Import reads at most 900 KB, previews at most 10 rules and shows a bounded confirmation with rule count and content hash, while the engine retains final validation.
+
+Validation is in progress. No v1.12.0 Windows build, screenshot or published asset is claimed by this candidate entry until the workflow and download verification are recorded.
+
 
 ## Verified release 1.11.1 / 双版本发布与下载校验
 
