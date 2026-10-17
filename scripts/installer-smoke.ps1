@@ -21,6 +21,7 @@ $output = Join-Path $pwd $(if ($Edition -eq 'MyGo') { 'artifacts/installer-smoke
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 # Runner TEMP can contain an 8.3 alias; Shell resolves .lnk targets to long paths.
 Add-Type @'
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 public static class InstallerSmokePath
@@ -151,6 +152,7 @@ function Test-InteractivePostinstallLaunch {
     Remove-Item $logPath -Force -ErrorAction SilentlyContinue
     $setup = Start-Process -FilePath $Installer -ArgumentList @('/SP-', '/NORESTART', '/LANG=english',
         "/DIR=`"$installDirectory`"", "/LOG=`"$output/postinstall-launch.log`"") -PassThru
+    $null = $setup.Handle
     $deadline = (Get-Date).AddSeconds(150)
     $clicked = [Collections.Generic.List[string]]::new()
     while (-not $setup.HasExited -and (Get-Date) -lt $deadline) {
@@ -159,6 +161,7 @@ function Test-InteractivePostinstallLaunch {
         Start-Sleep -Seconds 1
     }
     if (-not $setup.HasExited) { throw 'Interactive installer did not finish (possible postinstall launch error).' }
+    $setup.WaitForExit()
     if ($setup.ExitCode -ne 0 -or -not $clicked.Contains('Finish')) { throw 'Installer did not reach the real Finish/launch path.' }
     $deadline = (Get-Date).AddSeconds(60)
     $loaded = $false
