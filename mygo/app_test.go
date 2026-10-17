@@ -161,3 +161,16 @@ func TestSmokeAndNormalOperationsUseSameReadableResult(t *testing.T) {
 		t.Fatal("string response remained JSON-quoted")
 	}
 }
+
+func TestWindowsSDKVersionMatchesOnlyCurrentRelease(t *testing.T) {
+	for _, value := range []string{version, version + ".0"} {
+		if !matchesReleaseVersion(value) {
+			t.Fatalf("valid SDK version rejected: %s", value)
+		}
+	}
+	for _, value := range []string{"", "1.10.1", version + ".1", "1.11.2.0"} {
+		if matchesReleaseVersion(value) {
+			t.Fatalf("wrong SDK version accepted: %s", value)
+		}
+	}
+}

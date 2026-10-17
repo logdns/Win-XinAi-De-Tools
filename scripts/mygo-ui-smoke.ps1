@@ -7,8 +7,8 @@ $env:WINXINAI_MYGO_SMOKE_DIR = $output
 $process = Start-Process -FilePath (Resolve-Path $Executable) -ArgumentList '--ui-smoke' -PassThru
 try {
     if (-not $process.WaitForExit(300000)) { throw 'MyGo UI smoke timed out.' }
-    if ($process.ExitCode -ne 0) { throw "MyGo exited with code $($process.ExitCode)." }
     if (Test-Path "$output/FAILED.txt") { throw (Get-Content "$output/FAILED.txt" -Raw) }
+    if ($process.ExitCode -ne 0) { throw "MyGo exited with code $($process.ExitCode)." }
     if (-not (Test-Path "$output/verification.json")) { throw 'MyGo did not produce a verification report.' }
     Get-Content "$output/verification.json"
     $log = Join-Path $env:LOCALAPPDATA 'Win-XinAi-De-Tools-MyGo/startup.log'

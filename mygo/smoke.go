@@ -26,7 +26,7 @@ func runSmoke(a *application) {
 		fail(fmt.Errorf("shared engine not running"))
 		return
 	}
-	if mygo.IsDev() || !mygo.App.IsPackaged() || mygo.App.Version() != version {
+	if mygo.IsDev() || !mygo.App.IsPackaged() || !matchesReleaseVersion(mygo.App.Version()) {
 		fail(fmt.Errorf("MyGo production/package version mismatch: dev=%t packaged=%t SDK=%s expected=%s", mygo.IsDev(), mygo.App.IsPackaged(), mygo.App.Version(), version))
 		return
 	}
@@ -103,3 +103,6 @@ func runSmoke(a *application) {
 	update(func() { a.busy = false })
 	mygo.App.Quit()
 }
+
+// Windows VERSIONINFO uses four numeric fields even for a three-part release.
+func matchesReleaseVersion(value string) bool { return value == version || value == version+".0" }
