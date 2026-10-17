@@ -49,7 +49,7 @@
 
 ## 界面
 
-以下为 [v1.12.2 正式发布构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。MyGo 现为专用功能界面，不再是操作下拉框与 JSON 控制台。网卡设置截图是从实际 DHCP 网卡回填后、尚未提交的 Static 草稿，未修改主机网络。
+以下为 [v1.12.2 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39017169207)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。MyGo 现为专用功能界面，不再是操作下拉框与 JSON 控制台。网卡设置截图是从实际 DHCP 网卡回填后、尚未提交的 Static 草稿，未修改主机网络。
 
 ### 概览
 
@@ -75,7 +75,7 @@
 
 ![v1.12.2 MyGo 中文原生概览](docs/screenshots/mygo-dashboard.zh-CN.png)
 
-### Built with MyGo：小屏适配与窗口控制
+### Built with MyGo：小屏适配与关闭选择
 
 首次窗口按屏幕工作区计算尺寸；窗口控制只使用标准 Windows 标题栏，点击系统 X 才显示“最小化到托盘 / 退出程序 / 取消”，不再常驻一排按钮。下图为实际原生内容截图，不包含系统标题栏，不是整张桌面截图；Alt+Left 仍可按历史返回。
 

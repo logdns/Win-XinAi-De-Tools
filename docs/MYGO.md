@@ -95,3 +95,6 @@ Native X opens a modal choice, never an always-visible control strip: Hide to tr
 v1.12.2 移除左侧重复品牌、顶部重复标题与文字窗口按钮。点击系统 X 才弹出关闭选项，默认取消；保留原生窗口边框、小屏工作区适配、危险操作确认、语言/主题和会话草稿。
 
 Regression coverage adds close-choice transitions, native default-Cancel/hide/explicit-Exit HWND input, compact dialog bounds, history shortcuts and installer Start Menu/Finish-launch shutdown through the real choice dialog. Network/Hyper-V changes remain excluded from CI. Candidate and release results are recorded separately in AUDIT.md, not inferred from the previous release.
+
+
+The v1.12.2 [completed Windows candidate](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39017169207) verifies the new close flow on both x64 and native ARM64, including installed Start Menu/Finish launches and engine cleanup. Actual bilingual screenshots cover standard and compact dialogs. Canceling X preserves a maximized window. Localized buttons wrap within a bounded native dialog; backdrop clicks, Enter and Escape cancel safely. See AUDIT.md for the complete validation and remaining physical-device limits.

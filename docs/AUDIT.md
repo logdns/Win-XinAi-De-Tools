@@ -1,6 +1,6 @@
 # Current audit and validation / 当前审计与验证
 
-当前发布版本：**1.12.1**。Windows 候选和正式发布验证均通过；历史版本记录保留。。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前发布版本：**1.12.1**。Windows 候选和正式发布验证均通过；历史版本记录保留。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
 
 ## 1.12.2 focused chrome and close-flow review / 窗口简化专项复核
@@ -11,7 +11,17 @@ Scope: changes to MyGo view chrome, native close handling, tray availability and
 - Native close is vetoed until the user explicitly approves Exit. Busy operations and pending mutation confirmations cannot be interrupted. A close dialog blocks background navigation/operation requests. Cancel is last/default; Escape never approves Exit. Explicit Exit uses App.Quit and the existing engine cleanup, not process termination; approval prevents recursive prompts.
 - Hide is offered only after successful native tray creation; without a tray `/silent` also shows the window. Hiding leaves the engine/HTTP alive, while normal Exit closes them. No new command, network listener, external input or system-mutation capability is introduced.
 - Local regression: 154 .NET tests; MyGo tests/race/vet; 420 bilingual resources and release metadata; 13 installer contracts; x64/ARM64 cross-compilation. Cross-compilation is not native Windows execution. New native X/default-Cancel/hide/explicit-Exit HWND automation and real installer checks must pass on both Windows architectures before release. No real network reset, Hyper-V mutation or reboot is performed.
-- Manual limits remain mixed-monitor DPI, physical-device behavior, secure-desktop UAC, accessibility and real system configuration/recovery. Candidate/tag run IDs and fresh actual screenshots will be added after completion.
+- Manual limits remain mixed-monitor DPI, physical-device behavior, secure-desktop UAC, accessibility and real system configuration/recovery. The completed candidate evidence follows; published-tag/package checks remain a separate step.
+
+## Verified 1.12.2 candidate / 简化窗口候选验证
+
+[Successful complete Windows candidate](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39017169207), source `8303c758f302775a0fa51f9777c8f16208643311`, 2026-10-17:
+
+- 154 .NET tests on Windows x64 and native Windows ARM64, 2 opted-in x64 firewall integration tests, 38 Go test functions, 13 installer contracts, 420 bilingual resources, native helper builds and Go/NuGet dependency checks pass. Local Go race/vet and x64/ARM64 cross-compilation also pass.
+- Actual native MyGo windows on both architectures verify initial work-area fit, minimize/maximize/restore, busy-close veto, X opening a modal without unmaximizing the window, Enter/Escape cancellation, hide/show and explicit Exit through real HWND keyboard events. Normal engine shutdown is required. Both Start Menu launches and actual installer Finish launches exercise default Cancel followed by explicit Exit, never a CI close bypass.
+- Both editions' x64 installers, MyGo native ARM64 installation/reinstallation/uninstallation, all shortcut options and side-by-side preservation checks pass. All ten packages build. WinUI covers 180 combinations; each MyGo native architecture captures 144 combinations, 20 scrolled details and four bilingual compact/standard close dialogs.
+- Reviewed real Windows screenshots replace the older toolbar screenshots in both READMEs. The SDK's fixed-width alert overflowed with three localized buttons during an earlier successful candidate (`39016032589`); it was replaced with a bounded native dialog and wrapping button row. New tests assert every button fits inside the padded dialog, not merely inside the application window. Cancel remains the default, including after reopening. Native close now also preserves maximized state.
+- Two early runs were canceled while refining the HWND automation (keyboard events must target the MyGoSurface child, with key-down/up queued before teardown); another was canceled when adding maximized-state preservation. No failed assertion was disabled. No real network reset, Hyper-V mutation or reboot was executed. Native hosted ARM64 is not a physical-device/DPI/accessibility certificate.
 
 ## Verified release 1.12.1 / 安装、窗口与中文修复发布
 
