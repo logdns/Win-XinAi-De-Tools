@@ -33,14 +33,22 @@ public sealed partial class NetworkSettingsPage : Page
         SetBusy(true);
         try
         {
-            var selectedName = (AdapterSelector.SelectedItem as NetworkAdapterModel)?.Name;
+            var selectedId = (AdapterSelector.SelectedItem as NetworkAdapterModel)?.InterfaceGuid;
             var adapters = await NetworkConfigurationService.ListAdaptersAsync();
-            _adapters.Clear();
-            foreach (var adapter in adapters) _adapters.Add(adapter);
-            var selected = _adapters.FirstOrDefault(adapter => adapter.Name == selectedName) ?? _adapters.FirstOrDefault();
-            AdapterSelector.SelectedItem = selected;
+            var selected = adapters.FirstOrDefault(adapter => adapter.InterfaceGuid == selectedId) ?? adapters.FirstOrDefault();
+            // Suppress the async selection event: refresh owns the complete query lifetime.
+            _updating = true;
+            try
+            {
+                _adapters.Clear();
+                foreach (var adapter in adapters) _adapters.Add(adapter);
+                AdapterSelector.SelectedItem = selected;
+            }
+            finally { _updating = false; }
             if (selected is null)
                 ShowError(App.Text("Network_NoAdapters"));
+            else
+                await LoadConfigurationAsync(selected);
         }
         catch (Exception ex)
         {
@@ -56,14 +64,7 @@ public sealed partial class NetworkSettingsPage : Page
         SetBusy(true);
         try
         {
-            var configuration = await NetworkConfigurationService.GetConfigurationAsync(adapter);
-            Populate(configuration);
-            CurrentConfigText.Text = string.Format(App.Text("Network_CurrentFormat"),
-                configuration.DhcpEnabled ? App.Text("Network_Dhcp") : App.Text("Network_Static"),
-                string.IsNullOrWhiteSpace(configuration.IPv4Address) ? "-" : $"{configuration.IPv4Address}/{configuration.PrefixLength}",
-                string.IsNullOrWhiteSpace(configuration.Gateway) ? "-" : configuration.Gateway,
-                configuration.DnsDisplay,
-                configuration.DefaultRouteMetric == 0 ? "-" : configuration.DefaultRouteMetric.ToString());
+            await LoadConfigurationAsync(adapter);
         }
         catch (Exception ex)
         {
@@ -71,6 +72,18 @@ public sealed partial class NetworkSettingsPage : Page
             AuditLogService.Record("ReadNetworkConfiguration", ex.Message, false);
         }
         finally { SetBusy(false); }
+    }
+
+    private async Task LoadConfigurationAsync(NetworkAdapterModel adapter)
+    {
+        var configuration = await NetworkConfigurationService.GetConfigurationAsync(adapter);
+        Populate(configuration);
+        CurrentConfigText.Text = string.Format(App.Text("Network_CurrentFormat"),
+            configuration.DhcpEnabled ? App.Text("Network_Dhcp") : App.Text("Network_Static"),
+            string.IsNullOrWhiteSpace(configuration.IPv4Address) ? "-" : $"{configuration.IPv4Address}/{configuration.PrefixLength}",
+            string.IsNullOrWhiteSpace(configuration.Gateway) ? "-" : configuration.Gateway,
+            configuration.DnsDisplay,
+            configuration.DefaultRouteMetric == 0 ? "-" : configuration.DefaultRouteMetric.ToString());
     }
 
     private void AddressModeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -137,8 +150,7 @@ public sealed partial class NetworkSettingsPage : Page
 
     private async Task AdapterSelector_RefreshAsync(NetworkAdapterModel adapter)
     {
-        var configuration = await NetworkConfigurationService.GetConfigurationAsync(adapter);
-        Populate(configuration);
+        await LoadConfigurationAsync(adapter);
     }
 
     private NetworkConfigurationRequest? BuildRequest(out string? error)

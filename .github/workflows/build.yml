@@ -135,6 +135,7 @@ jobs:
           matches Settings > System > About > System type.
           "@
           Set-Content -Path "$publishDirectory\README.txt" -Value $instructions -Encoding UTF8
+          Copy-Item docs/NETWORK-RESET.md,docs/HYPER-V.md,docs/INSTALLATION.md $publishDirectory
       - name: Smoke test packaged application startup
         if: matrix.rid == 'win-x64'
         shell: pwsh
@@ -377,6 +378,7 @@ jobs:
           Copy-Item LICENSE,THIRD-PARTY-NOTICES.md $target
           Copy-Item licenses "$target/licenses" -Recurse
           Copy-Item docs/MYGO.md "$target/README.md"
+          Copy-Item docs/NETWORK-RESET.md,docs/HYPER-V.md,docs/INSTALLATION.md $target
           Push-Location mygo
           python ../scripts/collect-go-licenses.py "../$target"
           if ($LASTEXITCODE -ne 0) { throw 'License collection failed.' }
