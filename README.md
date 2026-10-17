@@ -43,7 +43,7 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-Actual Windows x64 screenshots from the [v1.12.0 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39005023882). System status and available controls depend on the host configuration. MyGo now shows dedicated feature pages, not an operation-selector/JSON console. The adapter settings screenshot is an unsubmitted Static draft populated from a DHCP adapter; no network configuration was changed.
+Actual Windows x64 screenshots from the [v1.12.0 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39005734844). System status and available controls depend on the host configuration. MyGo now shows dedicated feature pages, not an operation-selector/JSON console. The adapter settings screenshot is an unsubmitted Static draft populated from a DHCP adapter; no network configuration was changed.
 
 ### Dashboard
 

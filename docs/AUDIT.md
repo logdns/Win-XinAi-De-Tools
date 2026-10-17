@@ -1,7 +1,19 @@
 # Current audit and validation / 当前审计与验证
 
-当前候选版本：**1.12.0**；已发布版本：**1.11.1**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前发布版本：**1.12.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
+
+## Verified release 1.12.0 / 专用功能界面双版本发布
+
+[Successful tag workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39005734844) and [published v1.12.0 release](https://github.com/logdns/Win-XinAi-De-Tools/releases/tag/v1.12.0), verified 2026-10-17:
+
+- Tag resolves to `bf126e9a3b3f05ab52fd312ace677b9912825346`, the validated implementation plus candidate documentation/screenshots. Existing v1.11.1 and v1.11.0 tags remain unchanged. Post-release documentation refreshes actual tag-run screenshots without retargeting the release.
+- The tag workflow repeats 151 .NET 8 tests, 2 firewall integration tests, 33 Go test functions, 13 installer contracts, both dependency audits, all ten builds, 180 WinUI native combinations and 144 MyGo combinations plus 20 scrolled feature/settings captures. Both real x64 installer lifecycles and the independent simultaneous-installation/uninstall test pass again.
+- The release is public/latest, neither draft nor prerelease. Exactly **11 non-empty assets**: WinUI x86/x64/ARM64 ZIP and EXE, MyGo x64/ARM64 ZIP and EXE, and one `SHA256SUMS.txt`. Screenshots/verification logs remain separate Actions artifacts.
+- Downloaded all ten packages and matched every SHA-256 to the published manifest. `scripts/verify-release.py artifacts/release-v1.12.0 1.12.0` also passes five ZIP CRCs, native frontend/engine PE architectures and administrator manifests, version/production-tag/SDK identifiers, self-contained .NET/ASP.NET/WinUI/Skia runtime presence as applicable, recovery documentation and original Go licenses. This local package check does not execute installers; actual Windows x64 execution is the CI evidence above. Hashes are not a signing certificate.
+- Both READMEs use the release workflow's real native screenshots, including the new MyGo rule lists, populated settings, Hyper-V and connection controls. Original JSON-console screenshots are replaced, not presented as the current UI. Static configuration and switch-creation forms are unsubmitted drafts, not evidence of changes to the host.
+- No real network reset, Hyper-V mutation or reboot is executed. Physical x86/ARM64, reset/reboot recovery, accessibility/mixed DPI and interactive installer/Start Menu indexing checks remain manual acceptance. The focused source review below is not an independent full penetration test.
+
 
 ## MyGo 1.12.0 functional UI review / 专用功能页修复
 
