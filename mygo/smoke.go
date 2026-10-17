@@ -77,6 +77,7 @@ func runSmoke(a *application) {
 			fail(err)
 		}
 	}
+	a.win.Maximize()
 	a.win.Close()
 	time.Sleep(200 * time.Millisecond)
 	update(func() {
@@ -98,6 +99,11 @@ func runSmoke(a *application) {
 		fail(windowError)
 		return
 	}
+	if !a.win.IsMaximized() {
+		fail(fmt.Errorf("opening/canceling close choice changed maximized state"))
+		return
+	}
+	a.win.Unmaximize()
 	if a.trayAvailable {
 		a.win.Close()
 		time.Sleep(200 * time.Millisecond)

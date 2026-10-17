@@ -104,7 +104,9 @@ func main() {
 			if !a.requestClose() {
 				e.PreventDefault()
 				a.win.Show()
-				a.win.Restore()
+				if a.win.IsMinimized() {
+					a.win.Restore()
+				}
 				a.win.Focus()
 				a.win.Invalidate()
 			}
