@@ -51,7 +51,7 @@ func runSmoke(a *application) {
 			for pageID, group := range actions {
 				for _, op := range group {
 					if op.ID == id {
-						a.results[pageID] = string(data)
+						a.results[pageID] = formatResult(data)
 					}
 				}
 			}

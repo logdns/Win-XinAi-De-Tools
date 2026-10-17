@@ -450,22 +450,8 @@ func (a *application) perform(op action, args map[string]string, confirmed bool)
 				a.status = err.Error()
 				return
 			}
-			var pretty bytes.Buffer
-			if json.Indent(&pretty, data, "", "  ") == nil {
-				a.results[pageID] = pretty.String()
-			} else {
-				a.results[pageID] = string(data)
-			}
-			var str string
-			if json.Unmarshal(data, &str) == nil {
-				a.results[pageID] = str
-			}
-			var result map[string]any
-			if json.Unmarshal(data, &result) == nil {
-				if success, ok := result["success"].(bool); ok && !success {
-					a.failed = true
-				}
-			}
+			a.results[pageID] = formatResult(data)
+			a.failed = resultFailed(data)
 			a.status = a.tr("操作已完成，请检查结果。", "Operation completed. Review the results.")
 			if a.failed {
 				a.status = a.tr("部分操作失败或未完成，请检查逐项结果。", "Some operations failed or were incomplete. Review every result.")
@@ -476,6 +462,29 @@ func (a *application) perform(op action, args map[string]string, confirmed bool)
 			}
 		})
 	}()
+}
+
+func formatResult(data json.RawMessage) string {
+	var text string
+	if json.Unmarshal(data, &text) == nil {
+		return text
+	}
+	var pretty bytes.Buffer
+	if json.Indent(&pretty, data, "", "  ") == nil {
+		return pretty.String()
+	}
+	return string(data)
+}
+
+func resultFailed(data json.RawMessage) bool {
+	var success bool
+	if json.Unmarshal(data, &success) == nil && string(data) != "null" {
+		return !success
+	}
+	var result struct {
+		Success *bool `json:"success"`
+	}
+	return json.Unmarshal(data, &result) == nil && result.Success != nil && !*result.Success
 }
 
 func (a *application) loadChoices(op string, data json.RawMessage) {

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -136,5 +137,27 @@ func TestResetConfirmationRemainsReachableAtMinimumSize(t *testing.T) {
 		if a.confirming || a.busy {
 			t.Fatal("minimum-size default did not cancel")
 		}
+	}
+}
+
+func TestPartialAndFalseOperationResultsRemainFailures(t *testing.T) {
+	for _, data := range []string{`false`, `{"success":false,"failedCount":1}`} {
+		if !resultFailed([]byte(data)) {
+			t.Fatalf("failure hidden: %s", data)
+		}
+	}
+	for _, data := range []string{`true`, `{"success":true}`, `{"completed":true}`, `[]`, `null`} {
+		if resultFailed([]byte(data)) {
+			t.Fatalf("unexpected failure: %s", data)
+		}
+	}
+}
+
+func TestSmokeAndNormalOperationsUseSameReadableResult(t *testing.T) {
+	if got := formatResult([]byte(`{"success":false,"steps":["one"]}`)); !strings.Contains(got, "\n  \"success\"") {
+		t.Fatal("JSON not formatted")
+	}
+	if got := formatResult([]byte(`"plain text"`)); got != "plain text" {
+		t.Fatal("string response remained JSON-quoted")
 	}
 }
