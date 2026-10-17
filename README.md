@@ -32,23 +32,22 @@ Install identities, shortcuts and UI preferences are independent. Inspired by [P
 ## Features
 
 - **Local network reset**: DNS cache, selected-adapter DHCP/automatic DNS, or system Winsock/TCP/IP. Snapshot first, Cancel by default, no automatic reboot; see [reset and recovery](docs/NETWORK-RESET.md).
-
 - **Temporary HTTP**: configurable port (8980 by default), folder selection/opening, Start/Stop/Restart, individual URL copy/open actions, and local HTTP detection with port/process details. Supports external access; see the [HTTP guide](docs/TEMPORARY-HTTP.md).
 - **Firewall and networking**: manage rules, query ports, configure adapters/DNS/routes, inspect connections and processes, import/export rules, and review operation logs.
 - **SMB**: manage SMB Direct, SMB 1.0/CIFS, and folder sharing.
 - **WSL**: install and manage distributions, open terminals, import/export/migrate, and manage storage, proxies, port forwarding, and USB devices.
 - **Hyper-V**: feature-only or complete platform/boot disable, virtual adapter controls, internal/private/external switches and host NIC sharing. See the [Hyper-V/network guide](docs/HYPER-V.md).
-- **Desktop**: saved appearance/language, history-based Back, notification-area support, logon startup, and `/silent`.
+- **Desktop**: saved appearance/language, history-based Back, notification-area support, WinUI logon startup, and `/silent`.
 
 System configuration changes require administrator privileges. Enable the legacy SMB 1.0 protocol only when needed. One-command WSL installation requires Windows 10 2004 or later.
 
 ## Interface
 
-Actual Windows x64 screenshots from the [v1.10.1 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38403144791). System status and available controls depend on the host configuration.
+Actual Windows x64 screenshots from the [v1.11.0 candidate UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060). System status and available controls depend on the host configuration.
 
 ### Dashboard
 
-![v1.10.1 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
+![v1.11.0 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
 
 ### Hyper-V features and boot configuration
 
@@ -60,10 +59,24 @@ Actual Windows x64 screenshots from the [v1.10.1 release UI verification](https:
 
 ### Local HTTP discovery
 
-![v1.10.1 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
+![v1.11.0 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
+
+### Local network reset (WinUI)
+
+![v1.11.0 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
+
+### Built with MyGo: native overview
+
+![v1.11.0 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
+
+### Built with MyGo: network reset
+
+![v1.11.0 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
 
 ## Documentation and development
 
+- [Local network reset, snapshots and recovery](docs/NETWORK-RESET.md)
+- [MyGo edition, differences and build](docs/MYGO.md)
 - [Hyper-V settings, network risks and recovery](docs/HYPER-V.md)
 - [HTTP usage and internet access](docs/TEMPORARY-HTTP.md)
 - [UI behavior and validation](docs/UI-AND-VALIDATION.md)

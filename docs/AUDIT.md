@@ -12,7 +12,24 @@ This page summarizes the current implementation and completed validation.
 - Protocol limits: frontend request 1 MiB, response 32 MiB; engine line length is checked after allocation, suitable for the trusted private parent only, not an untrusted network protocol. General requests time out after five minutes, WSL after one hour, shutdown after fifteen seconds. Forced termination can leave system changes or an executable/port-scoped HTTP rule; inspect locally before retrying.
 - Separate AppIds, directories, names, preferences and exact shortcut cleanup prevent intentional cross-edition uninstall/migration. Windows configuration/audit/backups are shared by design; no cross-process system-operation locking is provided. Avoid simultaneous conflicting operations.
 - MyGo is pinned to an immutable upstream version; original licenses and notices for all modules/Go are packaged. Initial Go 1.27.1 vulnerability scanning found standard-library advisories; build toolchain is raised to the fixed Go 1.27.2 rather than suppressing findings. MyGo has native controls, but accessibility/DPI and physical ARM64 acceptance are not inherited from WinUI.
-- Windows CI and release/download verification are still pending for this candidate. Historical results below do not validate 1.11.0. Real reset, reboot and recovery require a disposable, locally accessible Windows device and are not executed by CI.
+- Windows candidate validation is recorded below; tag publication and downloaded-asset verification remain pending. Historical pre-1.11.0 results are not evidence for this version. Real reset, reboot and recovery require a disposable, locally accessible Windows device and are not executed by CI.
+
+## Verified 1.11.0 candidate / 双版本候选验证
+
+[Successful Windows candidate workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060), code commit `554620a` (full commit recorded by the workflow), 2026-10-17. The tag preparation adds documentation and actual screenshots only.
+
+| Check | Result |
+|---|---|
+| .NET 8 on Windows | 151 tests passed, including GUID/confirmation/result guards and PowerShell parser/mocked-reset contracts; separate opted-in firewall integration: 2 passed |
+| MyGo | 12 Go test functions, 144 headless native view combinations, every operation form, minimum-size Cancel-default confirmation, preferences, transport/error contracts; native resource-tool compilation |
+| Packaged x64 interfaces | WinUI: 180 combinations plus existing HTTP lifecycle/clipboard/discovery; MyGo: 144 actual captures and 6 read-only engine operations with matching version |
+| Localization and metadata | 420 bilingual WinUI resources, 15 WinUI pages, synchronized 1.11.0 metadata across both editions/engine/installers |
+| Dependencies | Three direct/transitive NuGet audits and both pinned-Go scans passed; Go 1.27.2 replaces vulnerable 1.27.1; Rust/Go helper compilation checks passed |
+| Actual x64 installers | Each edition passed default/none/desktop-only/Start-Menu-only/both selections without postinstall launch, real shortcut targets/icons/workdirs, installed Start Menu launch, reinstallation and uninstall |
+| Side-by-side installation | Both real installers coexist; WinUI reinstall/deselection/uninstall preserves MyGo executable/shortcuts; final cleanup removes both editions' links |
+| Packages and visuals | All 10 packages built; actual light/dark/compact screenshots reviewed, including corrected dark network warning contrast; source/runtime/physical-device limits remain explicit |
+
+Earlier candidates exposed a mocked PowerShell common-parameter conflict and the new warning's light-background/dark-text mismatch. The final candidate fixes those checks, serializes network refresh, uses GUID-scoped IP/DNS targeting, shows false/partial engine results as failures, and makes smoke/normal result rendering identical. No actual network reset, system reboot or Hyper-V mutation is executed in CI. MyGo's read-only GPU captures do not prove accessibility or physical ARM64 acceptance. This is focused review plus functional validation, not independent penetration testing.
 
 ## Installer 1.10.1 focused review / 安装入口专项审查
 

@@ -32,7 +32,6 @@
 ## 功能
 
 - **本地网络重置**：清理 DNS 缓存、所选网卡 DHCP/自动 DNS、整机 Winsock/TCP/IP；先备份、默认取消、不自动重启，见[重置与恢复](docs/NETWORK-RESET.md)。
-
 - **临时 HTTP**：默认端口 8980，可自定义端口、选择/打开目录、启动/停止/重启；逐条复制和打开地址，自动检测本机 HTTP 服务并显示端口和进程。支持外部访问，详见 [HTTP 使用指南](docs/TEMPORARY-HTTP.md)。
 - **防火墙与网络**：管理规则，查询端口，配置网卡、DNS 和路由，监控连接和进程，导入/导出规则与查看操作日志。
 - **SMB**：管理 SMB Direct、SMB 1.0/CIFS 和共享目录。
@@ -44,11 +43,11 @@
 
 ## 界面
 
-以下为 [v1.10.1 发布构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38403144791)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
+以下为 [v1.11.0 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/38998132060)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。
 
 ### 概览
 
-![v1.10.1 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
+![v1.11.0 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
 
 ### Hyper-V 功能与启动配置
 
@@ -60,10 +59,24 @@
 
 ### 本机 HTTP 服务检测
 
-![v1.10.1 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
+![v1.11.0 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
+
+### 本地网络重置（原版 WinUI）
+
+![v1.11.0 DNS、网卡和 Winsock/TCP/IP 重置，深色风险提示](docs/screenshots/network-reset.png)
+
+### Built with MyGo：原生概览
+
+![v1.11.0 MyGo 中文原生概览](docs/screenshots/mygo-dashboard.zh-CN.png)
+
+### Built with MyGo：网络重置
+
+![v1.11.0 MyGo 中文网络重置与风险提示](docs/screenshots/mygo-reset.zh-CN.png)
 
 ## 文档与开发
 
+- [本地网络重置、备份与恢复](docs/NETWORK-RESET.md)
+- [MyGo 版本差异与构建](docs/MYGO.md)
 - [Hyper-V 设置、网络风险与恢复](docs/HYPER-V.md)
 - [HTTP 使用与外网访问](docs/TEMPORARY-HTTP.md)
 - [界面行为与验证](docs/UI-AND-VALIDATION.md)
