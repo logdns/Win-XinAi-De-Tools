@@ -52,7 +52,7 @@ public static class InstallerSmokePath
                 GetClassName(child, type, type.Capacity);
                 string name = text.ToString().Replace("&", "").Trim();
                 if (type.ToString() == "TNewButton" && IsWindowVisible(child) && IsWindowEnabled(child)
-                    && (name == "Next >" || name == "Install" || name == "Finish")) {
+                    && (name == "Next" || name == "Next >" || name == "Install" || name == "Finish")) {
                     PostMessage(child, 0x00F5, IntPtr.Zero, IntPtr.Zero);
                     clicked = name;
                     return false;
