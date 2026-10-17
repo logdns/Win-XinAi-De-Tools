@@ -35,8 +35,8 @@ var actions = map[string][]action{
 	},
 	"network": {
 		{"network.list", "查看网卡", "List adapters", "", true},
-		{"network.read", "读取所选网卡配置", "Read selected adapter", "adapter", true},
-		{"network.apply", "应用 IP/DNS 配置", "Apply IP/DNS settings", "adapter mode ip prefix gateway dns dns2 metric", false},
+		{"network.read", "读取所选网卡配置", "Read selected adapter", "adapterId", true},
+		{"network.apply", "应用 IP/DNS 配置", "Apply IP/DNS settings", "adapterId mode ip prefix gateway dns dns2 metric", false},
 	},
 	"reset": {{"network.reset", "重置本地网络设置", "Reset local network settings", "mode adapterId", false}},
 	"hyperv": {

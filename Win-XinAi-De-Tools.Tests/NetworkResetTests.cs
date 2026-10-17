@@ -42,6 +42,18 @@ public sealed class NetworkResetTests
     }
 
     [Fact]
+    public void NetworkConfigurationAlsoRequiresGuidAndIgnoresAliasWildcards()
+    {
+        var id = Guid.NewGuid();
+        var script = NetworkConfigurationService.BuildAdapterLookup(new NetworkAdapterModel { Name = "*'; $(whoami)", InterfaceGuid = id });
+        Assert.Contains(id.ToString("D"), script);
+        Assert.Contains("$a.Count -ne 1", script);
+        Assert.DoesNotContain("whoami", script);
+        Assert.DoesNotContain("-Name", script);
+        Assert.Throws<ArgumentException>(() => NetworkConfigurationService.BuildAdapterLookup(new NetworkAdapterModel { Name = "*" }));
+    }
+
+    [Fact]
     public void SnapshotIncludesManualRecoveryData()
     {
         foreach (var command in new[] { "Get-NetAdapter", "Get-NetIPAddress", "Get-NetIPInterface", "Get-DnsClientServerAddress", "Get-NetRoute" })
@@ -61,7 +73,7 @@ public sealed class NetworkResetTests
     public async Task WindowsParserAcceptsScriptsWithoutExecutingThem()
     {
         if (!OperatingSystem.IsWindows()) return;
-        foreach (var script in new[] { NetworkResetService.SnapshotScript, NetworkResetService.BuildResetScript(new(NetworkResetMode.FlushDns)), NetworkResetService.BuildResetScript(new(NetworkResetMode.AdapterDhcp, Guid.NewGuid())) })
+        foreach (var script in new[] { NetworkResetService.SnapshotScript, NetworkResetService.BuildResetScript(new(NetworkResetMode.FlushDns)), NetworkResetService.BuildResetScript(new(NetworkResetMode.AdapterDhcp, Guid.NewGuid())), NetworkConfigurationService.BuildAdapterLookup(new NetworkAdapterModel { InterfaceGuid = Guid.NewGuid() }) })
         {
             var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
             await RunHarnessAsync($"$tokens=$null;$errors=$null;[System.Management.Automation.Language.Parser]::ParseInput([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('{encoded}')),[ref]$tokens,[ref]$errors)|Out-Null;if($errors.Count){{throw ($errors|Out-String)}}");

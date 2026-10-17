@@ -33,8 +33,8 @@ public static class NetworkConfigurationService
     public static Task<NetworkConfigurationModel> GetConfigurationAsync(NetworkAdapterModel adapter) => Task.Run(() =>
     {
         EnsureWindows();
-        var alias = EscapePowerShell(adapter.Name);
-        var script = $"$a=Get-NetAdapter -Name '{alias}' -ErrorAction Stop; $ip=Get-NetIPAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {{$_.PrefixOrigin -ne 'RouterAdvertisement' -and $_.IPAddress -notlike '169.254.*'}} | Sort-Object SkipAsSource | Select-Object -First 1; $r=Get-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue | Sort-Object RouteMetric | Select-Object -First 1; $d=Get-DnsClientServerAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue; $ipAddress=if($ip){{$ip.IPAddress}}else{{''}}; $prefix=if($ip){{$ip.PrefixLength}}else{{0}}; $gatewayValue=if($r){{$r.NextHop}}else{{''}}; $metric=if($r){{$r.RouteMetric}}else{{0}}; [pscustomobject]@{{InterfaceAlias=$a.Name;InterfaceIndex=$a.ifIndex;DhcpEnabled=((Get-NetIPInterface -InterfaceIndex $a.ifIndex -AddressFamily IPv4).Dhcp -eq 'Enabled');IPv4Address=$ipAddress;PrefixLength=$prefix;Gateway=$gatewayValue;DnsServers=@($d.ServerAddresses);DefaultRouteMetric=$metric}} | ConvertTo-Json -Compress -Depth 4";
+        var lookup = BuildAdapterLookup(adapter);
+        var script = $"{lookup} $ip=Get-NetIPAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {{$_.PrefixOrigin -ne 'RouterAdvertisement' -and $_.IPAddress -notlike '169.254.*'}} | Sort-Object SkipAsSource | Select-Object -First 1; $r=Get-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue | Sort-Object RouteMetric | Select-Object -First 1; $d=Get-DnsClientServerAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue; $ipAddress=if($ip){{$ip.IPAddress}}else{{''}}; $prefix=if($ip){{$ip.PrefixLength}}else{{0}}; $gatewayValue=if($r){{$r.NextHop}}else{{''}}; $metric=if($r){{$r.RouteMetric}}else{{0}}; [pscustomobject]@{{InterfaceAlias=$a.Name;InterfaceIndex=$a.ifIndex;DhcpEnabled=((Get-NetIPInterface -InterfaceIndex $a.ifIndex -AddressFamily IPv4).Dhcp -eq 'Enabled');IPv4Address=$ipAddress;PrefixLength=$prefix;Gateway=$gatewayValue;DnsServers=@($d.ServerAddresses);DefaultRouteMetric=$metric}} | ConvertTo-Json -Compress -Depth 4";
         var row = RunPowerShell<ConfigurationDto>(script);
         return new NetworkConfigurationModel
         {
@@ -53,7 +53,7 @@ public static class NetworkConfigurationService
     {
         EnsureWindows();
         Validate(request);
-        var alias = EscapePowerShell(adapter.Name);
+        var lookup = BuildAdapterLookup(adapter);
         var ip = EscapePowerShell(request.IPv4Address);
         var gateway = EscapePowerShell(request.Gateway);
         var dns = new[] { request.PrimaryDns, request.SecondaryDns }
@@ -65,8 +65,8 @@ public static class NetworkConfigurationService
             ? "Set-DnsClientServerAddress -InterfaceIndex $a.ifIndex -ResetServerAddresses -ErrorAction Stop"
             : $"Set-DnsClientServerAddress -InterfaceIndex $a.ifIndex -ServerAddresses {dnsExpression} -ErrorAction Stop";
         var script = request.UseDhcp
-            ? $"$a=Get-NetAdapter -Name '{alias}' -ErrorAction Stop; Get-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue | Where-Object {{$_.Protocol -ne 'Dhcp'}} | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue; Get-NetIPAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {{$_.PrefixOrigin -eq 'Manual' -and $_.IPAddress -notlike '169.254.*'}} | Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue; Set-NetIPInterface -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -Dhcp Enabled -ErrorAction Stop; Set-DnsClientServerAddress -InterfaceIndex $a.ifIndex -ResetServerAddresses -ErrorAction Stop"
-            : $"$a=Get-NetAdapter -Name '{alias}' -ErrorAction Stop; Set-NetIPInterface -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -Dhcp Disabled -ErrorAction Stop; Get-NetIPAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {{$_.IPAddress -notlike '169.254.*'}} | Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue; New-NetIPAddress -InterfaceIndex $a.ifIndex -IPAddress '{ip}' -PrefixLength {request.PrefixLength} -AddressFamily IPv4 -ErrorAction Stop | Out-Null; Get-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue; if('{gateway}' -ne ''){{New-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -NextHop '{gateway}' -RouteMetric {request.RouteMetric} -ErrorAction Stop | Out-Null}}; {dnsCommand}";
+            ? $"{lookup} Get-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue | Where-Object {{$_.Protocol -ne 'Dhcp'}} | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue; Get-NetIPAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {{$_.PrefixOrigin -eq 'Manual' -and $_.IPAddress -notlike '169.254.*'}} | Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue; Set-NetIPInterface -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -Dhcp Enabled -ErrorAction Stop; Set-DnsClientServerAddress -InterfaceIndex $a.ifIndex -ResetServerAddresses -ErrorAction Stop"
+            : $"{lookup} Set-NetIPInterface -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -Dhcp Disabled -ErrorAction Stop; Get-NetIPAddress -InterfaceIndex $a.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {{$_.IPAddress -notlike '169.254.*'}} | Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue; New-NetIPAddress -InterfaceIndex $a.ifIndex -IPAddress '{ip}' -PrefixLength {request.PrefixLength} -AddressFamily IPv4 -ErrorAction Stop | Out-Null; Get-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue; if('{gateway}' -ne ''){{New-NetRoute -InterfaceIndex $a.ifIndex -DestinationPrefix '0.0.0.0/0' -NextHop '{gateway}' -RouteMetric {request.RouteMetric} -ErrorAction Stop | Out-Null}}; {dnsCommand}";
         RunPowerShell<object>(script, parseOutput: false);
     });
 
@@ -120,6 +120,12 @@ public static class NetworkConfigurationService
         {
             throw new NetworkConfigurationException($"Could not read Windows network configuration: {ex.Message}");
         }
+    }
+
+    internal static string BuildAdapterLookup(NetworkAdapterModel adapter)
+    {
+        if (adapter.InterfaceGuid == Guid.Empty) throw new ArgumentException("Select a valid adapter GUID. Refresh the adapter list.");
+        return $"$a=@(Get-NetAdapter -IncludeHidden -ErrorAction Stop | Where-Object {{[guid]$_.InterfaceGuid -eq [guid]'{adapter.InterfaceGuid:D}'}}); if($a.Count -ne 1 -or $a[0].Status -eq 'Disabled'){{throw 'Selected adapter is missing or disabled. Refresh before retrying.'}}; $a=$a[0];";
     }
 
     private static string EscapePowerShell(string value) => value.Replace("'", "''", StringComparison.Ordinal);
