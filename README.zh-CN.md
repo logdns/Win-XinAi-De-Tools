@@ -29,6 +29,12 @@
 
 两版独立安装、快捷方式与界面设置，可同时保留。MyGo 借鉴 [Pulse](https://pulse.egoist.dev/) 的分区与状态卡片，不使用 WebView；包含自包含 .NET 系统服务引擎，不是单文件小体积版本。各功能页进入自动加载真实状态，直接展示规则/连接列表、网卡设置、Hyper-V/SMB/WSL 控件和 HTTP 地址按钮；WSL 高级功能使用分组表单；不提供应用登录自启开关。**两版共用同一台电脑的系统配置，勿并发执行冲突操作。** 详见 [MyGo 版本、差异与构建](docs/MYGO.md)。
 
+## v1.12.1 修复
+
+- 修复安装完成立即启动时的错误 740，保留管理员权限要求和独立的快捷方式选项。
+- MyGo 首次窗口自适配屏幕工作区，增加始终可见的最小化、最大化/还原、关闭/退出入口。
+- 修复网卡名称、接口别名和 SMB 中文输出乱码，正确解码 WSL 启动诊断，不修改系统全局语言或代码页。
+
 ## 功能
 
 - **本地网络重置**：清理 DNS 缓存、所选网卡 DHCP/自动 DNS、整机 Winsock/TCP/IP；先备份、默认取消、不自动重启，见[重置与恢复](docs/NETWORK-RESET.md)。
@@ -43,11 +49,11 @@
 
 ## 界面
 
-以下为 [v1.12.0 正式发布构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39005734844)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。MyGo 现为专用功能界面，不再是操作下拉框与 JSON 控制台。网卡设置截图是从实际 DHCP 网卡回填后、尚未提交的 Static 草稿，未修改主机网络。
+以下为 [v1.12.1 候选构建界面验证](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39012141927)生成的 Windows x64 实际软件截图。系统状态与可用操作取决于主机配置。MyGo 现为专用功能界面，不再是操作下拉框与 JSON 控制台。网卡设置截图是从实际 DHCP 网卡回填后、尚未提交的 Static 草稿，未修改主机网络。
 
 ### 概览
 
-![v1.12.0 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
+![v1.12.1 概览，包含 Hyper-V 管理入口](docs/screenshots/dashboard.png)
 
 ### Hyper-V 功能与启动配置
 
@@ -59,40 +65,46 @@
 
 ### 本机 HTTP 服务检测
 
-![v1.12.0 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
+![v1.12.1 本机 HTTP 服务检测](docs/screenshots/temporary-http-discovery.png)
 
 ### 本地网络重置（原版 WinUI）
 
-![v1.12.0 DNS、网卡和 Winsock/TCP/IP 重置，深色风险提示](docs/screenshots/network-reset.png)
+![v1.12.1 DNS、网卡和 Winsock/TCP/IP 重置，深色风险提示](docs/screenshots/network-reset.png)
 
 ### Built with MyGo：原生概览
 
-![v1.12.0 MyGo 中文原生概览](docs/screenshots/mygo-dashboard.zh-CN.png)
+![v1.12.1 MyGo 中文原生概览](docs/screenshots/mygo-dashboard.zh-CN.png)
+
+### Built with MyGo：小屏适配与窗口控制
+
+首次窗口按屏幕工作区计算尺寸；顶部始终显示最小化、最大化/还原、关闭/退出，系统标题栏控件仍保留。下图为实际原生内容截图（464 × 601 像素），不是整张桌面截图。
+
+![v1.12.1 MyGo 小屏布局和始终可见的窗口按钮](docs/screenshots/mygo-compact.zh-CN.png)
 
 ### Built with MyGo：规则列表与直接操作
 
-![v1.12.0 MyGo 规则搜索、筛选、编辑与删除按钮](docs/screenshots/mygo-firewall.zh-CN.png)
+![v1.12.1 MyGo 规则搜索、筛选、编辑与删除按钮](docs/screenshots/mygo-firewall.zh-CN.png)
 
 ### Built with MyGo：回填 IP/DNS 设置
 
-![v1.12.0 MyGo 网卡设置，尚未提交的 Static 草稿](docs/screenshots/mygo-network-settings.zh-CN.png)
+![v1.12.1 MyGo 网卡设置，尚未提交的 Static 草稿](docs/screenshots/mygo-network-settings.zh-CN.png)
 
 ### Built with MyGo：Hyper-V 平台与网络
 
-![v1.12.0 MyGo Hyper-V 实际功能与启动状态及专用按钮](docs/screenshots/mygo-hyperv.zh-CN.png)
+![v1.12.1 MyGo Hyper-V 实际功能与启动状态及专用按钮](docs/screenshots/mygo-hyperv.zh-CN.png)
 
 <details>
 <summary>展开虚拟交换机设置与连接监控</summary>
 
-![v1.12.0 MyGo 实际交换机列表与未提交的创建表单](docs/screenshots/mygo-hyperv-network.zh-CN.png)
+![v1.12.1 MyGo 实际交换机列表与未提交的创建表单](docs/screenshots/mygo-hyperv-network.zh-CN.png)
 
-![v1.12.0 MyGo 连接列表与绑定进程的行内按钮](docs/screenshots/mygo-connections.zh-CN.png)
+![v1.12.1 MyGo 连接列表与绑定进程的行内按钮](docs/screenshots/mygo-connections.zh-CN.png)
 
 </details>
 
 ### Built with MyGo：网络重置
 
-![v1.12.0 MyGo 中文网络重置与风险提示](docs/screenshots/mygo-reset.zh-CN.png)
+![v1.12.1 MyGo 中文网络重置与风险提示](docs/screenshots/mygo-reset.zh-CN.png)
 
 ## 文档与开发
 

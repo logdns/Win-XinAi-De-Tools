@@ -1,6 +1,6 @@
 # Current audit and validation / 当前审计与验证
 
-当前修复候选版本：**1.12.1**（正式发布验证待补）；上一发布为 **1.12.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
+当前修复候选版本：**1.12.1**（Windows 候选验证通过，正式标签发布待核验）；上一发布为 **1.12.0**。本页区分新增功能的源码审查、候选验证与发布下载校验。
 This page summarizes the current implementation and completed validation.
 
 ## 1.12.1 focused fixes / 安装、窗口与编码复核
@@ -13,7 +13,14 @@ Source review scope: both installer `[Run]` entries; MyGo work-area sizing, visi
 - WSL: keep Linux UTF-8 distinct from native launcher UTF-16; preserve nonzero exits and show available stdout diagnostics instead of a generic disk-usage failure. Empty/non-installed distributions are not reported as healthy.
 - Validation added: exact Chinese JSON/path/stderr subprocess round-trip, WSL encoding fixtures, compact control bounds, work-area fit, actual minimize/maximize/restore and busy-close veto, real non-silent installer Finish launch, and a native Windows ARM64 MyGo release gate.
 
-Candidate Windows results, refreshed real screenshots and final package checksum verification will be recorded after execution. A hosted runner does not establish physical ARM64 hardware, mixed-monitor DPI, secure-desktop UAC, accessibility or destructive-feature acceptance.
+[Successful complete Windows candidate](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39012141927), implementation `71dec6c`, 2026-10-17:
+
+- 154 Windows .NET 8 tests and 2 opted-in firewall integration tests pass on x64; all 154 shared-service tests, including real Chinese PowerShell JSON/stderr round-trip, also pass on native Windows ARM64. 36 Go test functions, 13 installer contracts, 420-resource localization/version audit, NuGet/Go dependency audits and all ten packages pass. Local Go `-race` and `go vet` also pass.
+- Both editions pass actual x64 installation, every shortcut choice, Start Menu startup, reinstallation and uninstall. The real non-silent English wizard records Next → Install → Finish; its log records `Run as: Current user`, and the installed administrator application starts and shuts down normally. Native Windows ARM64 MyGo repeats this full lifecycle, not only cross-compilation. Independent cross-edition installation/uninstall also passes.
+- Both native MyGo x64 and ARM64 runs verify initial bounds `{X:24 Y:24 Width:976 Height:672}` within the actual `{X:0 Y:0 Width:1024 Height:720}` DIP work area, actual minimize/maximize/restore, busy-close veto, 12 read-only engine probes and selected-adapter read-back. Each captures 144 page/language/theme/size combinations plus 20 scrolled settings views. WinUI's 180-combination native check also passes. README screenshots are refreshed from this candidate; the compact screenshot demonstrates visible controls, not a full desktop or physical DPI certification.
+- A focused reusable installer workflow also passes [WinUI x86-on-x64 and MyGo native ARM64](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39012004300) against candidate packages. Earlier candidate failures were in new automation (missing C# import, versioned wizard caption and modern `Next` label); those runs are not presented as passed or released.
+
+Final tag publication and downloaded-package verification remain pending. A hosted runner does not establish physical ARM64 hardware, mixed-monitor DPI, secure-desktop UAC, accessibility or destructive-feature acceptance.
 
 ## Verified release 1.12.0 / 专用功能界面双版本发布
 
