@@ -1,6 +1,11 @@
 package main
 
-import "github.com/egoist/mygo"
+import (
+	"log"
+
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
+)
 
 // WorkArea and WindowOptions both use DIPs; do not multiply by ScaleFactor.
 func initialWindowOptions(work mygo.Rectangle, hidden bool) mygo.WindowOptions {
@@ -22,32 +27,57 @@ func initialWindowOptions(work mygo.Rectangle, hidden bool) mygo.WindowOptions {
 	return opts
 }
 
-type windowControls interface {
-	Minimize()
-	Maximize()
-	Unmaximize()
-	IsMaximized() bool
-	Close()
+func (a *application) canExit() bool {
+	if a.busy || a.confirming {
+		a.status = a.tr("请等待当前操作完成后退出。", "Wait for the active operation before exiting.")
+		return false
+	}
+	return true
 }
 
-func (a *application) controlWindow(w windowControls, command string) {
-	if command == "close" && a.busy {
-		a.status = a.tr("请等待当前操作完成后退出。", "Wait for the active operation before exiting.")
+// Only an explicit Exit choice may bypass the next native close notification.
+func (a *application) requestClose() bool {
+	if !a.canExit() {
+		return false
+	}
+	if a.exitApproved {
+		return true
+	}
+	a.closePrompt = true
+	log.Printf("MyGo close choice opened; tray=%t", a.trayAvailable)
+	return false
+}
+
+func (a *application) approveExit() bool {
+	if !a.canExit() {
+		return false
+	}
+	a.closePrompt = false
+	a.exitApproved = true
+	log.Print("MyGo exit approved")
+	return true
+}
+
+func (a *application) closeDialog(c *ui.Context) {
+	buttons := []string{}
+	if a.trayAvailable {
+		buttons = append(buttons, a.tr("最小化到托盘", "Hide to tray"))
+	}
+	buttons = append(buttons, a.tr("退出程序", "Exit application"), a.tr("取消", "Cancel"))
+	chosen := ui.AlertDialog(c, &a.closePrompt, a.tr("关闭窗口", "Close window"), a.tr("请选择关闭方式。退出将停止临时 HTTP 服务。", "Choose what to do. Exiting stops the temporary HTTP service."), buttons...)
+	if chosen == ui.AlertDismissed || chosen == len(buttons)-1 {
+		log.Print("MyGo close choice canceled")
+	}
+	if chosen < 0 || chosen == len(buttons)-1 {
 		return
 	}
-	if w == nil {
-		return
-	}
-	switch command {
-	case "minimize":
-		w.Minimize()
-	case "maximize":
-		if w.IsMaximized() {
-			w.Unmaximize()
-		} else {
-			w.Maximize()
+	if a.trayAvailable && chosen == 0 {
+		if a.canExit() && a.win != nil {
+			a.win.Hide()
+			log.Print("MyGo hidden to tray")
 		}
-	case "close":
-		w.Close()
+	} else if a.approveExit() && a.win != nil {
+		// Quit is deferred until this UI frame completes and uses normal cleanup.
+		mygo.App.Quit()
 	}
 }

@@ -79,19 +79,33 @@ func main() {
 				if _, err := mygo.NewTray(mygo.TrayOptions{Icon: icon, ToolTip: "Win-XinAi-De-Tools-MyGo", Menu: mygo.NewMenu([]*mygo.MenuItem{
 					{Label: a.tr("显示窗口", "Show window"), Click: func(*mygo.MenuItem, *mygo.Window) { a.win.Show(); a.win.Restore(); a.win.Focus() }},
 					{Label: a.tr("隐藏到托盘", "Hide to tray"), Click: func(*mygo.MenuItem, *mygo.Window) { a.win.Hide() }},
-					{Label: a.tr("退出程序", "Exit application"), Click: func(*mygo.MenuItem, *mygo.Window) { mygo.App.Quit() }},
+					{Label: a.tr("退出程序", "Exit application"), Click: func(*mygo.MenuItem, *mygo.Window) {
+						if a.approveExit() {
+							mygo.App.Quit()
+						} else {
+							a.win.Show()
+							a.win.Invalidate()
+						}
+					}},
 				})}); err != nil {
 					log.Print(err)
 					a.win.Show()
+				} else {
+					a.trayAvailable = true
 				}
 			} else {
 				a.win.Show()
 			}
 		}
+		if !a.trayAvailable {
+			a.win.Show()
+		}
 		a.win.OnClose(func(e *mygo.CloseEvent) {
-			if a.busy {
+			if !a.requestClose() {
 				e.PreventDefault()
-				a.status = a.tr("请等待当前操作完成后退出。", "Wait for the active operation before exiting.")
+				a.win.Show()
+				a.win.Restore()
+				a.win.Focus()
 				a.win.Invalidate()
 			}
 		})

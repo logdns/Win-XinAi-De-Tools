@@ -71,7 +71,47 @@ func runSmoke(a *application) {
 		return
 	}
 	update(func() { a.busy = false; a.status = "" })
-	report = append(report, "PASS initial work-area fit; actual minimize/maximize/restore; busy close veto (normal close and engine shutdown checked by installer smoke)")
+	report = append(report, "PASS initial work-area fit; actual minimize/maximize/restore; busy close veto")
+	key := func(code uintptr) {
+		if err := smokeKey(a.win, code); err != nil {
+			fail(err)
+		}
+	}
+	a.win.Close()
+	time.Sleep(200 * time.Millisecond)
+	update(func() {
+		if !a.closePrompt || a.exitApproved {
+			windowError = fmt.Errorf("native X did not open close choice")
+		}
+	})
+	if windowError != nil {
+		fail(windowError)
+		return
+	}
+	key(0x0D) // Enter must activate the default Cancel.
+	update(func() {
+		if a.closePrompt || a.exitApproved {
+			windowError = fmt.Errorf("native Enter did not cancel closing")
+		}
+	})
+	if windowError != nil {
+		fail(windowError)
+		return
+	}
+	if a.trayAvailable {
+		a.win.Close()
+		time.Sleep(200 * time.Millisecond)
+		key(0x09) // Cancel -> first button (Hide to tray).
+		key(0x0D)
+		if a.win.IsVisible() || a.win.IsDestroyed() {
+			fail(fmt.Errorf("native hide-to-tray choice failed"))
+			return
+		}
+		a.win.Show()
+		a.win.Restore()
+		a.win.Focus()
+		report = append(report, "PASS native HWND keyboard choices: X -> Cancel (default); X -> Hide to tray; show/restore")
+	}
 	for _, id := range []string{"health", "dashboard", "firewall.list", "network.list", "hyperv.status", "wsl.status", "smb.status", "smb.addresses", "http.status", "connections.list", "audit.list", "http.discover"} {
 		data, err := a.engine.call(id, nil, false, "en-US")
 		if err != nil {
@@ -218,8 +258,45 @@ func runSmoke(a *application) {
 	report = append(report, fmt.Sprintf("PASS: %d additional scrolled feature/settings captures; static network form is an unsubmitted draft, no system changes", details))
 	data, _ := json.MarshalIndent(report, "", "  ")
 	_ = os.WriteFile(filepath.Join(directory, "verification.json"), data, 0600)
-	update(func() { a.busy = false })
-	mygo.App.Quit()
+	a.win.SetSize(800, 600)
+	for _, language := range []string{"en-US", "zh-CN"} {
+		update(func() {
+			a.busy = false
+			a.page = "dashboard"
+			a.pageScroll("dashboard").Y = 0
+			a.prefs.Language = language
+			a.prefs.Theme = "Light"
+		})
+		a.win.Close()
+		time.Sleep(200 * time.Millisecond)
+		image, err := a.win.CapturePage()
+		if err != nil {
+			fail(err)
+			return
+		}
+		if err := os.WriteFile(filepath.Join(directory, "close-choice-"+language+".png"), image, 0600); err != nil {
+			fail(err)
+			return
+		}
+		key(0x1B) // Escape is also a safe cancellation on the actual HWND.
+		update(func() {
+			if a.closePrompt || a.exitApproved {
+				windowError = fmt.Errorf("native Escape did not cancel closing")
+			}
+		})
+		if windowError != nil {
+			fail(windowError)
+			return
+		}
+	}
+	a.win.Close()
+	time.Sleep(200 * time.Millisecond)
+	// From default Cancel, wrap to Hide (if present), then Exit.
+	key(0x09)
+	if a.trayAvailable {
+		key(0x09)
+	}
+	key(0x0D)
 }
 
 // Windows VERSIONINFO uses four numeric fields even for a three-part release.

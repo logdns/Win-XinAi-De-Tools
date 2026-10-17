@@ -247,7 +247,7 @@ func (a *application) runRead(id string, args map[string]string) {
 }
 func (a *application) requestArgs(id string, args map[string]string) {
 	op, ok := actionByID(id)
-	if !ok || a.busy || a.confirming {
+	if !ok || a.busy || a.confirming || a.closePrompt || a.exitApproved {
 		return
 	}
 	// Freeze row identity and arguments; later filtering or draft changes cannot retarget confirmation.

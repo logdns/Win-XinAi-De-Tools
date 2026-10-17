@@ -38,7 +38,7 @@ public sealed class Dispatcher : IAsyncDisposable
             object? result = null;
             switch (request.Op)
             {
-                case "health": result = new { version = "1.12.1", engine = "shared-dotnet", platform = Environment.OSVersion.ToString() }; break;
+                case "health": result = new { version = "1.12.2", engine = "shared-dotnet", platform = Environment.OSVersion.ToString() }; break;
                 case "dashboard":
                     var rules = await FirewallService.ListRulesAsync();
                     result = new { rules = rules.Count, inbound = rules.Count(r => r.Direction == "Inbound"), outbound = rules.Count(r => r.Direction == "Outbound") }; break;

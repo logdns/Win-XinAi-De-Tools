@@ -15,6 +15,7 @@ try {
     Copy-Item $log "$output/startup.log"
     if ((Get-Content $log -Raw) -notmatch 'production=true') { throw 'MyGo production mode was not enabled.' }
     if ((Get-Content $log -Raw) -notmatch 'MyGo shutdown completed') { throw 'MyGo did not shut down its engine cleanly.' }
+    if ((Get-Content $log -Raw) -notmatch 'MyGo close choice canceled' -or (Get-Content $log -Raw) -notmatch 'MyGo exit approved') { throw 'MyGo did not exercise native close Cancel/Exit choices.' }
 }
 finally {
     if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }

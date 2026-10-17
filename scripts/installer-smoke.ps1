@@ -37,6 +37,13 @@ public static class InstallerSmokePath
     [DllImport("user32.dll")] private static extern bool IsWindowEnabled(IntPtr window);
     [DllImport("user32.dll")] private static extern bool PostMessage(IntPtr window, uint message, IntPtr wParam, IntPtr lParam);
 
+    public static void SendKey(IntPtr window, int key)
+    {
+        if (!PostMessage(window, 0x0100, new IntPtr(key), IntPtr.Zero)
+            || !PostMessage(window, 0x0101, new IntPtr(key), IntPtr.Zero))
+            throw new InvalidOperationException("Could not send native application key.");
+    }
+
     public static string AdvanceWizard(string application)
     {
         string clicked = null;
@@ -168,6 +175,46 @@ function Uninstall-Case([string]$Name) {
     Write-Host "PASS: $Name uninstall removed the executable and shortcuts"
 }
 
+function Close-InstalledApplication($App) {
+    if ($Edition -eq 'WinUI') {
+        if (-not $App.CloseMainWindow() -or -not $App.WaitForExit(15000)) { throw 'Installed application did not close normally.' }
+        return
+    }
+    $logPath = Join-Path $env:LOCALAPPDATA "$appName/startup.log"
+    $before = Get-Content $logPath -Raw
+    $handle = $App.MainWindowHandle
+    if (-not $App.CloseMainWindow()) { throw 'Could not request native X close.' }
+    $deadline = (Get-Date).AddSeconds(15)
+    do {
+        Start-Sleep -Milliseconds 200
+        $log = Get-Content $logPath -Raw
+    } while ((Get-Date) -lt $deadline -and $log.Substring($before.Length) -notmatch 'MyGo close choice opened')
+    if ($App.HasExited -or $log.Substring($before.Length) -notmatch 'MyGo close choice opened') { throw 'Native X did not show close choice.' }
+    # Exercise the real default button through HWND input, not a CI bypass.
+    [InstallerSmokePath]::SendKey($handle, 0x0D)
+    $deadline = (Get-Date).AddSeconds(10)
+    do {
+        Start-Sleep -Milliseconds 200
+        $log = Get-Content $logPath -Raw
+    } while ((Get-Date) -lt $deadline -and $log.Substring($before.Length) -notmatch 'MyGo close choice canceled')
+    if ($App.HasExited -or $log.Substring($before.Length) -notmatch 'MyGo close choice canceled') { throw 'Default Enter did not cancel closing.' }
+    if (-not $App.CloseMainWindow()) { throw 'Could not reopen close choice.' }
+    Start-Sleep -Milliseconds 500
+    # Default Cancel -> wrap to first action -> Exit if a tray exists.
+    [InstallerSmokePath]::SendKey($handle, 0x09)
+    Start-Sleep -Milliseconds 200
+    if ($log -match 'MyGo close choice opened; tray=true') {
+        [InstallerSmokePath]::SendKey($handle, 0x09)
+        Start-Sleep -Milliseconds 200
+    }
+    [InstallerSmokePath]::SendKey($handle, 0x0D)
+    if (-not $App.WaitForExit(15000)) { throw 'Explicit Exit did not shut down normally.' }
+    $log = Get-Content $logPath -Raw
+    if ($log -notmatch 'MyGo exit approved' -or $log -notmatch 'MyGo shutdown completed') { throw 'MyGo skipped normal shutdown cleanup.' }
+    if (Get-Process -Name 'Win-XinAi-De-Tools.Engine' -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq (Join-Path $installDirectory 'engine/Win-XinAi-De-Tools.Engine.exe') }) { throw 'MyGo left its shared engine running.' }
+    Write-Host 'PASS: native X opens choices; Enter cancels by default; explicit Exit cleans up engine'
+}
+
 function Test-InteractivePostinstallLaunch {
     # Do not use /SILENT: skipifsilent bypasses precisely the [Run] path under test.
     $logPath = Join-Path $env:LOCALAPPDATA "$appName/startup.log"
@@ -202,7 +249,7 @@ function Test-InteractivePostinstallLaunch {
     if (-not $loaded) { throw 'Finish did not launch the installed administrator application.' }
     $app = @(Get-Process -Name $appName -ErrorAction Stop)
     if ($app.Count -ne 1 -or $app[0].Path -ne $executable) { throw 'Finish launched an unexpected application.' }
-    if (-not $app[0].CloseMainWindow() -or -not $app[0].WaitForExit(15000)) { throw 'Postinstall application did not close normally.' }
+    Close-InstalledApplication $app[0]
     Copy-Item $logPath (Join-Path $output 'postinstall-startup.log')
     $clicked | Set-Content (Join-Path $output 'wizard-buttons.txt')
     Write-Host 'PASS: real non-silent installer Finish launched requireAdministrator application; no error 740'
@@ -236,9 +283,7 @@ try {
     if (@($app).Count -ne 1 -or $app.Path -ne $executable) {
         throw 'Shortcut launched an unexpected application path or process count.'
     }
-    if (-not $app.CloseMainWindow() -or -not $app.WaitForExit(15000)) {
-        throw 'Installed application did not shut down normally.'
-    }
+    Close-InstalledApplication $app
     if ($Edition -eq 'MyGo') {
         if (Get-Process -Name 'Win-XinAi-De-Tools.Engine' -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq (Join-Path $installDirectory 'engine/Win-XinAi-De-Tools.Engine.exe') }) {
             throw 'Installed MyGo left its shared engine running.'

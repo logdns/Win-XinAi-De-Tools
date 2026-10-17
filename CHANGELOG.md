@@ -3,6 +3,13 @@
 仅列出近期功能变化。历史版本与下载见 [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases)。
 Recent feature changes are listed below; previous releases and downloads are available on GitHub.
 
+## v1.12.2 - 2026-10-17
+
+- Remove MyGo's duplicate sidebar branding, content title/Back header and text window-control toolbar. Keep the standard Windows title bar, native minimize/maximize/close and work-area/DPI sizing. Back remains available through Alt+Left.
+- Native X now opens a close-choice dialog: Hide to tray (only with a working tray), Exit application, or default Cancel. Enter/Escape cancel; explicit Exit follows normal engine/HTTP cleanup without recursively prompting. Active operations or a pending system-change confirmation veto exit.
+- Keep Built with MyGo and version information in Settings & about rather than repeating it across the workspace. Preserve compact navigation, bilingual functionality, draft state and all existing system-operation safeguards.
+- 新增关闭选择框，仅点击系统 X 后显示；移除重复标题和右上角文字按钮。没有可用托盘时不提供隐藏，避免程序无法找回。两版同步发布。
+
 ## v1.12.1 - 2026-10-17
 
 - Fix installer Finish-page launch error 740: both editions explicitly retain the elevated installer token when launching the administrator application. Shortcut selection and optional launch remain independent.

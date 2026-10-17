@@ -1,6 +1,6 @@
 # Win-XinAi-De-Tools-MyGo
 
-**Built with MyGo · v1.12.0**
+**Built with MyGo · v1.12.2**
 
 [简体中文](#中文) | [English](#english)
 
@@ -26,7 +26,7 @@
 | 规则导入导出 | 相同 JSON 格式；原生文件选择、限 900 KB 的导入预览（最多展示 10 条）、可选粘贴 JSON；导出通过原生文件对话框保存 |
 | 连接监控 | 进入自动查询，支持搜索与手动刷新；每条连接提供关闭 TCP / 结束进程按钮，确认锁定当时的连接对象或 PID，无需复制 JSON |
 | 临时 HTTP | 目录选择、启动/重启/停止、运行状态与请求数、逐条地址复制/打开，以及本机服务发现 |
-| 外观与导航 | 中英文、系统/浅色/深色、历史返回、会话草稿、托盘、`/silent`；界面语言切换保留草稿 |
+| 外观与导航 | 中英文、系统/浅色/深色、Alt+Left 历史返回、会话草稿、托盘、`/silent`；界面语言切换保留草稿 |
 | 登录启动 | 本版不提供应用登录自启开关；WSL 发行版自启属于单独的系统功能 |
 
 v1.12.0 修复了旧版主要以“选择操作＋执行＋JSON”呈现的问题：现在各页直接展示实际状态与功能控件。进入页面会自动读取状态，仍可手动刷新；网络/SMB 未提交草稿保留，点击另一网卡会按该网卡重新填表。WSL 高级功能按安装、存储、任务、网络/USB 分组，独立展开表单。防火墙、连接与日志每页显示最多 50 项。原始响应默认折叠，仅供诊断。所有修改均需确认；SMB Guest 共享可能降低整机安全，HTTP 无认证且允许外部访问。阅读结果中的错误、备份路径与重启提示，不要把请求完成当成已验证系统恢复。
@@ -44,7 +44,7 @@ go test -tags=mygo_noinspector ./...
 go vet -tags=mygo_noinspector ./...
 go run ./cmd/resources -arch amd64
 $env:GOOS='windows'; $env:GOARCH='amd64'; $env:CGO_ENABLED='0'
-go build -tags=mygo_noinspector -trimpath -ldflags='-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=1.12.0' -o ../artifacts/mygo-portable/win-x64/Win-XinAi-De-Tools-MyGo.exe .
+go build -tags=mygo_noinspector -trimpath -ldflags='-s -w -H=windowsgui -X github.com/egoist/mygo.production=1 -X github.com/egoist/mygo.packageIdentifier=com.logdns.winxinai.mygo -X github.com/egoist/mygo.packageName=Win-XinAi-De-Tools-MyGo -X github.com/egoist/mygo.packageVersion=1.12.2' -o ../artifacts/mygo-portable/win-x64/Win-XinAi-De-Tools-MyGo.exe .
 cd ..
 Copy-Item Assets artifacts/mygo-portable/win-x64/Assets -Recurse
 ```
@@ -61,7 +61,7 @@ A separately installed, native Go/MyGo Windows edition, not a WebView wrapper. I
 
 Downloads support x64 and ARM64 only. Keep the entire package, including the self-contained .NET engine and licenses. Both installers provide independent default-selected desktop/Start Menu tasks and optional postinstall launch. App identities, installation paths and UI preferences are separate; Windows configuration, audit logs and network backups are shared. Avoid concurrent conflicting changes.
 
-Version 1.12.0 replaces the old operation-selector/JSON-first console with dedicated native feature pages: searchable firewall and connection lists with object-bound buttons, adapter settings populated from real IP/DNS/route data, Hyper-V features/adapters/switches, SMB status/addresses, WSL distribution actions and grouped advanced forms, and readable activity entries. Pages load read-only state on entry and read back after mutations, including partial failures. Network/SMB drafts are preserved; selecting a different adapter repopulates its form. Lists page at 50 items. Rule import uses native file selection (900 KB limit) and a 10-row preview, with optional pasted JSON; export saves through a native file dialog. HTTP URLs have individual copy/open controls. Raw responses remain collapsed diagnostics, never the primary feature view. Application login startup is not offered in this edition. Themes/languages, draft retention, Back, tray and `/silent` are supported. No claim is made about a tiny standalone binary, low CPU/memory, or performance matching Pulse.
+Version 1.12.0 replaces the old operation-selector/JSON-first console with dedicated native feature pages: searchable firewall and connection lists with object-bound buttons, adapter settings populated from real IP/DNS/route data, Hyper-V features/adapters/switches, SMB status/addresses, WSL distribution actions and grouped advanced forms, and readable activity entries. Pages load read-only state on entry and read back after mutations, including partial failures. Network/SMB drafts are preserved; selecting a different adapter repopulates its form. Lists page at 50 items. Rule import uses native file selection (900 KB limit) and a 10-row preview, with optional pasted JSON; export saves through a native file dialog. HTTP URLs have individual copy/open controls. Raw responses remain collapsed diagnostics, never the primary feature view. Application login startup is not offered in this edition. Themes/languages, draft retention, Alt+Left Back, tray and `/silent` are supported. No claim is made about a tiny standalone binary, low CPU/memory, or performance matching Pulse.
 
 Network reset offers DNS cache, selected-adapter IPv4 DHCP/automatic DNS and Winsock/TCP/IP modes. Every reset snapshots configuration before changing it, confirms with Cancel as default and never reboots automatically. Read [network reset and recovery](NETWORK-RESET.md) before use. SMB Guest sharing and unauthenticated external HTTP retain their explicit risks.
 
@@ -84,3 +84,14 @@ Release gates now include actual non-silent installer Finish-page launch on x64 
 
 
 v1.12.1 is published with both editions. Its [successful release workflow](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39013102283) includes native Windows ARM64 installation and non-silent Finish-page launch, shared-service Chinese-output tests and the same native window checks as x64. Both READMEs use that release's real screenshots. Initial bounds on both hosted architectures are 976 × 672 inside a 1024 × 720 DIP work area. Later stress captures deliberately request other sizes; they do not describe the initial window. Physical-device and mixed-monitor DPI acceptance remain separate.
+
+
+## v1.12.2 simplified chrome / 简化窗口布局
+
+The v1.12.1 toolbar described above is historical and removed in v1.12.2. The sidebar branding and repeated title/Back header are also removed. Only the standard Windows title bar handles minimize/maximize/close; Alt+Left keeps history navigation. Product/version and Built with MyGo attribution stay in Settings & about.
+
+Native X opens a modal choice, never an always-visible control strip: Hide to tray (only after actual successful tray creation), Exit application, Cancel. Cancel is the default for Enter and Escape dismisses without exiting. Explicit tray Exit remains available. Busy operations and pending mutation confirmations veto closing. Normal Exit stops the shared engine and temporary HTTP service; Hide does not. If tray creation fails, even `/silent` shows the window so the application remains reachable.
+
+v1.12.2 移除左侧重复品牌、顶部重复标题与文字窗口按钮。点击系统 X 才弹出关闭选项，默认取消；保留原生窗口边框、小屏工作区适配、危险操作确认、语言/主题和会话草稿。
+
+Regression coverage adds close-choice transitions, native default-Cancel/hide/explicit-Exit HWND input, compact dialog bounds, history shortcuts and installer Start Menu/Finish-launch shutdown through the real choice dialog. Network/Hyper-V changes remain excluded from CI. Candidate and release results are recorded separately in AUDIT.md, not inferred from the previous release.

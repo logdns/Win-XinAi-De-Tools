@@ -13,7 +13,7 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-const version = "1.12.1"
+const version = "1.12.2"
 
 type preferences struct {
 	Language string `json:"language"`
@@ -37,6 +37,9 @@ type application struct {
 	results                  map[string]string
 	status                   string
 	busy, failed, confirming bool
+	closePrompt              bool
+	trayAvailable            bool
+	exitApproved             bool
 	pending                  pendingOperation
 	fixture                  bool
 	data                     map[string]json.RawMessage
@@ -118,7 +121,7 @@ func (a *application) value(op, key string) *string {
 	return a.fields[id]
 }
 func (a *application) navigate(id string) {
-	if id == a.page || a.confirming || a.busy {
+	if id == a.page || a.confirming || a.closePrompt || a.busy {
 		return
 	}
 	valid := false
@@ -149,38 +152,18 @@ func (a *application) view(c *ui.Context) {
 	theme.Radius = 8
 	c.SetTheme(&theme)
 	width, _ := c.Size()
+	if c.Shortcut(ui.Alt, ui.KeyLeft) && len(a.history) > 0 && !a.busy && !a.confirming && !a.closePrompt {
+		a.page = a.history[len(a.history)-1]
+		a.history = a.history[:len(a.history)-1]
+		a.status = ""
+		a.refreshPage()
+	}
 	ui.Column(c).Fill().Background(theme.Background).Children(func() {
-		ui.Row(c).Padding(6, 10).Gap(6).Background(theme.Surface).Children(func() {
-			ui.Text(c, "XINAI / MYGO").Bold().Grow(1).MinWidth(0)
-			for _, control := range []struct{ command, zh, en string }{
-				{"minimize", "最小化", "Minimize"},
-				{"maximize", "最大化/还原", "Maximize/restore"},
-				{"close", "关闭/退出", "Close/exit"},
-			} {
-				if ui.Button(c, a.tr(control.zh, control.en)).Disabled(control.command == "close" && a.busy).Clicked() && a.win != nil {
-					a.controlWindow(a.win, control.command)
-				}
-			}
-		})
 		ui.Row(c).Grow(1).FillWidth().MinHeight(0).Children(func() {
 			if width >= 760 {
 				a.sidebar(c)
 			}
 			ui.Column(c).Grow(1).MinWidth(0).FillHeight().Children(func() {
-				ui.Row(c).Padding(14, 22).Gap(10).Background(theme.Surface).BorderWidth(0, 0, 1, 0).BorderColor(theme.Border).Children(func() {
-					if ui.Button(c, a.tr("返回", "Back")).Disabled(len(a.history) == 0 || a.busy || a.confirming).Clicked() {
-						a.page = a.history[len(a.history)-1]
-						a.history = a.history[:len(a.history)-1]
-						a.status = ""
-						a.refreshPage()
-					}
-					title := "Win-XinAi-De-Tools-MyGo"
-					if width < 760 {
-						title = "Win-XinAi / MyGo"
-					}
-					ui.Text(c, title).Bold().Grow(1).MinWidth(0)
-					ui.Text(c, "v"+version).TextColor(theme.TextMuted)
-				})
 				if width < 760 {
 					labels := []string{}
 					selected := ""
@@ -251,15 +234,12 @@ func (a *application) view(c *ui.Context) {
 	if ui.AlertDialog(c, &a.confirming, a.tr("确认系统操作", "Confirm system operation"), a.pending.Description, a.tr("确认执行", "Confirm operation"), a.tr("取消", "Cancel")) == 0 {
 		a.perform(a.pending.Action, a.pending.Args, true)
 	}
+	a.closeDialog(c)
 }
 
 func (a *application) sidebar(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Width(232).FillHeight().Padding(18, 12).Gap(16).Background(t.Surface).BorderWidth(0, 1, 0, 0).BorderColor(t.Border).Children(func() {
-		ui.Column(c).Padding(8).Gap(4).Children(func() {
-			ui.Text(c, "XINAI / NETWORK").Bold().FontSize(16)
-			ui.Text(c, "Built with MyGo").FontSize(12).TextColor(t.Accent)
-		})
 		selected := a.page
 		if ui.Sidebar(c, &selected, func() {
 			for _, p := range pages {
@@ -414,7 +394,7 @@ func formatArgs(args map[string]string) string {
 }
 
 func (a *application) perform(op action, args map[string]string, confirmed bool) {
-	if a.busy {
+	if a.busy || a.closePrompt || a.exitApproved {
 		return
 	}
 	if !op.Read && !confirmed {

@@ -6,7 +6,7 @@ A native Windows utility for firewall rules, network settings, SMB, WSL, Hyper-V
 
 ## Download
 
-**v1.12.1** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
+**v1.12.2** · [GitHub Releases](https://github.com/logdns/Win-XinAi-De-Tools/releases/latest) · [Actions](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml)
 
 Requires Windows 10 1809 or later. Extract the portable ZIP or run the installer, then launch the app as administrator. Packages include the .NET and Windows App SDK runtimes.
 
@@ -14,26 +14,26 @@ The installer offers **desktop** and **Start Menu** shortcuts as independent opt
 
 | Architecture | Portable | Installer |
 |---|---|---|
-| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-Setup-x64.exe) |
-| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-Setup-x86.exe) |
-| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-Setup-arm64.exe) |
+| x64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-win-x64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-Setup-x64.exe) |
+| x86 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-win-x86.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-Setup-x86.exe) |
+| ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-win-arm64.zip) | [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-Setup-arm64.exe) |
 
-[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/SHA256SUMS.txt) provides download checksums.
+[SHA256SUMS.txt](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/SHA256SUMS.txt) provides download checksums.
 
 ## Parallel Editions
 
 | Edition | Interface / architectures | x64 portable / installer | ARM64 portable / installer |
 |---|---|---|---|
 | Original WinUI | WinUI 3 + Skia; x86/x64/ARM64 | See above | See above |
-| **Win-XinAi-De-Tools-MyGo** | **Built with MyGo**, native Go GPU UI; x64/ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-MyGo-win-x64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-MyGo-Setup-x64.exe) | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-MyGo-win-arm64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.1/Win-XinAi-De-Tools-MyGo-Setup-arm64.exe) |
+| **Win-XinAi-De-Tools-MyGo** | **Built with MyGo**, native Go GPU UI; x64/ARM64 | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-MyGo-win-x64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-MyGo-Setup-x64.exe) | [ZIP](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-MyGo-win-arm64.zip) / [EXE](https://github.com/logdns/Win-XinAi-De-Tools/releases/download/v1.12.2/Win-XinAi-De-Tools-MyGo-Setup-arm64.exe) |
 
 Install identities, shortcuts and UI preferences are independent. Inspired by [Pulse](https://pulse.egoist.dev/), MyGo uses native Go controls, not a WebView. It includes a self-contained .NET system engine: no tiny standalone-binary claim. Dedicated feature pages automatically load real state and show searchable rule/connection lists, populated adapter settings, Hyper-V/SMB/WSL controls and individual HTTP URL actions. Advanced WSL tools have grouped forms; application login startup is not offered. **Both editions manage the same Windows configuration; avoid conflicting simultaneous changes.** See the [MyGo guide and differences](docs/MYGO.md).
 
-## v1.12.1 Fixes
+## v1.12.2 Fixes
 
-- Fix optional post-install launch error 740 without removing administrator requirements or shortcut choices.
-- Fit MyGo's initial window inside the screen work area and add visible Minimize, Maximize/restore and Close/exit controls.
-- Preserve Chinese adapter names/aliases, SMB paths and WSL launcher diagnostics with explicit per-process encoding.
+- Remove duplicate MyGo branding/title rows and the extra text window-control toolbar; keep the standard Windows title bar.
+- Click native X to choose Hide to tray, Exit application or default Cancel. Active operations remain protected; Exit cleans up the shared engine/HTTP service.
+- Preserve work-area sizing, installer launch/shortcut fixes and Chinese output. Both editions remain available in parallel.
 
 ## Features
 
@@ -49,11 +49,11 @@ System configuration changes require administrator privileges. Enable the legacy
 
 ## Interface
 
-Actual Windows x64 screenshots from the [v1.12.1 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/runs/39013102283). System status and available controls depend on the host configuration. MyGo now shows dedicated feature pages, not an operation-selector/JSON console. The adapter settings screenshot is an unsubmitted Static draft populated from a DHCP adapter; no network configuration was changed.
+Actual Windows x64 screenshots from the [v1.12.2 release UI verification](https://github.com/logdns/Win-XinAi-De-Tools/actions/workflows/build.yml). System status and available controls depend on the host configuration. MyGo now shows dedicated feature pages, not an operation-selector/JSON console. The adapter settings screenshot is an unsubmitted Static draft populated from a DHCP adapter; no network configuration was changed.
 
 ### Dashboard
 
-![v1.12.1 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
+![v1.12.2 dashboard with Hyper-V navigation](docs/screenshots/dashboard.png)
 
 ### Hyper-V features and boot configuration
 
@@ -65,46 +65,48 @@ Actual Windows x64 screenshots from the [v1.12.1 release UI verification](https:
 
 ### Local HTTP discovery
 
-![v1.12.1 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
+![v1.12.2 local HTTP service discovery](docs/screenshots/temporary-http-discovery.png)
 
 ### Local network reset (WinUI)
 
-![v1.12.1 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
+![v1.12.2 DNS, adapter and Winsock/TCP/IP reset with dark safety notice](docs/screenshots/network-reset.png)
 
 ### Built with MyGo: native overview
 
-![v1.12.1 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
+![v1.12.2 MyGo native dashboard](docs/screenshots/mygo-dashboard.png)
 
-### Built with MyGo: compact window and visible controls
+### Built with MyGo: compact window and close choices
 
-The initial window fits the display work area. Minimize, Maximize/restore and Close/exit remain visible in the native toolbar; system title-bar controls stay enabled. This is an actual compact native content capture (464 × 601 pixels), not a full-desktop screenshot.
+The initial window fits the display work area. Only the standard Windows title bar provides window controls; native X opens Hide to tray / Exit / Cancel instead of showing those buttons permanently. These are actual native content captures, not full-desktop screenshots; the OS title bar is outside the captured content. Alt+Left navigates back.
 
-![v1.12.1 MyGo compact layout with visible window controls](docs/screenshots/mygo-compact.png)
+![v1.12.2 MyGo compact layout without duplicate chrome](docs/screenshots/mygo-compact.png)
+
+![MyGo close choice shown only after native X](docs/screenshots/mygo-close-choice.png)
 
 ### Built with MyGo: rules and direct actions
 
-![v1.12.1 MyGo searchable rule list with edit and delete buttons](docs/screenshots/mygo-firewall.png)
+![v1.12.2 MyGo searchable rule list with edit and delete buttons](docs/screenshots/mygo-firewall.png)
 
 ### Built with MyGo: populated IP/DNS settings
 
-![v1.12.1 MyGo selected-adapter settings, unsubmitted Static draft](docs/screenshots/mygo-network-settings.png)
+![v1.12.2 MyGo selected-adapter settings, unsubmitted Static draft](docs/screenshots/mygo-network-settings.png)
 
 ### Built with MyGo: Hyper-V platform and networking
 
-![v1.12.1 MyGo Hyper-V feature and boot state with dedicated controls](docs/screenshots/mygo-hyperv.png)
+![v1.12.2 MyGo Hyper-V feature and boot state with dedicated controls](docs/screenshots/mygo-hyperv.png)
 
 <details>
 <summary>Virtual switch settings and connection monitor</summary>
 
-![v1.12.1 MyGo real switch inventory and unsubmitted creation form](docs/screenshots/mygo-hyperv-network.png)
+![v1.12.2 MyGo real switch inventory and unsubmitted creation form](docs/screenshots/mygo-hyperv-network.png)
 
-![v1.12.1 MyGo connection list with process-bound actions](docs/screenshots/mygo-connections.png)
+![v1.12.2 MyGo connection list with process-bound actions](docs/screenshots/mygo-connections.png)
 
 </details>
 
 ### Built with MyGo: network reset
 
-![v1.12.1 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
+![v1.12.2 MyGo network reset and safety scope](docs/screenshots/mygo-reset.png)
 
 ## Documentation and development
 
