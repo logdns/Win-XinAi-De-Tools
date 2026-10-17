@@ -36,11 +36,14 @@ public static class InstallerSmokePath
     [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr window);
     [DllImport("user32.dll")] private static extern bool IsWindowEnabled(IntPtr window);
     [DllImport("user32.dll")] private static extern bool PostMessage(IntPtr window, uint message, IntPtr wParam, IntPtr lParam);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern IntPtr FindWindowEx(IntPtr parent, IntPtr after, string type, string name);
 
     public static void SendKey(IntPtr window, int key)
     {
-        if (!PostMessage(window, 0x0100, new IntPtr(key), IntPtr.Zero)
-            || !PostMessage(window, 0x0101, new IntPtr(key), IntPtr.Zero))
+        var surface = FindWindowEx(window, IntPtr.Zero, "MyGoSurface", null);
+        if (surface == IntPtr.Zero) throw new InvalidOperationException("Native MyGo input surface not found.");
+        if (!PostMessage(surface, 0x0100, new IntPtr(key), IntPtr.Zero)
+            || !PostMessage(surface, 0x0101, new IntPtr(key), IntPtr.Zero))
             throw new InvalidOperationException("Could not send native application key.");
     }
 
