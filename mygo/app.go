@@ -597,7 +597,7 @@ func (a *application) warning(page string) string {
 	case "http":
 		return a.tr("监听所有可用网卡，并添加临时防火墙规则。目录文件无需登录即可被访问；仅分享专用目录。Stop/正常退出会清理，崩溃后可能需手工清理。更改语言或主题不会停止服务。", "Listens on all available interfaces and opens a temporary firewall rule. Files are accessible without login; share a dedicated directory only. Stop/normal exit cleans up; a crash can require manual cleanup. Language/theme changes keep the server running.")
 	case "connections":
-		return a.tr("关闭连接会中断会话；结束进程会丢失未保存工作，不允许结束系统进程。", "Closing connections interrupts sessions; terminating processes loses unsaved work. System processes are protected.")
+		return a.tr("关闭连接会中断会话；结束进程会丢失未保存工作。仅阻止 PID 不大于 4，不保证其他关键进程安全，请先核对 PID。", "Closing connections interrupts sessions; terminating processes loses unsaved work. Only PIDs up to 4 are blocked, not every critical process. Verify the PID first.")
 	case "firewall", "transfer":
 		return a.tr("规则修改会影响全机。导入可能部分成功；修改规则会先删除旧规则。请备份并检查每项结果。", "Rule changes affect the whole host. Import can partially succeed; modification removes the old rule first. Back up and inspect every result.")
 	default:
